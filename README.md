@@ -1,4 +1,4 @@
-**Note, this is an early pre-release (v0.0.3).  There is only basic MessageFormat functionality for now.**  You can use it to start building your app, but there is no precompilation or translation support yet (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
+**Note, this is an early pre-release (v0.0.4).  There is only basic MessageFormat functionality for now.**  You can use it to start building your app, but there is no precompilation or translation support yet (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
 
 # MessageFormat for Meteor
 
