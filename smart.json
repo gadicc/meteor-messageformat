@@ -2,7 +2,7 @@
     "name": "messageformat",
     "description": "MessageFormat support for Meteor",
     "homepage": "https://github.com/gadicohen/meteor-messageformat",
-    "author": "Gadi Cohen (dragon@wastelands.net)",
+    "author": "Gadi Cohen <dragon@wastelands.net>",
     "version": "0.0.1",
     "git": "https://github.com/gadicohen/meteor-messageformat.git",
 	"packages": {}
