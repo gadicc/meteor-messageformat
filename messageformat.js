@@ -9,10 +9,10 @@ Handlebars.registerHelper('mf', function(key, message, params) {
     } else
         params = params.hash;
 
-    return mf(key, message, params);
+    return mf(key, params, message);
 });
 
-function mf(key, message, params, locale) {
+function mf(key, params, message, locale) {
     if (!locale)
         locale = Session.get('locale');
     if (!locale) {

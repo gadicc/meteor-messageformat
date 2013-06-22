@@ -33,19 +33,19 @@ For longer MessageFormat Strings, you can do this:
 
 Notes:
 
-1. *keytext* is optional.  You could potentially have everything compiled in advance (by hand, for now), and thus also reduce the size of your templates.  However, I made this available as an option since it's much easier to have text inline in your code and automatically extracted later, and I feel this was what made the adoption of gettext so successful.
+1. *keytext* is optional.  You could potentially have everything compiled in advance (by hand, for now), and thus also reduce the size of your templates.  However, I made this available as an option since it's much easier to have text inline in your code and automatically extracted later, and I feel this was what made the adoption of gettext so successful.  It also provides a useful fallback.
 
 2. *TemplateVar*, etc, are *regular template variables or helper functions*.  Reactivity is maintained!  You can throw in a quoted value here for testing (e.g. VAR1='male')
  
 #### Javascript (if needed)
 
 ```
-mf(key, message, params, locale);
+mf(key, params, message, locale);
 ```
 
 Notes:
 
-1. *message* is optional, as per the above.
+1. *message* is optional (can be *null*), as per the above.
 2. *locale* is optional, defaults to Session.get('locale');
  
 ## Examples
