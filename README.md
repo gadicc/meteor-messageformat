@@ -1,4 +1,4 @@
-**Note, this is a very early pre-release (v0.0.1).  There is only basic MessageFormat functionality for now.**  You can use it to start building your app, but there is no precompilation or translation support yet (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
+**Note, this is an early pre-release (v0.0.3).  There is only basic MessageFormat functionality for now.**  You can use it to start building your app, but there is no precompilation or translation support yet (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
 
 # MessageFormat for Meteor
 
@@ -33,9 +33,9 @@ For longer MessageFormat Strings, you can do this:
 
 Notes:
 
-1. *keytext* is optional.  You could potentially have everything compiled in advance (by hand, for now), and thus also reduce the size of your templates.  However, I made this available as an option since it's much easier to have text inline in your code and automatically extracted later, and I feel this was what made the adoption of gettext so successful.  It also provides a useful fallback.
+1. *TemplateVar*, etc, are *regular template variables or helper functions*.  Reactivity is maintained!  You can throw in a quoted value here for testing (e.g. VAR1='male')
 
-2. *TemplateVar*, etc, are *regular template variables or helper functions*.  Reactivity is maintained!  You can throw in a quoted value here for testing (e.g. VAR1='male')
+2. *keytext* is potentially optional.  You could have all text compiled in advance (by hand, for now), and thus also reduce the size of your templates.  However, I made this available as an option since it's much easier to have text inline in your code and automatically extract it later; I feel this was what made the adoption of gettext so successful.  It also provides a useful fallback.
  
 #### Javascript (if needed)
 
@@ -56,7 +56,7 @@ For a list of examples of what you can do with MessageFormat (SelectFormat, Plur
 example.html:
 ```
 <template name="example">
-    {{#mf KEY="they_liked" GENDER=GENDER}}
+    {{#mf KEY="found_results" GENDER=GENDER NUM_RESULTS=NUM_RESULTS NUM_CATS=NUM_CATS}}
         {GENDER, select,
               male {He}
             female {She}
@@ -65,7 +65,7 @@ example.html:
                 =0 {no results}
                one {1 result}
              other {# results}
-        } in {NUM_CATEGORIES, plural,
+        } in {NUM_CATS, plural,
                one {1 category}
              other {# categories}
         }.
@@ -84,12 +84,12 @@ if (Meteor.isClient) {
 
     Session.setDefault('NUM_RESULTS', 2);
     Template.example.NUM_RESULTS = function() {
-        return Session.get('NUM_RESULTS']);
+        return Session.get('NUM_RESULTS');
     }
     
-    Session.setDefault('NUM_CATEGORIES', 1);
-    Template.example.NUM_CATEGORIES = function() {
-        return Session.get('NUM_CATEGORIES');
+    Session.setDefault('NUM_CATS', 1);
+    Template.example.NUM_CATS = function() {
+        return Session.get('NUM_CATS');
     }
 }
 ```

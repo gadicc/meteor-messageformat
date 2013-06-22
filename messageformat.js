@@ -9,7 +9,14 @@ Handlebars.registerHelper('mf', function(key, message, params) {
     } else
         params = params.hash;
 
-    return mf(key, params, message);
+    /* unfortunately, global helpers don't have access to the current template context this
+    if (params.TPLVARS) {
+        _.each(params.TPLVARS.split(','), function(tplvar) {
+            params[tplvar] = this[tplvar];
+        });
+    }
+    */
+    return mf(key, params, message, params.LOCALE);
 });
 
 function mf(key, params, message, locale) {
