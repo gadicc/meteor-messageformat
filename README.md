@@ -108,6 +108,30 @@ Some possible outputs:
     They found 2 results in 2 categories.
 ```
 
+#### PluralFormat - offset extension
+
+Again, for the full explanation see [MessageFormat.js by Alex Sexton](https://github.com/SlexAxton/messageformat.js/).
+
+```
+    {{#mf KEY="added_to_profile" NUM_ADDS=NUM_ADDS}}
+        You {NUM_ADDS, plural, offset:1
+            =0 {didnt add this to your profile}
+            =1 {added this to your profile}
+           one {and one other person added this to their profile}
+         other {and # others added this to their profiles}}.      
+    {{/mf}}
+```
+
+All possible outputs:
+```
+	NUM_ADDS=0: "You didnt add this to your profile."
+	NUM_ADDS=1: "You added this to your profile."
+	NUM_ADDS=2: "You and one other person added this to their profile."
+	NUM_ADDS=2+ "You and 3 others added this to their profile."
+```
+
+There are a lot of other cool things you can do with MessageFormat.  And most importantly, for translation purposes, the translator is not forced to work around the way you chose to write the initial text.
+
 ## TODO
 
 1. Extract all strings from templates to allow for translation and precompilation.
