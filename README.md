@@ -1,4 +1,4 @@
-**Note, this is an early pre-release (v0.0.4).  There is only basic MessageFormat functionality for now.**  You can use it to start building your app, but there is no precompilation or translation support yet (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
+**Note, this is an early pre-release.**  You can use it to start building your app, but there is no precompilation or automatic translation building support yet (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
 
 # MessageFormat for Meteor
 
@@ -104,7 +104,7 @@ and watch the text automatically re-render, without you needing to write or exec
 Some possible outputs:
 ```
     He found 1 result in 2 categories.
-    Se found no results in 1 category.
+    She found no results in 1 category.
     They found 2 results in 2 categories.
 ```
 
@@ -124,19 +124,37 @@ Again, for the full explanation see [MessageFormat.js by Alex Sexton](https://gi
 
 All possible outputs:
 ```
-	NUM_ADDS=0: "You didnt add this to your profile."
-	NUM_ADDS=1: "You added this to your profile."
-	NUM_ADDS=2: "You and one other person added this to their profile."
-	NUM_ADDS=2+ "You and 3 others added this to their profile."
+    NUM_ADDS=0: "You didnt add this to your profile."
+  NUM_ADDS=1: "You added this to your profile."
+  NUM_ADDS=2: "You and one other person added this to their profile."
+  NUM_ADDS=3+ "You and 2 others added this to their profile."
 ```
 
 There are a lot of other cool things you can do with MessageFormat.  And most importantly, for translation purposes, the translator is not forced to work around the way you chose to write the initial text.
 
+## Adding other languages
+
+Again, this is still a work in progress.  In the future, there will be a tool to automatically extract all language keys from your project, mark the ones needing updating, etc.  But for now, you can for example create a `client/trans.js` which looks like this (THIS FORMAT MIGHT CHANGE):
+
+```js
+    MessageFormatCache.compiled.he = {};
+  MessageFormatCache.strings.he = {
+    'Vegan': 'טבעוני',
+    'add_new_product': 'הוסף מוצר חדש',
+    'edit_ingredients': 'ערוך רשימת הרכיבים',
+    'Everything': 'הכל',
+    'in_category': 'בתוך',
+    'all_categories': 'כל הקטגוריות',
+    'edit': 'ערוך',
+        'long': 'אתה {NUM_ADDS, etc...}'
+  };
+```
+
+You can see it in action at the following site (which is also still a work-in-progress): [www.can-i-eat.it](http://www.can-i-eat.it/)
+
 ## TODO
 
 1. Extract all strings from templates to allow for translation and precompilation.
-
-1. Additionally, allow for translated strings, as per the above (this is in the original MessageFormat.js package's TODO list as well).
 
 1. It would be nice if *keyname* could be unique *per template*, but currently [there is no way for a template helper to know the name of a calling template](https://github.com/meteor/meteor/issues/658)
 
