@@ -6,7 +6,6 @@ table.example tr td { padding: 5px 10px 5px 10px; border: 1px solid black; verti
 body[dir=ltr] table.example tr td:first-child { text-align: right; }
 body[dir=rtl] table.example tr td:first-child { text-align: left; }
 
-code { white-space: pre; }
 ddiv.indent { margin-left: 20px; }
 button.selected { border: 2px solid black; }
 button { direction: ltr; }

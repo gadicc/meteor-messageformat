@@ -21,12 +21,18 @@
 	{{example 'i_am_str' 'I am a string.'}}
 	{{> langButtons}}
 
-	<h2>String with a variable</h2>
+	<h2>String with a static variable</h2>
 	{{example 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
 	{{> langButtons}}	
 
 	<h2>String with a variable from a helper function</h2>
-	{{example 'hello_name' 'Hello, {NAME}.' NAME=getName paramOverride='NUM=getName'}}
+	{{#example KEY='hello_name' NAME=getName paramOverride='NUM=getName'}}
+		Hello, {NAME}.
+	{{else}}
+		Template.main.getName = function() {
+			return Session.get("name");
+		}
+	{{/example}}
 	{{> langButtons}}		
 
 	<h2>String with a plural</h2>
@@ -55,7 +61,7 @@
 &#123;&#123;/mf&#125;&#125;{{/sh_highlight}}{{else
 					}}<code>&#123;&#123;mf '{{key}}' '{{message}}'{{#if paramOverride}} {{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;{{/if}}</code></td></tr>
 			{{#if js}}<tr><td>JavaScript:</td><td>{{#sh_highlight lang='js'}}{{js}}{{/sh_highlight}}</code></td></tr>{{/if}}
-			<tr><td>Result:</td><td>{{mf key message params}}</td></tr>
+			<tr><td>Result:</td><td>{{#if longMessage}}{{#sh_highlight lang='html'}}{{mf key message params}}{{/sh_highlight}}{{else}}{{mf key message params}}{{/if}}</td></tr>
 		</table>
 	</div>
 </template>

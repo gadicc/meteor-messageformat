@@ -19,7 +19,7 @@ if (Meteor.isClient) {
   }
 
   Template.main.example = function(key, message, params) {
-    var js;
+    var js, longMessage;
     if (typeof key == "function") {
         // if called as a block helper
         message = myTrim(key.fn(this), '   ');
@@ -27,14 +27,16 @@ if (Meteor.isClient) {
         params = { hash: key.hash };
         console.log(params);
         js = myTrim(key.inverse(this), '');
-        key = params.KEY;
+        key = params.hash.KEY;
+        longMessage = true;
     } else {
         console.log(params);
         message = params ? message : null;
         js = params.extra;
-        console.log(params);
+        longMessage = false;
     }
     return new Handlebars.SafeString(Template.example({
+      longMessage: longMessage,
       key: key, message: message, params: params, js: js,
       paramOverride: params.hash && params.hash.paramOverride
     }));
@@ -51,9 +53,12 @@ if (Meteor.isClient) {
     return out;
   }
 
+/*
   Template.example.longMessage = function() {
+    return 1;
     return this.message.length > 20;
   }
+*/
 
   Session.setDefault('lang', 'en');
   Template.langButtons.events({
