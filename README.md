@@ -36,6 +36,8 @@ Notes:
 1. *TemplateVar*, etc, are *regular template variables or helper functions*.  Reactivity is maintained!  You can throw in a quoted value here for testing (e.g. VAR1='male')
 
 2. *keytext* is potentially optional.  You could have all text compiled in advance (by hand, for now), and thus also reduce the size of your templates.  However, I made this available as an option since it's much easier to have text inline in your code and automatically extract it later; I feel this was what made the adoption of gettext so successful.  It also provides a useful fallback.
+
+3. You can also optionally pass a `LOCALE=value` to control the translation of just a single block.
  
 #### Javascript (if needed)
 

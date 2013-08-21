@@ -23,14 +23,11 @@ if (Meteor.isClient) {
     if (typeof key == "function") {
         // if called as a block helper
         message = myTrim(key.fn(this), '   ');
-        console.log(message)
         params = { hash: key.hash };
-        console.log(params);
         js = myTrim(key.inverse(this), '');
         key = params.hash.KEY;
         longMessage = true;
     } else {
-        console.log(params);
         message = params ? message : null;
         js = params.extra;
         longMessage = false;
@@ -72,11 +69,22 @@ if (Meteor.isClient) {
     return Session.equals('lang', lang);
   }
 
+  Session.setDefault('NUM', 1);
   Template.numButton.events({
     'click button': function(event) {
       Session.set('NUM', $(event.target).val());
     }
   });
+  Template.numButton.isNum = function(num) {
+    // Session.equals doesn't work well with 0
+    return Session.get('NUM') == num;
+    /*
+    console.log(Session.get('NUM'), num);
+    console.log(Session.get('NUM') == num);
+    console.log(Session.equals('NUM', num));
+    return Session.equals('NUM', num);
+    */
+  }
 
 
   function setBodyDir() {

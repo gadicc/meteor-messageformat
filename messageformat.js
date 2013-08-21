@@ -27,14 +27,10 @@ Handlebars.registerHelper('mf', function(key, message, params) {
         params = params ? params.hash : {};
     }
 
-    /* unfortunately, global helpers don't have access to the current template context this
-    if (params.TPLVARS) {
-        _.each(params.TPLVARS.split(','), function(tplvar) {
-            params[tplvar] = this[tplvar];
-        });
-    }
-    */
-    // XXX TODO think about this
+    // Ideally we would like to automatically make available the entire template context.
+    // Unfortunately, global helpers don't have access to it :(
+
+    // XXX TODO think about this.  Allows for <a href="...">strings</a>.
     return new Handlebars.SafeString(mf(key, params, message, params ? params.LOCALE : null));
 });
 

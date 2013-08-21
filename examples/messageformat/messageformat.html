@@ -1,5 +1,5 @@
 <head>
-  <title>messageformat</title>
+  <title>Meteor MessageFormat examples</title>
 </head>
 
 <body>
@@ -11,31 +11,60 @@
 
 	<p>This site is a live example of the various functionalities of the
 		<a href="http://atmosphere.meteor.com/package/messageformat">messageformat</a>
-		smart package.</p>
+		smart package (you can find the source of this website in the 'examples' directory).</p>
 
 	<p>The examples below rely purely on Session variables, because they allow for
 		easy demonstration on the client-side.  However, the results from a
 		<code>collection.find()</code> work just as well, and remain reactive.</p>
 
-	<h2>Simple string translation</h2>
+	<div id="TOC">
+		<div>Contents</div>
+			<ol>
+					<li><a href="#simple_use">{{mf 'simple_use' 'Simple Use'}}</a></li>
+					<ol>
+							<li><a href="#simple_string">{{mf 'simple_string' 'Simple string translation'}}</a></li>
+							<li><a href="#simple_variable">{{mf 'simple_variable' 'String with a static variable'}}</a></li>
+							<li><a href="#simple_helper">{{mf 'simple_helper' 'String with a variable from a helper function'}}</a></li>
+					</ol>
+					<li><a href="#plural_xtension">{{mf 'plural_extension' 'Plural Extension'}}</a></li>
+					<ol>
+							<li><a href="#string_plural">{{mf 'string_plural' 'String with a plural'}}</a></li>
+							<li><a href="#plural_offset">{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</a></li>
+					</ol>
+			</ol>
+		</div>	
+
+	<a name="simple_use"></a>
+	<h2>{{mf 'simple_use' 'Simple Use'}}</h2>
+
+	<a name="simple_string"></a>
+	<h3>{{mf 'simple_string' 'Simple string translation'}}</h3>
 	{{example 'i_am_str' 'I am a string.'}}
 	{{> langButtons}}
 
-	<h2>String with a static variable</h2>
+	<a name="simple_variable"></a>
+	<h3>{{mf 'simple_variable' 'String with a static variable'}}</h3>
 	{{example 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
 	{{> langButtons}}	
 
-	<h2>String with a variable from a helper function</h2>
+	<a name="simple_helper"></a>
+	<h3>{{mf 'simple_helper' 'String with a variable from a helper function'}}</h3>
 	{{#example KEY='hello_name' NAME=getName paramOverride='NUM=getName'}}
 		Hello, {NAME}.
 	{{else}}
-		Template.main.getName = function() {
-			return Session.get("name");
-		}
+	  Template.main.getName = function() {
+	    var lang = Session.get("lang");
+	    return lang == "he" ? "גדי" : "Gadi";
+	  }
 	{{/example}}
 	{{> langButtons}}		
+	{{> nameBox}}
 
-	<h2>String with a plural</h2>
+	<a name="plural_extension"></a>
+	<h2>{{mf 'plural_extension' 'Plural Extension'}}</h2>
+
+	<a name="string_plural"></a>
+	<h3>{{mf 'string_plural' 'String with a plural'}}</h3>
 	{{#example KEY='there_are_widgets' NUM=getNum paramOverride='NUM=getNum'}}
 		There {NUM, plural,
 		     =0 {are no widgets}
@@ -49,19 +78,35 @@
 	{{/example}}
 	{{> langButtons}}<br />
 	{{> numButton}}
+
+	<a name='plural_offset'></a>
+	<h3>{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</h3>
+	{{#example KEY="added_to_profile" NUM_ADDS=getNum paramOverride='NUM_ADDS=getNum'}}
+		You {NUM_ADDS, plural, offset:1
+		    =0 {didnt add this to your profile}
+		    =1 {added this to your profile}
+		   one {and one other person added this to their profile}
+		 other {and # others added this to their profiles}}.
+	{{else}}
+		Template.main.getNum = function() {
+			return Session.get("NUM");
+		}
+	{{/example}}
+	{{> langButtons}}<br />
+	{{> numButton}}
 </template>
 
 <template name="example">
 	<div class="exampleWrapper">
 		<table class="example">
-			<tr><td>Template:</td><td>{{#if longMessage
+			<tr><td>{{mf 'template' 'Template'}}:</td><td>{{#if longMessage
 				}}{{#sh_highlight lang='html'}}&#123;&#123;#mf KEY='{{key}}'{{#if paramOverride}} {{paramOverride}}{{else}}{{paramsStr}}{{/if
 					}}&#125;&#125;
 {{message}}
 &#123;&#123;/mf&#125;&#125;{{/sh_highlight}}{{else
 					}}<code>&#123;&#123;mf '{{key}}' '{{message}}'{{#if paramOverride}} {{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;{{/if}}</code></td></tr>
-			{{#if js}}<tr><td>JavaScript:</td><td>{{#sh_highlight lang='js'}}{{js}}{{/sh_highlight}}</code></td></tr>{{/if}}
-			<tr><td>Result:</td><td>{{#if longMessage}}{{#sh_highlight lang='html'}}{{mf key message params}}{{/sh_highlight}}{{else}}{{mf key message params}}{{/if}}</td></tr>
+			{{#if js}}<tr><td>{{mf 'javascript' 'JavaScript'}}:</td><td>{{#sh_highlight lang='js'}}{{js}}{{/sh_highlight}}</code></td></tr>{{/if}}
+			<tr><td>{{mf 'result' 'Result'}}:</td><td>{{#if longMessage}}{{#sh_highlight lang='html'}}{{mf key message params}}{{/sh_highlight}}{{else}}{{mf key message params}}{{/if}}</td></tr>
 		</table>
 	</div>
 </template>
@@ -73,13 +118,13 @@
 </template>
 
 <template name="numButton">
-	<button value="0">Session.set('NUM', 0);</button>
-	<button value="1">Session.set('NUM', 1);</button>
-	<button value="2">Session.set('NUM', 2);</button>
-	<button value="3">Session.set('NUM', 3);</button>
-	<button value="4">Session.set('NUM', 4);</button>
+	<button {{#if isNum 0}}class="selected" {{/if}}value="0">Session.set('NUM', 0);</button>
+	<button {{#if isNum 1}}class="selected" {{/if}}value="1">Session.set('NUM', 1);</button>
+	<button {{#if isNum 2}}class="selected" {{/if}}value="2">Session.set('NUM', 2);</button>
+	<button {{#if isNum 3}}class="selected" {{/if}}value="3">Session.set('NUM', 3);</button>
+	<button {{#if isNum 4}}class="selected" {{/if}}value="4">Session.set('NUM', 4);</button>
 </template>
 
-<template name="pluralExample">
+<template name="nameBox">
 
 </template>
