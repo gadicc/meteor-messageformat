@@ -26,10 +26,18 @@
 							<li><a href="#simple_variable">{{mf 'simple_variable' 'String with a static variable'}}</a></li>
 							<li><a href="#simple_helper">{{mf 'simple_helper' 'String with a variable from a helper function'}}</a></li>
 					</ol>
-					<li><a href="#plural_xtension">{{mf 'plural_extension' 'Plural Extension'}}</a></li>
+					<li><a href="#plural_extension">{{mf 'plural_extension' 'Plural Extension'}}</a></li>
 					<ol>
 							<li><a href="#string_plural">{{mf 'string_plural' 'String with a plural'}}</a></li>
 							<li><a href="#plural_offset">{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</a></li>
+					</ol>
+					<li><a href="#selectformat">{{mf 'selectformat' 'SelectFormat'}}</a></li>
+					<ol>
+							<li><a href="#string_gender">{{mf 'string_gender' 'String with a gender'}}</a></li>
+					</ol>
+					<li><a href="#mixing_it_up">{{mf 'mixing_it_up' 'Mixing it Up'}}</a></li>
+					<ol>
+							<li><a href="#string_gender_plural">{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</a></li>
 					</ol>
 			</ol>
 		</div>	
@@ -57,8 +65,7 @@
 	    return lang == "he" ? "גדי" : "Gadi";
 	  }
 	{{/example}}
-	{{> langButtons}}		
-	{{> nameBox}}
+	{{> langButtons}}
 
 	<a name="plural_extension"></a>
 	<h2>{{mf 'plural_extension' 'Plural Extension'}}</h2>
@@ -77,7 +84,7 @@
 		}
 	{{/example}}
 	{{> langButtons}}<br />
-	{{> numButton}}
+	{{> numButtons}}
 
 	<a name='plural_offset'></a>
 	<h3>{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</h3>
@@ -93,7 +100,62 @@
 		}
 	{{/example}}
 	{{> langButtons}}<br />
-	{{> numButton}}
+	{{> numButtons}}
+
+	<a name='selectformat'></a>
+	<h2>{{mf 'selectformat' 'SelectFormat'}}
+
+	<a name='string_gender'></a>
+	<h3>{{mf 'string_gender' 'String with a gender'}}</h3>
+	{{#example KEY='select_gender' GENDER=getGender paramOverride='GENDER=getGender'}}
+		{GENDER, select,
+				male {He}
+			female {She}
+			 other {They}} liked this.
+	{{else}}
+	  Template.main.getGender = function() {
+	    return Session.get('GENDER');
+	  }
+	{{/example}}
+	{{> langButtons}}<br />
+	{{> genderButtons}}
+
+	<h3>Other examples</h3>
+	Let me know if you think of any :)
+
+	<a name="mixing_it_up"></a>
+	<h2>{{mf 'mixing_it_up' 'Mixing it Up'}}</h2>
+
+	<h3>{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</h3>
+	{{#example KEY='gender_plural' GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2 paramOverride='GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2'}}
+   {GENDER, select,
+          male {He}
+        female {She}
+         other {They}
+    } found {NUM_RESULTS, plural,
+            =0 {no results}
+           one {1 result}
+         other {# results}
+    } in {NUM_CATS, plural,
+           one {1 category}
+         other {# categories}
+    }.
+  {{else}}
+	  Template.main.getGender = function() {
+	    return Session.get("GENDER");
+	  }
+		Template.main.getNum = function() {
+			return Session.get("NUM");
+		}
+		Template.main.getNum2 = function() {
+			return Session.get("NUM2");
+		}
+	{{/example}}
+	{{> langButtons}}<br />
+	{{> genderButtons}}<br />
+	{{> numButtons}}<br />
+	{{> numButtons2}}
+
 </template>
 
 <template name="example">
@@ -117,7 +179,7 @@
 	<button {{#if isLang 'he'}}class="selected" {{/if}}value="he">Session.set('lang', 'he');</button>
 </template>
 
-<template name="numButton">
+<template name="numButtons">
 	<button {{#if isNum 0}}class="selected" {{/if}}value="0">Session.set('NUM', 0);</button>
 	<button {{#if isNum 1}}class="selected" {{/if}}value="1">Session.set('NUM', 1);</button>
 	<button {{#if isNum 2}}class="selected" {{/if}}value="2">Session.set('NUM', 2);</button>
@@ -125,6 +187,16 @@
 	<button {{#if isNum 4}}class="selected" {{/if}}value="4">Session.set('NUM', 4);</button>
 </template>
 
-<template name="nameBox">
+<template name="numButtons2">
+	<button {{#if isNum 0}}class="selected" {{/if}}value="0">Session.set('NUM2', 0);</button>
+	<button {{#if isNum 1}}class="selected" {{/if}}value="1">Session.set('NUM2', 1);</button>
+	<button {{#if isNum 2}}class="selected" {{/if}}value="2">Session.set('NUM2', 2);</button>
+	<button {{#if isNum 3}}class="selected" {{/if}}value="3">Session.set('NUM2', 3);</button>
+	<button {{#if isNum 4}}class="selected" {{/if}}value="4">Session.set('NUM2', 4);</button>
+</template>
 
+<template name="genderButtons">
+	<button {{#if isGender "male"}}class="selected" {{/if}}value="male">Session.set('GENDER', 'male');</button>
+	<button {{#if isGender "female"}}class="selected" {{/if}}value="female">Session.set('GENDER', 'female');</button>
+	<button {{#if isGender "other"}}class="selected" {{/if}}value="other">Session.set('GENDER', 'other');</button>
 </template>

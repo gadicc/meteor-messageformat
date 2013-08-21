@@ -4,7 +4,11 @@
 
 This package builds on [MessageFormat.js by Alex Sexton](https://github.com/SlexAxton/messageformat.js/).  You should read that page for a good explanation of how *MessageFormat* works and why it's a better option than *gettext*.
 
-The smart package offers both a static mf() function in Javascript, but more importantly a {{mf}} reactive template helper which makes it ridiculously easy to code both multilingual apps, or just apps with good English (or any other native language).  See examples below:
+The smart package offers both a static mf() function in Javascript, but more importantly a {{mf}} reactive template helper which makes it ridiculously easy to code both multilingual apps, or just apps with good English (or any other native language).
+
+See the examples below, or take a look at the [live example demo site](http://messageformat.meteor.com/).  The site shows the different combinations possible and how they rerender themselves reactively, with no additional work
+on your part.  (You can also see the [can-i-eat.it](http://www.can-i-eat.it/) work-in-progress.)
+
 
 ## Installation
 
@@ -151,8 +155,6 @@ Again, this is still a work in progress.  In the future, there will be a tool to
         'long': 'אתה {NUM_ADDS, etc...}'
   };
 ```
-
-You can see it in action at the following site (which is also still a work-in-progress): [www.can-i-eat.it](http://www.can-i-eat.it/)
 
 ## TODO
 

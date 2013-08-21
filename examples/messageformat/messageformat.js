@@ -5,11 +5,6 @@ if (Meteor.isClient) {
     return lang == 'he' ? 'גדי' : 'Gadi';
   }
 
-  Session.setDefault('NUM', 1);
-  Template.main.getNum = function() {
-    return Session.get('NUM');
-  }
-
   function myTrim(text, indent) {
     text = text.replace(/^\n*/, '').replace(/\t/g, '  ');
     var re = /^ */;
@@ -70,12 +65,12 @@ if (Meteor.isClient) {
   }
 
   Session.setDefault('NUM', 1);
-  Template.numButton.events({
+  Template.numButtons.events({
     'click button': function(event) {
       Session.set('NUM', $(event.target).val());
     }
   });
-  Template.numButton.isNum = function(num) {
+  Template.numButtons.isNum = function(num) {
     // Session.equals doesn't work well with 0
     return Session.get('NUM') == num;
     /*
@@ -85,7 +80,43 @@ if (Meteor.isClient) {
     return Session.equals('NUM', num);
     */
   }
+  Template.main.getNum = function() {
+    return Session.get('NUM');
+  }
 
+  Session.setDefault('NUM2', 1);
+  Template.numButtons2.events({
+    'click button': function(event) {
+      Session.set('NUM2', $(event.target).val());
+    }
+  });
+  Template.numButtons2.isNum = function(num) {
+    // Session.equals doesn't work well with 0
+    return Session.get('NUM2') == num;
+    /*
+    console.log(Session.get('NUM'), num);
+    console.log(Session.get('NUM') == num);
+    console.log(Session.equals('NUM', num));
+    return Session.equals('NUM', num);
+    */
+  }
+  Template.main.getNum2 = function() {
+    return Session.get('NUM2');
+  }
+
+
+  Session.setDefault('GENDER', 'male');
+  Template.genderButtons.events({
+    'click button': function(event) {
+      Session.set('GENDER', $(event.target).val());
+    }
+  });
+  Template.genderButtons.isGender = function(gender) {
+    return Session.equals('GENDER', gender);
+  }
+  Template.main.getGender = function() {
+    return Session.get('GENDER');
+  }
 
   function setBodyDir() {
     // There will ultimately be a better way to do this in the final package

@@ -12,6 +12,10 @@ if (Meteor.isClient) {
         'plural_extension': 'כלי רבים',
         'string_plural': 'מחרוזת ברבים',
         'plural_offset': 'מחרוזת ברבים עם אופסט',
+        'selectformat': 'SelectFormat',
+        'string_gender': 'מחרוזת עם מין',
+        'mixing_it_up': 'יאללה בלאגן',
+        'string_gender_plural': 'מין ופעמיים רבים',
         'i_am_str': 'אני מחרוזת.',
         'hello_name': 'שלום, {NAME}.',
         'there_are_widgets': '{NUM, plural, =0 {אין ווידג\'טים} one {יש ווידג\'ט אחד} other {יש # ווידג\'טים}}.',
@@ -19,7 +23,19 @@ if (Meteor.isClient) {
             +'=0 {לא הוספת את זה לפרופיל שלך}'
             +'=1 {הוספת את זה לפרופיל שלך}'
            +'one {אתה ועוד איש אחד הוסיפו את זה לפרופיל}'
-         +'other {אתה ועוד # אנשים הוסיפו את זה לפרופיל}}.'
+         +'other {אתה ועוד # אנשים הוסיפו את זה לפרופיל}}.',
+         'select_gender': '{GENDER, select, male {הוא אהב} female {היא אהבה} other {הפ אהבו}} את זה.',
+         'gender_plural': ' {GENDER, select,'
+            + 'male {הוא מצא}'
+          + 'female {היא מצאה}'
+          + 'other {הם מצאו}'
+        + '} {NUM_RESULTS, plural,'
+           + 'one {תוצאה אחת}'
+         + 'other {# תוצאות}'
+        + '} בתוך {NUM_CATS, plural,'
+           + 'one {קטגוריה אחת}'
+         + 'other {# קרגוריות}'
+        + '}.'
     };
 
     MessageFormatCache.compiled.af = {};
@@ -31,7 +47,19 @@ if (Meteor.isClient) {
             +'=0 {het dit nie na jou profiel gevoeg nie}'
             +'=1 {het dit na jou profiel gevoeg}'
            +'one {en een ander het dit na jou profiel gevoeg}'
-         +'other {en # anders het dit na jou profiel gevoeg}}.'
+         +'other {en # anders het dit na jou profiel gevoeg}}.',
+         'select_gender': '{GENDER, select, male {Hy} female {Sy} other {Hulle}} het dit geliek.',
+         'gender_plural': ' {GENDER, select,'
+            + 'male {Hy}'
+          + 'female {Sy}'
+          + 'other {Hulle}'
+        + '} het {NUM_RESULTS, plural,'
+           + 'one {een lei}'
+         + 'other {# resultate}'
+        + '} gevind in {NUM_CATS, plural,'
+           + 'one {een kategorie}'
+         + 'other {# kategorieë}'
+        + '}.'
     };
 
 }
