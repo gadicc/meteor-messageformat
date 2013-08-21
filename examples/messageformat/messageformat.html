@@ -25,25 +25,39 @@
 	{{example 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
 	{{> langButtons}}	
 
+	<h2>String with a variable from a helper function</h2>
+	{{example 'hello_name' 'Hello, {NAME}.' NAME=getName paramOverride='NUM=getName'}}
+	{{> langButtons}}		
+
 	<h2>String with a plural</h2>
-	{{example 'there_are_widgets' 'There {NUM, plural, =0 {are no widgets} one {is one widget} other {are # widgets}}.' NUM=NUM paramOverride=' NUM=getNum' extra='Template.main.getNum = function() { return Session.get("NUM"); }'}}
+	{{#example KEY='there_are_widgets' NUM=getNum paramOverride='NUM=getNum'}}
+		There {NUM, plural,
+		     =0 {are no widgets}
+		    one {is one widget}
+		  other {are # widgets}
+		}.
+	{{else}}
+		Template.main.getNum = function() {
+			return Session.get("NUM");
+		}
+	{{/example}}
 	{{> langButtons}}<br />
 	{{> numButton}}
 </template>
 
 <template name="example">
-	<table class="example">
-		<tr><td>Template:</td><td><code>{{#if longMessage}}
-				&#123;&#123;#mf KEY='{{key}}' {{#if paramOverride}}{{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;
-				<div class="indent">{{message}}</div>
-				&#123;&#123;/mf&#125;&#125;
-			{{else}}
-				&#123;&#123;mf '{{key}}' '{{message}}'{{#if paramOverride}}{{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;
-			{{/if}}
-			</code></td></tr>
-		{{#if extra}}<tr><td>JavaScript:</td><td><code>{{extra}}</code></td></tr>{{/if}}
-		<tr><td>Result:</td><td>{{mf key message params}}</td></tr>
-	</table>
+	<div class="exampleWrapper">
+		<table class="example">
+			<tr><td>Template:</td><td>{{#if longMessage
+				}}{{#sh_highlight lang='html'}}&#123;&#123;#mf KEY='{{key}}'{{#if paramOverride}} {{paramOverride}}{{else}}{{paramsStr}}{{/if
+					}}&#125;&#125;
+{{message}}
+&#123;&#123;/mf&#125;&#125;{{/sh_highlight}}{{else
+					}}<code>&#123;&#123;mf '{{key}}' '{{message}}'{{#if paramOverride}} {{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;{{/if}}</code></td></tr>
+			{{#if js}}<tr><td>JavaScript:</td><td>{{#sh_highlight lang='js'}}{{js}}{{/sh_highlight}}</code></td></tr>{{/if}}
+			<tr><td>Result:</td><td>{{mf key message params}}</td></tr>
+		</table>
+	</div>
 </template>
 
 <template name="langButtons">

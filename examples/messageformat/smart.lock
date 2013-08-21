@@ -4,11 +4,17 @@
     "basePackages": {
       "messageformat": {
         "path": "../.."
+      },
+      "SyntaxHighlighter": {
+        "path": "../../../SyntaxHighlighter"
       }
     },
     "packages": {
       "messageformat": {
         "path": "../.."
+      },
+      "SyntaxHighlighter": {
+        "path": "../../../SyntaxHighlighter"
       },
       "headers": {
         "git": "https://github.com/gadicohen/meteor-headers.git",
