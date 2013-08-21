@@ -1,0 +1,20 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "messageformat": {
+        "path": "../.."
+      }
+    },
+    "packages": {
+      "messageformat": {
+        "path": "../.."
+      },
+      "headers": {
+        "git": "https://github.com/gadicohen/meteor-headers.git",
+        "tag": "v0.0.2",
+        "commit": "b0a42698a03888a6bd72f3e92b321aa58688e57b"
+      }
+    }
+  }
+}

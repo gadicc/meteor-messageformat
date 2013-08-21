@@ -6,6 +6,6 @@
     "version": "0.0.5",
     "git": "https://github.com/gadicohen/meteor-messageformat.git",
 	"packages": {
-		"headers": "0.0.1"
+		"headers": "0.0.2"
 	}
 }

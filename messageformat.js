@@ -1,11 +1,11 @@
-MessageFormatCache = { objects: {}, compiled: { 'en': {} }, strings: {}, native: 'en' };
+MessageFormatCache = { objects: {}, compiled: { en: {} }, strings: { en: { en: 'English' }}, native: 'en' };
 
 Meteor.startup(function() {
     var lang, acceptLangs;
-    if (Session.get('lang') || !reqHeaders['accept-language'])
+    if (Session.get('lang') || !headers.get['accept-language'])
         return;
 
-    acceptLangs = reqHeaders['accept-language'].split(',');
+    acceptLangs = headers.get['accept-language'].split(',');
     for (var i=0; i < acceptLangs.length; i++) {
         lang = acceptLangs[i].split(';')[0];
         if (MessageFormatCache['native'] == lang || MessageFormatCache.strings['lang']) {
@@ -22,8 +22,10 @@ Handlebars.registerHelper('mf', function(key, message, params) {
         message = key.fn(this);
         params = key.hash;
         key = params.KEY;
-    } else
-        params = params.hash;
+    } else {
+        message = params ? message : null;
+        params = params ? params.hash : {};
+    }
 
     /* unfortunately, global helpers don't have access to the current template context this
     if (params.TPLVARS) {
@@ -33,7 +35,7 @@ Handlebars.registerHelper('mf', function(key, message, params) {
     }
     */
     // XXX TODO think about this
-    return new Handlebars.SafeString(mf(key, params, message, params.LOCALE));
+    return new Handlebars.SafeString(mf(key, params, message, params ? params.LOCALE : null));
 });
 
 mf = function(key, params, message, locale) {
@@ -48,14 +50,18 @@ mf = function(key, params, message, locale) {
     if (!mf)
         mf = MessageFormatCache.objects[locale] = new MessageFormat(locale);
 
-    if (locale != MessageFormatCache.native
-            && MessageFormatCache.strings[locale] && MessageFormatCache.strings[locale][key])
-        message = MessageFormatCache.strings[locale][key];
-
-
     var cmessage = MessageFormatCache.compiled[locale][key];
-    if (!cmessage)
+    if (!cmessage) {
+        // try find key in 1) locale, 2) native, 3) as an argument, 4) just show the key name
+        if (MessageFormatCache.strings[locale] && MessageFormatCache.strings[locale][key])
+            message = MessageFormatCache.strings[locale][key];
+        else if (MessageFormatCache.strings[MessageFormatCache.native][key])
+            message = MessageFormatCache.strings[MessageFormatCache.native][key];
+        else
+            message = message || key;
+
         cmessage = MessageFormatCache.compiled[locale][key] = mf.compile(message);
+    }
 
     try {
         cmessage = cmessage(params);

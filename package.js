@@ -4,8 +4,9 @@ Package.describe({
 
 Package.on_use(function (api) {
 	api.use('headers', ['client', 'server']);
+	api.use('handlebars', 'client');
     api.add_files('lib/messageformat.js/messageformat.js', 'client');
     api.add_files(['messageformat.js', 'locale-all.js'], 'client');  
     if (api.export)
-    	api.export('mf', 'client');
+    	api.export(['MessageFormatCache', 'mf'], 'client');
 });

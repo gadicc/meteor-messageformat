@@ -1,0 +1,65 @@
+<head>
+  <title>messageformat</title>
+</head>
+
+<body>
+  {{> main}}
+</body>
+
+<template name="main">
+	<h1>Meteor MessageFormat examples</h1>
+
+	<p>This site is a live example of the various functionalities of the
+		<a href="http://atmosphere.meteor.com/package/messageformat">messageformat</a>
+		smart package.</p>
+
+	<p>The examples below rely purely on Session variables, because they allow for
+		easy demonstration on the client-side.  However, the results from a
+		<code>collection.find()</code> work just as well, and remain reactive.</p>
+
+	<h2>Simple string translation</h2>
+	{{example 'i_am_str' 'I am a string.'}}
+	{{> langButtons}}
+
+	<h2>String with a variable</h2>
+	{{example 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
+	{{> langButtons}}	
+
+	<h2>String with a plural</h2>
+	{{example 'there_are_widgets' 'There {NUM, plural, =0 {are no widgets} one {is one widget} other {are # widgets}}.' NUM=NUM paramOverride=' NUM=getNum' extra='Template.main.getNum = function() { return Session.get("NUM"); }'}}
+	{{> langButtons}}<br />
+	{{> numButton}}
+</template>
+
+<template name="example">
+	<table class="example">
+		<tr><td>Template:</td><td><code>{{#if longMessage}}
+				&#123;&#123;#mf KEY='{{key}}' {{#if paramOverride}}{{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;
+				<div class="indent">{{message}}</div>
+				&#123;&#123;/mf&#125;&#125;
+			{{else}}
+				&#123;&#123;mf '{{key}}' '{{message}}'{{#if paramOverride}}{{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;
+			{{/if}}
+			</code></td></tr>
+		{{#if extra}}<tr><td>JavaScript:</td><td><code>{{extra}}</code></td></tr>{{/if}}
+		<tr><td>Result:</td><td>{{mf key message params}}</td></tr>
+	</table>
+</template>
+
+<template name="langButtons">
+	<button {{#if isLang 'en'}}class="selected" {{/if}}value="en">Session.set('lang', 'en');</button>
+	<button {{#if isLang 'af'}}class="selected" {{/if}}value="af">Session.set('lang', 'af');</button>
+	<button {{#if isLang 'he'}}class="selected" {{/if}}value="he">Session.set('lang', 'he');</button>
+</template>
+
+<template name="numButton">
+	<button value="0">Session.set('NUM', 0);</button>
+	<button value="1">Session.set('NUM', 1);</button>
+	<button value="2">Session.set('NUM', 2);</button>
+	<button value="3">Session.set('NUM', 3);</button>
+	<button value="4">Session.set('NUM', 4);</button>
+</template>
+
+<template name="pluralExample">
+
+</template>
