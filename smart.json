@@ -3,9 +3,9 @@
     "description": "MessageFormat support for Meteor",
     "homepage": "https://github.com/gadicohen/meteor-messageformat",
     "author": "Gadi Cohen <dragon@wastelands.net>",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "git": "https://github.com/gadicohen/meteor-messageformat.git",
 	"packages": {
-		"headers": "0.0.2"
+		"headers": "0.0.8"
 	}
 }
