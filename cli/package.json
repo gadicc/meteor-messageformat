@@ -1,0 +1,32 @@
+{
+  "name": "meteor-messageformat",
+  "version": "0.0.1",
+  "description": "CLI tools for Meteor MessageFormat smart package",
+  "main": "mf_extract.js",
+  "dependencies": {
+    "underscore": "~1.5.2",
+    "walk": "~2.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/gadicohen/meteor-messageformat"
+  },
+  "keywords": [
+    "messageformat",
+    "meteor",
+    "i18n",
+    "translation"
+  ],
+  "bin": {
+    "mf_extract": "mf_extract.js"
+  },
+  "author": "Gadi Cohen",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/gadicohen/meteor-messageformat/issues"
+  }
+}

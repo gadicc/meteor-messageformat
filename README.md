@@ -1,4 +1,6 @@
-**Note, this is an early pre-release.**  You can use it to start building your app, but there is no precompilation or automatic translation building support yet (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
+**Note, this is an early pre-release.**  You can use it to start building your app, but
+there is extraction tool is still quite simple, and there is no code yet to manage
+translations online, etc (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
 
 # MessageFormat for Meteor
 
@@ -140,10 +142,21 @@ There are a lot of other cool things you can do with MessageFormat.  And most im
 
 ## Adding other languages
 
-Again, this is still a work in progress.  In the future, there will be a tool to automatically extract all language keys from your project, mark the ones needing updating, etc.  But for now, you can for example create a `client/trans.js` which looks like this (THIS FORMAT MIGHT CHANGE):
+Again, this is still a work in progress.  Currently there is a very simple tool to extract
+strings from *templates* (block helper and JavaScript coming soon), and no real management tools (for updating translations, etc) -- *yet* (it is planned).  Go to your project root
+dir:
+
+```bash
+sudo npm install -g meteor-messageformat
+mf_extract > client/trans.js
+```
+
+Edit trans.js and copy and paste the block for each language, changing 'en' to the
+desired language code and changing the value of each key.  The output will look like
+this (THE FORMAT MIGHT STILL CHNAGE):
 
 ```js
-    MessageFormatCache.compiled.he = {};
+MessageFormatCache.compiled.he = {};
   MessageFormatCache.strings.he = {
     'Vegan': 'טבעוני',
     'add_new_product': 'הוסף מוצר חדש',
@@ -152,13 +165,14 @@ Again, this is still a work in progress.  In the future, there will be a tool to
     'in_category': 'בתוך',
     'all_categories': 'כל הקטגוריות',
     'edit': 'ערוך',
-        'long': 'אתה {NUM_ADDS, etc...}'
+    'long': 'אתה {NUM_ADDS, etc...}'
   };
 ```
 
 ## TODO
 
-1. Extract all strings from templates to allow for translation and precompilation.
+1. Extract all strings from templates to allow for translation and precompilation (started,
+working simple implementation, but still a work in progress; see above.).
 
 1. It would be nice if *keyname* could be unique *per template*, but currently [there is no way for a template helper to know the name of a calling template](https://github.com/meteor/meteor/issues/658)
 
