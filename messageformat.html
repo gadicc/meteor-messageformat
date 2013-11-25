@@ -1,0 +1,74 @@
+<template name="mfTrans">
+	<h2>{{mf 'mf_site_translations' 'Site Translations'}}</h2>
+	<table class="mfTrans">
+		<tr>
+			<th>Language</th>
+			<th>trans.</th>
+			<th>%</th>
+			<th>fuzzy</th>
+			<th>%</th>
+			<th>untrans</th>
+			<th>%</th>
+			<th>graph</th>
+		</tr>
+		{{#each stats.langs}}
+		<tr>
+			<td><a href="/translate/{{lang}}">{{lang}}</a></td>
+			<td>{{trans}}</td>
+			<td>{{transPercent}}</td>
+			<td>{{fuzzy}}</td>
+			<td>{{fuzzyPercent}}</td>
+			<td>{{untrans}}</td>
+			<td>{{untransPercent}}</td>
+			<td>
+				<div class="mfTransGraph trans" style="{{transWidth}}"></div
+				><div class="mfTransGraph fuzzy" style="{{fuzzyWidth}}"></div
+				><div class="mfTransGraph untrans" style="{{untransWidth}}"></div>
+			</td>
+		</tr>
+		{{/each}}
+	</table>
+
+	<br />
+	<p>
+		<input type="text" id="mfTransNewText" placeholder="New Language" />
+		<input type="submit" id="mfTransNewSubmit" value="Go" />
+	</p>
+
+</template>
+
+<template name="mfTransLang">
+	<div id="mfTransLang">
+
+		<div id="mfTransPreview">
+			<table>
+				<thead>
+					<tr>
+						<th>Original String ({{orig}})</th>
+						<th>Translation ({{trans}})</th>
+					</tr>
+				</thead>
+			</table>
+			{{#isolate}}
+			<div class="tbodyScroll">
+				<table>
+					<tbody>
+					{{#each strings}}
+						<tr data-key="{{key}}" class="{{isCurrent}}">
+							<td>{{orig}}</td>
+							<td>{{trans}}</td>
+						</tr>
+					{{/each}}
+					</tbody>
+				</table>
+			</div>
+			{{/isolate}}
+		</div>
+		<p>Use ctrl-up and ctrl-down to quickly change keys</p>
+		<textarea id="mfTransOrig" readonly>{{mfTransOrig}}</textarea>
+		<textarea id="mfTransDest">{{mfTransTrans}}</textarea>
+
+	<a href="/translate">Back to Translation Summary</a>
+
+	</div>
+</template>

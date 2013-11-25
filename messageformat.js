@@ -1,4 +1,14 @@
-MessageFormatCache = { objects: {}, compiled: { en: {} }, strings: { en: { en: 'English' }}, native: 'en' };
+mfStrings = new Meteor.Collection('mfStrings');
+mfRevisions = new Meteor.Collection('mfRevisions');
+mfMeta = new Meteor.Collection('mfMeta');
+
+MessageFormatCache = {
+    native: 'en',
+    objects: {},
+    compiled: { en: {} },
+    strings: { en: { en: 'English' }},
+    meta: { en: {} }
+};
 
 if (Meteor.isClient) {
 
@@ -39,11 +49,12 @@ if (Meteor.isClient) {
 }
 
 mf = function(key, params, message, locale) {
-    if (!locale)
+    if (!locale && Meteor.isClient)
         locale = Session.get('locale');
     if (!locale) {
         locale = MessageFormatCache.native;
-        Session.set('locale', locale);
+        if (Meteor.isClient)
+            Session.set('locale', locale);
     }
 
     var mf = MessageFormatCache.objects[locale];
@@ -72,3 +83,26 @@ mf = function(key, params, message, locale) {
     
     return cmessage;
 }
+
+MessageFormatPkg = {
+
+    addStrings: function(lang, strings, meta) {
+        var dict = {};
+        _.each(strings, function(string) {
+            dict[string.key] = string.text;
+        });
+
+        if (!MessageFormatCache.compiled[lang])
+            MessageFormatCache.compiled[lang] = {};
+
+        // TODO, merge
+        MessageFormatCache.strings[lang] = dict;
+
+        if (!MessageFormatCache.meta[lang])
+            MessageFormatCache.meta[lang] = meta;
+
+        if (Meteor.isServer)
+            this.serverAddStrings(lang, strings, meta);
+    }
+
+};

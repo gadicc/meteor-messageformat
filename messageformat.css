@@ -1,0 +1,52 @@
+table.mfTrans tr:first-child { background: #ccccee; }
+table.mfTrans tr:nth-child(odd) { background: #ddddff; }
+table.mfTrans tr:nth-child(even) { background: #eeeeee; }
+table.mfTrans tr td,
+table.mfTrans tr th { border: 1px solid black; padding: 5px 10px 5px 10px; }
+table.mfTrans tr th:nth-child(2), table.mfTrans tr th:nth-child(3) { color: #050; }
+table.mfTrans tr th:nth-child(4), table.mfTrans tr th:nth-child(5) { color: #550; }
+table.mfTrans tr th:nth-child(6), table.mfTrans tr th:nth-child(7) { color: #500; }
+
+div.mfTransGraph {
+	display: inline-block; height: 15px; margin: 0px;
+	border-top: 1px solid black; border-bottom: 1px solid black;
+}
+div.mfTransGraph.trans { background: #050; border-left: 1px solid black; }
+div.mfTransGraph.fuzzy { background: #550; }
+div.mfTransGraph.untrans { background: #500; border-right: 1px solid black; }
+
+#mfTransLang {
+	padding: 5px; margin: 5px;
+}
+
+#mfTransPreview .tbodyScroll {
+	overflow: hidden; height: 200px; overflow-y: scroll;
+	border-left: 1px solid black; border-bottom: 1px solid black;
+	position: relative; /* makes jquery scroll stuff easier */
+}
+#mfTransPreview table { width: 500%; table-layout:fixed; border-collapse:separate; background: white; }
+#mfTransPreview table thead tr { background: #ede9e3; }
+#mfTransPreview table thead th { width: 50%; padding: 4px 8px 4px 8px; }
+#mfTransPreview table thead th:first-child {
+	border-left: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black;
+	border-top-left-radius: 5px; 
+}
+#mfTransPreview table thead th:last-child {
+	border-right: 1px solid black; border-top: 1px solid black; border-bottom: 1px solid black;
+	border-top-right-radius: 5px;
+}
+
+#mfTransPreview table tr td {
+	width: 50%; padding: 4px 8px 4px 8px;
+	overflow: hidden; white-space: nowrap;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
+#mfTransPreview table tr:nth-child(even) { background: #f2f2f2; }
+#mfTransPreview table tr.current { background: #5598d7; color: white;}
+
+#mfTransLang textarea {
+	font-family: monospace;
+	height: 4em; width: 100%;
+	margin-top: 5px;
+}
