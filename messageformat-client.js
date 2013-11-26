@@ -19,6 +19,73 @@ function mfCheckScroll(tr) {
 
 }
 
+function saveChange(lang, key, text) {
+	var existing = mfStrings.findOne({
+		lang: lang, key: key
+	});
+	var source = mfStrings.findOne({
+		lang: MessageFormatCache.native, key: key
+	});
+
+	if (!text || (existing && text == existing.text))
+		return;
+
+	var revisionId = mfRevisions.insert({
+		lang: lang,
+		key: key,
+		text: text,
+		ctime: new Date().getTime(),
+		userId: Meteor.userId(),
+		sourceId: source.revisionId
+	});
+
+	if (existing)
+		mfStrings.update(existing._id, { $set: {
+			lang: lang,
+			text: text,
+			mtime: new Date().getTime(),
+			revisionId: revisionId
+		}});
+	else
+		mfStrings.insert({
+			key: key,
+			lang: lang,
+			text: text,
+			ctime: new Date().getTime(),
+			mtime: new Date().getTime(),
+			revisionId: revisionId
+		});
+
+	/*
+	mfStrings.upsert({key: existing && existing._id}, { $set: {
+		lang: lang,
+		text: text,
+		ctime: new Date().getTime(),
+		mtime: new Date().getTime(),
+		revisionId: revisionId
+	}});
+	*/
+}
+
+/*
+ *
+ */
+function changeKey(newKey) {
+	var destLang = Session.get('mfTransTrans');
+	var oldKey = Session.get('mfTransKey');
+	if (oldKey == newKey) return;
+
+	saveChange(destLang, oldKey, $('#mfTransDest').val());
+
+	// Temporary, need to turn off preserve
+	var str = mfStrings.findOne({
+		key: newKey, lang: destLang
+	});
+	$('#mfTransDest').val(str ? str.text : '');	
+
+	Session.set('mfTransKey', newKey);
+	$('#mfTransDest').focus();
+}
 
 Router.map(function() {
 	this.route('mfTrans', {
@@ -36,25 +103,19 @@ Router.map(function() {
 	this.route('mfTransLang', {
 		path: '/translate/:lang',
 		before: function() {
+			// Temporary, only used to override preserve on dest
+			Session.set('mfTransTrans', this.params.lang);
+
 			$(window).on('keydown.mfTrans', function() {
-				if (event.ctrlKey) {
-					if (event.which == 38) {
-						// up arrow
-						var tr = $('#mfTransLang tr.current').prev();
-						if (tr.length) {
-							Session.set('mfTransKey', tr.data('key'));
-							mfCheckScroll(tr);
-							$('#mfTransDest').focus();
-						}
-					} else if (event.which == 40) {
-						// down arrow
-						var tr = $('#mfTransLang tr.current').next();
-						if (tr.length) {
-							Session.set('mfTransKey', tr.data('key'));
-							mfCheckScroll(tr);
-							$('#mfTransDest').focus();
-						} 
-					}
+				if (event.ctrlKey && (event.which == 38 || event.which == 40)) {
+					event.preventDefault(); event.stopPropagation();
+					var tr = event.which == 38
+						? $('#mfTransLang tr.current').prev()
+						: $('#mfTransLang tr.current').next();
+					if (tr.length) {
+						changeKey(tr.data('key'));
+						mfCheckScroll(tr);
+					}					
 				}
 			});
 		},
@@ -94,7 +155,7 @@ Template.mfTransLang.events({
 	'click #mfTransLang tr': function() {
 		var tr = $(event.target).parents('tr');
 		var key = tr.data('key');
-		if (key) Session.set('mfTransKey', key);
+		if (key) changeKey(key);
 	}
 });
 
@@ -122,7 +183,26 @@ Template.mfTransLang.helpers({
 			lang: this.trans
 		});
 		return str ? str.text : '';
+	},
+	keyInfo: function() {
+		var str = mfStrings.findOne({
+			key: Session.get('mfTransKey'),
+			lang: this.orig
+		});
+		if (!str)
+			return '';
+		var out = '<b>' + str.key + '</b>'
+			+ ' in ' + str.file + ':' + str.line;
+		if (str.template) out += ' (template "' + str.template + '")';
+		return new Handlebars.SafeString(out);
 	}
+});
+
+var initialRender = _.once(function() {
+	var key = Session.get('mfTransKey'),
+		tr = $('#mfTransLang tr[data-key="'+key+'"]');
+	$('#mfTransPreview .tbodyScroll').scrollTop(tr.position().top);
+	$('#mfTransDest').focus();
 });
 
 Template.mfTransLang.rendered = function() {
@@ -134,9 +214,7 @@ Template.mfTransLang.rendered = function() {
 		Session.set('mfTransKey', key);
 	}
 
-	tr = $('#mfTransLang tr[data-key="'+key+'"]');
-	$('#mfTransPreview .tbodyScroll').scrollTop(tr.position().top);
-	$('#mfTransDest').focus();
+	initialRender();
 };
 
 MessageFormatPkg.loadLangs();

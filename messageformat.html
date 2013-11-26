@@ -31,7 +31,8 @@
 
 	<br />
 	<p>
-		<input type="text" id="mfTransNewText" placeholder="New Language" />
+		New language:
+		<input type="text" id="mfTransNewText" placeholder="fr, en_GB, etc" />
 		<input type="submit" id="mfTransNewSubmit" value="Go" />
 	</p>
 
@@ -65,10 +66,13 @@
 			{{/isolate}}
 		</div>
 		<p>Use ctrl-up and ctrl-down to quickly change keys</p>
+		<span>{{keyInfo}}</span><br />
 		<textarea id="mfTransOrig" readonly>{{mfTransOrig}}</textarea>
 		<textarea id="mfTransDest">{{mfTransTrans}}</textarea>
 
-	<a href="/translate">Back to Translation Summary</a>
+	<p>
+		<a href="/translate">Back to Translation Summary</a>
+	</p>
 
 	</div>
 </template>

@@ -1,7 +1,7 @@
 MessageFormatPkg.serverAddStrings = function(lang, strings, meta) {
 
 	/*
-	 * Part 1/2: See if any of our extracted strings are newer than their copy in
+	 * See if any of our extracted strings are newer than their copy in
 	 * the database and update them accordingly
 	 */
 
@@ -30,27 +30,15 @@ MessageFormatPkg.serverAddStrings = function(lang, strings, meta) {
 			text: str.text,
 			ctime: str.ctime,
 			mtime: str.mtime,
+			file: str.file,
+			line: str.line,
+			template: str.template,
+			removed: str.removed,
 			revisionId: revisionId
 		}});
 	}
 
 	mfStrings.upsert({key: '__mfLastSync'}, {$set: {text: new Date().getTime() } });
-
-
-	/*
-	 * Part 2/2: Observe additions/changes from after our last extract time, and
-	 * update the local cache accordingly
-	 */
-
-	mfStrings.find({mtime: {$gt: meta.extractedAt}}).observe({
-		added: function(doc) {
-			MessageFormatCache.strings[doc.lang][doc.key] = doc.string;
-		}, changed: function(doc) {
-			MessageFormatCache.strings[doc.lang][doc.key] = doc.string;
-			if (MessageFormatCache.compiled[doc.lang][doc.key])
-				delete MessageFormatCache.compiled[doc.lang][doc.key];
-		}
-	});
 }
 
 Meteor.methods({
@@ -81,6 +69,7 @@ Meteor.publish('mfRevisions', function(lang, limit) {
 	return mfRevisions.find(query, options);
 });
 
+// TODO, make reactive
 Meteor.publish('mfStats', function() {
 	var totals = { };
 	var langs = _.keys(MessageFormatCache.strings);
@@ -101,9 +90,9 @@ Meteor.publish('mfStats', function() {
 		};
 
 		totals[lang].untrans = total - totals[lang].trans - totals[lang].fuzzy;
-		totals[lang].transPercent = Math.floor(totals[lang].trans / total * 100);
-		totals[lang].fuzzyPercent = Math.floor(totals[lang].fuzzy / total * 100);
-		totals[lang].untransPercent = Math.floor(totals[lang].untrans / total * 100);
+		totals[lang].transPercent = Math.round(totals[lang].trans / total * 100);
+		totals[lang].fuzzyPercent = Math.round(totals[lang].fuzzy / total * 100);
+		totals[lang].untransPercent = Math.round(totals[lang].untrans / total * 100);
 
 		totals[lang].transWidth = 'width: ' + (2 * totals[lang].transPercent) + 'px';
 		totals[lang].fuzzyWidth = 'width: ' + (2 * totals[lang].fuzzyPercent) + 'px';

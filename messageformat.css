@@ -11,9 +11,9 @@ div.mfTransGraph {
 	display: inline-block; height: 15px; margin: 0px;
 	border-top: 1px solid black; border-bottom: 1px solid black;
 }
-div.mfTransGraph.trans { background: #050; border-left: 1px solid black; }
-div.mfTransGraph.fuzzy { background: #550; }
-div.mfTransGraph.untrans { background: #500; border-right: 1px solid black; }
+div.mfTransGraph.trans { background: #080; border-left: 1px solid black; }
+div.mfTransGraph.fuzzy { background: #880; }
+div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 
 #mfTransLang {
 	padding: 5px; margin: 5px;
@@ -47,6 +47,6 @@ div.mfTransGraph.untrans { background: #500; border-right: 1px solid black; }
 
 #mfTransLang textarea {
 	font-family: monospace;
-	height: 4em; width: 100%;
+	height: 5em; width: 100%;
 	margin-top: 5px;
 }

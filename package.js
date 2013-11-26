@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Package.on_use(function (api) {
-	api.use('headers', ['client', 'server']);
+	api.use(['headers', 'underscore'], ['client', 'server']);
 	api.use(['handlebars', 'templating', 'iron-router'], 'client');
 	api.add_files('lib/messageformat.js/messageformat.js', ['client', 'server']);
 	api.add_files(['messageformat.js', 'locale-all.js'], ['client', 'server']);  

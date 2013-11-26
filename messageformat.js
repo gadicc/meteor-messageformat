@@ -86,6 +86,8 @@ mf = function(key, params, message, locale) {
 
 MessageFormatPkg = {
 
+    currentObserveMtime: 0,
+
     addStrings: function(lang, strings, meta) {
         var dict = {};
         _.each(strings, function(string) {
@@ -103,6 +105,25 @@ MessageFormatPkg = {
 
         if (Meteor.isServer)
             this.serverAddStrings(lang, strings, meta);
-    }
 
+        this.observeFrom(meta.extractedAt);
+    },
+
+    /*
+     * Observe additions/changes from after our last extract time, and
+     * update the local cache accordingly
+     */
+    observeFrom: function(mtime) {
+        mfStrings.find({mtime: {$gt: mtime}}).observe({
+            added: function(doc) {
+                if (!MessageFormatCache.strings[doc.lang])
+                    MessageFormatCache.strings[doc.lang] = {};
+                MessageFormatCache.strings[doc.lang][doc.key] = doc.text;
+            }, changed: function(doc) {
+                MessageFormatCache.strings[doc.lang][doc.key] = doc.text;
+                if (MessageFormatCache.compiled[doc.lang][doc.key])
+                    delete MessageFormatCache.compiled[doc.lang][doc.key];
+            }
+        });
+    }
 };
