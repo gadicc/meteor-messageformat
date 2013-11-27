@@ -138,8 +138,10 @@ Meteor.publish('mfStats', function() {
 				self.changed('mfMeta', '__stats', mfStats());
 		},
 		changed: function() {
-			console.log('changed');
 			self.changed('mfMeta', '__stats', mfStats());
+		},
+		removed: function() {
+			self.changed('mfMeta', '__stats', mfStats());			
 		}
 	});
 
@@ -149,5 +151,24 @@ Meteor.publish('mfStats', function() {
 
 	self.onStop(function () {
 		handle.stop();
+	});
+});
+
+Router.map(function() {
+	this.route('mfTransExport', {
+		path: '/translate/export',
+		where: 'server',
+		action: function() {
+			var out = '';
+			for (lang in MessageFormatCache.strings) {
+				if (lang == MessageFormatCache.native)
+					continue;
+				out += 'MessageFormatPkg.addStrings("'+lang+'",'
+					+ JSON.stringify(MessageFormatCache.strings[lang], null, 2)
+					+ ', { exportedAt: ' + new Date().getTime() + '});\n'
+			}
+			this.response.writeHead(200, {'Content-Type': 'application/javascript'});
+			this.response.end(out, 'utf8');
+		}
 	});
 });

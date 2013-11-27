@@ -136,14 +136,6 @@ Router.map(function() {
 		}
 	});
 
-	this.route('mfTransExport', {
-		path: '/translate/export',
-		data: function() {
-			var data = {};
-			return data;
-		}
-	});
-
 	// Modify translations for a particular language
 	this.route('mfTransLang', {
 		path: '/translate/:lang',

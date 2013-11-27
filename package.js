@@ -4,7 +4,12 @@ Package.describe({
 
 Package.on_use(function (api) {
 	api.use(['headers', 'underscore'], ['client', 'server']);
-	api.use(['handlebars', 'templating', 'iron-router'], 'client');
+	api.use(['handlebars', 'templating'], 'client');
+
+	// Iron Router will be required until Issue #1358 is fixed
+	// For now we're kind of coding like it's required
+	api.use('iron-router', ['client', 'server']);
+
 	api.add_files('lib/messageformat.js/messageformat.js', ['client', 'server']);
 	api.add_files(['messageformat.js', 'locale-all.js'], ['client', 'server']);  
 	api.add_files('messageformat-server.js', 'server');

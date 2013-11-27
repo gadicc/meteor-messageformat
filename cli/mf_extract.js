@@ -69,7 +69,6 @@ walker.on('end', function() {
 	}
 
     serverStrings(strings);
-    clientStrings(strings);
 });
 
 function attrDict(string) {

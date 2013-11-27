@@ -101,11 +101,11 @@ MessageFormatPkg = {
                 if (!MessageFormatCache.compiled[doc.lang])
                     MessageFormatCache.compiled[doc.lang] = {};
                 MessageFormatCache.strings[doc.lang][doc.key]
-                    = doc.text || doc;  // store full doc on server
+                    = Meteor.isClient ? doc.text : doc;
             }, changed: function(doc) {
 //                console.log('changed ' + doc.key + ' ' + doc.text);
                 MessageFormatCache.strings[doc.lang][doc.key]
-                    = doc.text || doc;  // store full doc on server
+                    = Meteor.isClient ? doc.text : doc;
                 if (MessageFormatCache.compiled[doc.lang][doc.key])
                     delete MessageFormatCache.compiled[doc.lang][doc.key];
             }
