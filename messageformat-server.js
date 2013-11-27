@@ -1,4 +1,13 @@
-MessageFormatPkg.serverAddStrings = function(lang, strings, meta) {
+MessageFormatPkg.addStrings = function(lang, strings, meta) {
+
+    if (!MessageFormatCache.compiled[lang])
+        MessageFormatCache.compiled[lang] = {};
+
+    // TODO, merge
+    MessageFormatCache.strings[lang] = strings;
+
+    if (!MessageFormatCache.meta[lang])
+        MessageFormatCache.meta[lang] = meta;
 
 	/*
 	 * See if any of our extracted strings are newer than their copy in
@@ -38,24 +47,40 @@ MessageFormatPkg.serverAddStrings = function(lang, strings, meta) {
 		}});
 	}
 
-	mfStrings.upsert({key: '__mfLastSync'}, {$set: {text: new Date().getTime() } });
+	this.lastSync = new Date().getTime();
+	mfStrings.upsert({key: '__mfLastSync'}, {$set: {text: this.lastSync } });
+
+	// Continually watch database for any changes newer than last extraction
+    this.observeFrom(meta.extractedAt);
 }
 
 Meteor.methods({
 	mfLoadLangs: function() {
-		return MessageFormatCache.strings;
+		var strings = {};
+		for (lang in MessageFormatCache.strings) {
+			// TODO, skip unwanted langs
+			strings[lang] = {};
+			for (key in MessageFormatCache.strings[lang])
+				strings[lang][key] = MessageFormatCache.strings[lang][key].text;
+		}
+		return {
+			strings: strings,
+			lastSync: MessageFormatPkg.lastSync
+		}
 	}
 });
 
-Meteor.publish('mfStrings', function(lang, after) {
-	var query = {};
+Meteor.publish('mfStrings', function(lang, after, fullInfo) {
+	var query = {}, options = {};
 	if (_.isArray(lang))
 		query.lang = {$in: lang};
 	else if (lang)
 		query.lang = lang == 'native' ? MessageFormatCache.native : lang;
 	if (after)
 		query.mtime = {$gt: after};
-	return mfStrings.find(query);
+	if (!fullInfo)
+		options.fields = { key: 1, lang: 1, text: 1 };
+	return mfStrings.find(query, options);
 });
 
 Meteor.publish('mfRevisions', function(lang, limit) {
@@ -69,14 +94,15 @@ Meteor.publish('mfRevisions', function(lang, limit) {
 	return mfRevisions.find(query, options);
 });
 
-// TODO, make reactive
-Meteor.publish('mfStats', function() {
+function mfStats() {
 	var totals = { };
-	var langs = _.keys(MessageFormatCache.strings);
-	var native = langs[0];
-	var total = Object.keys(MessageFormatCache.strings[native]).length;
+	var nativeLang = MessageFormatCache.native;
+	var total = Object.keys(MessageFormatCache.strings[nativeLang]).length;
 
-	_.each(langs, function(lang) {
+	for (lang in MessageFormatCache.strings) {
+		if (lang == nativeLang)
+			continue;
+
 		totals[lang] = {
 			lang: lang,
 
@@ -97,8 +123,31 @@ Meteor.publish('mfStats', function() {
 		totals[lang].transWidth = 'width: ' + (2 * totals[lang].transPercent) + 'px';
 		totals[lang].fuzzyWidth = 'width: ' + (2 * totals[lang].fuzzyPercent) + 'px';
 		totals[lang].untransWidth = 'width: ' + (2 * totals[lang].untransPercent) + 'px';
+	}
+
+	return { total: total, langs: _.values(totals) };
+}
+
+// TODO, can/should optimize this to just update correct counts
+Meteor.publish('mfStats', function() {
+	var self = this;
+	var initializing = true;
+	var handle = mfStrings.find().observe({
+		added: function() {
+			if (!initializing)
+				self.changed('mfMeta', '__stats', mfStats());
+		},
+		changed: function() {
+			console.log('changed');
+			self.changed('mfMeta', '__stats', mfStats());
+		}
 	});
 
-	this.added('mfMeta', '__stats', { langs: _.values(totals) });
-	this.ready();
+	initializing = false;
+	self.added('mfMeta', '__stats', mfStats());
+	self.ready();
+
+	self.onStop(function () {
+		handle.stop();
+	});
 });

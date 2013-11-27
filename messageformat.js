@@ -88,27 +88,6 @@ MessageFormatPkg = {
 
     currentObserveMtime: 0,
 
-    addStrings: function(lang, strings, meta) {
-        var dict = {};
-        _.each(strings, function(string) {
-            dict[string.key] = string.text;
-        });
-
-        if (!MessageFormatCache.compiled[lang])
-            MessageFormatCache.compiled[lang] = {};
-
-        // TODO, merge
-        MessageFormatCache.strings[lang] = dict;
-
-        if (!MessageFormatCache.meta[lang])
-            MessageFormatCache.meta[lang] = meta;
-
-        if (Meteor.isServer)
-            this.serverAddStrings(lang, strings, meta);
-
-        this.observeFrom(meta.extractedAt);
-    },
-
     /*
      * Observe additions/changes from after our last extract time, and
      * update the local cache accordingly
@@ -116,14 +95,23 @@ MessageFormatPkg = {
     observeFrom: function(mtime) {
         mfStrings.find({mtime: {$gt: mtime}}).observe({
             added: function(doc) {
+//                console.log('added ' + doc.key + ' ' + doc.text);
                 if (!MessageFormatCache.strings[doc.lang])
                     MessageFormatCache.strings[doc.lang] = {};
-                MessageFormatCache.strings[doc.lang][doc.key] = doc.text;
+                if (!MessageFormatCache.compiled[doc.lang])
+                    MessageFormatCache.compiled[doc.lang] = {};
+                MessageFormatCache.strings[doc.lang][doc.key]
+                    = doc.text || doc;  // store full doc on server
             }, changed: function(doc) {
-                MessageFormatCache.strings[doc.lang][doc.key] = doc.text;
+//                console.log('changed ' + doc.key + ' ' + doc.text);
+                MessageFormatCache.strings[doc.lang][doc.key]
+                    = doc.text || doc;  // store full doc on server
                 if (MessageFormatCache.compiled[doc.lang][doc.key])
                     delete MessageFormatCache.compiled[doc.lang][doc.key];
             }
         });
     }
 };
+
+/* todo,
+record observeFrom cursor on client, use for reactrivity */

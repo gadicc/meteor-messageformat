@@ -1,5 +1,7 @@
 <template name="mfTrans">
 	<h2>{{mf 'mf_site_translations' 'Site Translations'}}</h2>
+	<p>Native language: <b>{{native}}</b> ({{stats.total}} strings)</p>
+
 	<table class="mfTrans">
 		<tr>
 			<th>Language</th>
@@ -70,9 +72,17 @@
 		<textarea id="mfTransOrig" readonly>{{mfTransOrig}}</textarea>
 		<textarea id="mfTransDest">{{mfTransTrans}}</textarea>
 
+	<br /><br />
 	<p>
 		<a href="/translate">Back to Translation Summary</a>
+		| <a href="/translate/export">Export server/mfStrings.js</a>
 	</p>
 
 	</div>
+</template>
+
+<template name="mfTransExport">
+{{#each lang}}
+MessageFormatPkg.addStrings("{{name}}", {{strings}}, {{meta}});
+{{/each}}
 </template>
