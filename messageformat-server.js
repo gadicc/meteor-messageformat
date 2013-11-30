@@ -1,20 +1,20 @@
-MessageFormatPkg.addStrings = function(lang, strings, meta) {
+mfPkg.addStrings = function(lang, strings, meta) {
 
-    if (!MessageFormatCache.compiled[lang])
-        MessageFormatCache.compiled[lang] = {};
+    if (!mfPkg.compiled[lang])
+        mfPkg.compiled[lang] = {};
 
     // TODO, merge
-    MessageFormatCache.strings[lang] = strings;
+    mfPkg.strings[lang] = strings;
 
-    if (!MessageFormatCache.meta[lang])
-        MessageFormatCache.meta[lang] = meta;
+    if (!mfPkg.meta[lang])
+        mfPkg.meta[lang] = meta;
 
 	/*
 	 * See if any of our extracted strings are newer than their copy in
 	 * the database and update them accordingly
 	 */
 
-	var lastSync = mfStrings.findOne({key: '__mfLastSync'});
+	var lastSync = this.mfStrings.findOne({key: '__mfLastSync'});
 	if (!lastSync) {
 		lastSync = { text: 0 };
 	}
@@ -27,14 +27,14 @@ MessageFormatPkg.addStrings = function(lang, strings, meta) {
 		if ((str.mtime || str.ctime) <= lastSync.text)
 			continue;
 
-		revisionId = mfRevisions.insert({
+		revisionId = this.mfRevisions.insert({
 			lang: lang,
 			key: key,
 			text: str.text,
 			ctime: str.ctime,
 		});
 
-		mfStrings.upsert({key: key}, { $set: {
+		this.mfStrings.upsert({key: key}, { $set: {
 			lang: lang,
 			text: str.text,
 			ctime: str.ctime,
@@ -48,24 +48,25 @@ MessageFormatPkg.addStrings = function(lang, strings, meta) {
 	}
 
 	this.lastSync = new Date().getTime();
-	mfStrings.upsert({key: '__mfLastSync'}, {$set: {text: this.lastSync } });
+	this.mfStrings.upsert({key: '__mfLastSync'}, {$set: {text: this.lastSync } });
 
 	// Continually watch database for any changes newer than last extraction
     this.observeFrom(meta.extractedAt);
 }
 
 Meteor.methods({
-	mfLoadLangs: function() {
+	mfLoadLangs: function(reqLang) {
 		var strings = {};
-		for (lang in MessageFormatCache.strings) {
-			// TODO, skip unwanted langs
+		for (lang in mfPkg.strings) {
+			if (reqLang && reqLang != lang)
+				continue;
 			strings[lang] = {};
-			for (key in MessageFormatCache.strings[lang])
-				strings[lang][key] = MessageFormatCache.strings[lang][key].text;
+			for (key in mfPkg.strings[lang])
+				strings[lang][key] = mfPkg.strings[lang][key].text;
 		}
 		return {
 			strings: strings,
-			lastSync: MessageFormatPkg.lastSync
+			lastSync: mfPkg.lastSync
 		}
 	}
 });
@@ -75,12 +76,12 @@ Meteor.publish('mfStrings', function(lang, after, fullInfo) {
 	if (_.isArray(lang))
 		query.lang = {$in: lang};
 	else if (lang)
-		query.lang = lang == 'native' ? MessageFormatCache.native : lang;
+		query.lang = lang == 'native' ? mfPkg.native : lang;
 	if (after)
 		query.mtime = {$gt: after};
 	if (!fullInfo)
 		options.fields = { key: 1, lang: 1, text: 1 };
-	return mfStrings.find(query, options);
+	return mfPkg.mfStrings.find(query, options);
 });
 
 Meteor.publish('mfRevisions', function(lang, limit) {
@@ -88,29 +89,29 @@ Meteor.publish('mfRevisions', function(lang, limit) {
 	if (_.isArray(lang))
 		query.lang = {$in: lang};
 	else if (lang)
-		query.lang = lang == 'native' ? MessageFormatCache.native : lang;
+		query.lang = lang == 'native' ? mfPkg.native : lang;
 	if (limit)
 		options.limit = limit;
-	return mfRevisions.find(query, options);
+	return mfPkg.mfRevisions.find(query, options);
 });
 
 function mfStats() {
 	var totals = { };
-	var nativeLang = MessageFormatCache.native;
-	var total = Object.keys(MessageFormatCache.strings[nativeLang]).length;
+	var nativeLang = mfPkg.native;
+	var total = Object.keys(mfPkg.strings[nativeLang]).length;
 
-	for (lang in MessageFormatCache.strings) {
+	for (lang in mfPkg.strings) {
 		if (lang == nativeLang)
 			continue;
 
 		totals[lang] = {
 			lang: lang,
 
-			trans: mfStrings.find({
+			trans: mfPkg.mfStrings.find({
 				lang: lang, removed: {$exists: false}, fuzzy: {$exists: false}
 				}).count(),
 
-			fuzzy: mfStrings.find({
+			fuzzy: mfPkg.mfStrings.find({
 				lang: lang, removed: {$exists: false}, fuzzy: true
 				}).count()
 		};
@@ -132,7 +133,7 @@ function mfStats() {
 Meteor.publish('mfStats', function() {
 	var self = this;
 	var initializing = true;
-	var handle = mfStrings.find().observe({
+	var handle = mfPkg.mfStrings.find().observe({
 		added: function() {
 			if (!initializing)
 				self.changed('mfMeta', '__stats', mfStats());
@@ -160,11 +161,11 @@ Router.map(function() {
 		where: 'server',
 		action: function() {
 			var out = '';
-			for (lang in MessageFormatCache.strings) {
-				if (lang == MessageFormatCache.native)
+			for (lang in mfPkg.strings) {
+				if (lang == mfPkg.native)
 					continue;
-				out += 'MessageFormatPkg.addStrings("'+lang+'",'
-					+ JSON.stringify(MessageFormatCache.strings[lang], null, 2)
+				out += 'mfPkg.addStrings("'+lang+'",'
+					+ JSON.stringify(mfPkg.strings[lang], null, 2)
 					+ ', { exportedAt: ' + new Date().getTime() + '});\n'
 			}
 			this.response.writeHead(200, {'Content-Type': 'application/javascript'});

@@ -4,7 +4,7 @@ Package.describe({
 
 Package.on_use(function (api) {
 	api.use(['headers', 'underscore'], ['client', 'server']);
-	api.use(['handlebars', 'templating'], 'client');
+	api.use(['handlebars', 'templating', 'session', 'deps'], 'client');
 
 	// Iron Router will be required until Issue #1358 is fixed
 	// For now we're kind of coding like it's required
@@ -15,5 +15,5 @@ Package.on_use(function (api) {
 	api.add_files('messageformat-server.js', 'server');
 	api.add_files(['messageformat.html', 'messageformat-client.js', 'messageformat.css'], 'client');
 	if (api.export)
-		api.export(['mf', 'MessageFormatPkg', 'MessageFormatCache', 'mfStrings', 'mvRevisions', 'mfMeta'], ['client', 'server']);
+		api.export(['mfPkg', 'mf'], ['client', 'server']);
 });

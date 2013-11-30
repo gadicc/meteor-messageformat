@@ -25,8 +25,8 @@ MessageFormatPkg = {
     }
 };
 
-if (fs.existsSync('server/mfStrings.js'))
-	eval(fs.readFileSync('server/mfStrings.js').toString());
+if (fs.existsSync('server/mfExtracts.js'))
+	eval(fs.readFileSync('server/mfExtracts.js').toString());
 
 var walker  = walk.walk('.', { followLinks: false });
 
@@ -116,11 +116,11 @@ function serverStrings(strings) {
 	var xlsInfo = { extractedAt: new Date().getTime() };
 
 	var lang = 'en';
-	var out = 'MessageFormatPkg.addStrings("' + lang + '",\n'
+	var out = 'mfPkg.addStrings("' + lang + '",\n'
 			+ JSON.stringify(strings, null, 2) + ', \n'
 			+ JSON.stringify(xlsInfo, null, 2) + ');\n';
 
-	fs.writeFile("server/mfStrings.js", out);
+	fs.writeFile("server/mfExtracts.js", out);
 }
 
 /*

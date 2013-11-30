@@ -1,25 +1,121 @@
 /*
+
+TODO
+
+* Since mfPkg is always up to date, use it instead of db queries,
+  just have a Session var track when it's updated to selectively allow for
+  reactivity (in trans stuff)
+
+* Revisions, show diff
+* Mark stuff as fuzzy or invalid depending on how big the change is
+
+* sendNative stuff
+* ready() function for loadlang, sub.  XXX
+
+*/
+
+
+
+/*
+ * On user connect, honor their language preferences if no Session var
+ * already set
+ */
+headers.ready(function() {
+    var lang, acceptLangs;
+    if (Session.get('lang') || !headers.get['accept-language'])
+        return;
+
+    acceptLangs = headers.get['accept-language'].split(',');
+    for (var i=0; i < acceptLangs.length; i++) {
+        lang = acceptLangs[i].split(';')[0];
+        if (mfPkg.strings[lang]) {
+            Session.set('locale', lang);
+            break;
+        }
+    }
+});
+
+
+/*
+ * Main Handlebars regular helper / block helper, calls mf() with correct
+ * parameters.  On the client, mf() honors the Session locale if none is
+ * manually specified here (see messageformat.js), making this a reactive
+ * data source.
+ */
+Handlebars.registerHelper('mf', function(key, message, params) {
+    if (typeof key == "function") {
+        // if called as a block helper
+        message = key.fn(this);
+        params = key.hash;
+        key = params.KEY;
+    } else {
+        message = params ? message : null;
+        params = params ? params.hash : {};
+    }
+
+    // Ideally we would like to automatically make available the entire template context.
+    // Unfortunately, global helpers don't have access to it :(
+
+    // XXX TODO think about this.  Allows for <a href="...">strings</a>.
+    return new Handlebars.SafeString(mf(key, params, message, params ? params.LOCALE : null));
+});
+
+/*
  * Send initial lang data to client, more efficiently than through a
  * collection publish
  */
-MessageFormatPkg.loadLangs = function() {
-	Meteor.call('mfLoadLangs', function(error, data) {
+mfPkg.lastSync = {};
+mfPkg.loadLangs = function(reqLang, callback) {
+	console.log('called loadlang ' + reqLang);
+	Meteor.call('mfLoadLangs', reqLang, function(error, data) {
 		if (error)
 			throw new Error(error);
 
-		MessageFormatCache.strings = data.strings;
+		console.log('data received');
+		console.log(data);
+
 		for (lang in data.strings) {
-			MessageFormatCache.compiled[lang] = {};
+			mfPkg.strings[lang] = data.strings[lang];
+			mfPkg.compiled[lang] = {};  // reset if exists
 		}
 
-		MessageFormatPkg.serverLastSync = data.lastSync;
-		MessageFormatPkg.observeFrom(data.lastSync);
-
-		// XXX, if not 'all', change per session variable
-		MessageFormatPkg.mfStringsSub
-			= Meteor.subscribe('mfStrings', 'all', data.lastSync, false);
+		mfPkg.lastSync[reqLang || 'all'] = data.lastSync;
+		if (callback)
+			callback();
 	});
 };
+
+function updateSubs() {
+	console.log('updateSubs');
+	/*
+	 * If we change languages, we'll still have all the lang data in mfPkg, we
+	 * just stop getting updates for that language.  If we change back, we'll
+	 * get all the updates since our last sync for that lang.
+	 */
+	var locale = Session.get('locale');
+	mfPkg.observeFrom(mfPkg.lastSync[locale]);
+	if (mfPkg.mfStringsSub)
+		mfPkg.mfStringsSub.stop();	
+	mfPkg.mfStringsSub
+		= Meteor.subscribe('mfStrings', locale,
+			mfPkg.lastSync[locale], false);
+}
+
+Deps.autorun(function() {
+	var locale = Session.get('locale') || mfPkg.native;
+
+	/* todo, load policies.
+	 * don't load native
+	 * option to load all, current, list
+	 */
+
+	// If we requested the lang previously, or requesting native lang,
+	// don't retrieve the strings [again], just update the subscription
+	if (mfPkg.strings[locale] || (!mfPkg.sendNative && locale == mfPkg.native))
+		updateSubs();
+	else
+		mfPkg.loadLangs(locale, updateSubs);
+});
 
 /*
  * Finds the name of the first route using the given template
@@ -53,17 +149,17 @@ function mfCheckScroll(tr) {
  * consider refactoring as a Method
  */
 function saveChange(lang, key, text) {
-	var existing = mfStrings.findOne({
+	var existing = mfPkg.mfStrings.findOne({
 		lang: lang, key: key
 	});
-	var source = mfStrings.findOne({
-		lang: MessageFormatCache.native, key: key
+	var source = mfPkg.mfStrings.findOne({
+		lang: mfPkg.native, key: key
 	});
 
 	if (!text || (existing && text == existing.text))
 		return;
 
-	var revisionId = mfRevisions.insert({
+	var revisionId = mfPkg.mfRevisions.insert({
 		lang: lang,
 		key: key,
 		text: text,
@@ -73,14 +169,14 @@ function saveChange(lang, key, text) {
 	});
 
 	if (existing)
-		mfStrings.update(existing._id, { $set: {
+		mfPkg.mfStrings.update(existing._id, { $set: {
 			lang: lang,
 			text: text,
 			mtime: new Date().getTime(),
 			revisionId: revisionId
 		}});
 	else
-		mfStrings.insert({
+		mfPkg.mfStrings.insert({
 			key: key,
 			lang: lang,
 			text: text,
@@ -111,7 +207,7 @@ function changeKey(newKey) {
 	saveChange(destLang, oldKey, $('#mfTransDest').val());
 
 	// Temporary, need to turn off preserve
-	var str = mfStrings.findOne({
+	var str = mfPkg.mfStrings.findOne({
 		key: newKey, lang: destLang
 	});
 	$('#mfTransDest').val(str ? str.text : '');	
@@ -129,9 +225,9 @@ Router.map(function() {
 		},
 		data: function() {
 			var data = {};
-			data.strings = mfStrings.find();
-			data.stats = mfMeta.findOne({_id: '__stats'});
-			data.native = MessageFormatCache.native;
+			data.strings = mfPkg.mfStrings.find();
+			data.stats = mfPkg.mfMeta.findOne({_id: '__stats'});
+			data.native = mfPkg.native;
 			return data;
 		}
 	});
@@ -160,7 +256,7 @@ Router.map(function() {
 			// Note, this is in ADDITION to the regular mfStrings sub
 			// TODO, cancel on unload
 			Meteor.subscribe('mfStrings',
-				[MessageFormatCache.native, this.params.lang], 0, true);
+				[mfPkg.native, this.params.lang], 0, true);
 
 			this.subscribe('mfRevisions', this.params.lang, 10);
 		},
@@ -170,11 +266,11 @@ Router.map(function() {
 		data: function() {
 			var data = { strings: {} };
 			var strings, out = {};
-			data.orig = MessageFormatCache.native;
+			data.orig = mfPkg.native;
 			data.trans = this.params.lang;
 
 			// summarise matching keys (orig + trans) to a single record
-			strings = mfStrings.find({
+			strings = mfPkg.mfStrings.find({
 				$or: [{lang: data.orig}, {lang: this.params.lang}]
 			}).fetch();
 			_.each(strings, function(str) {
@@ -218,21 +314,21 @@ Template.mfTransLang.helpers({
 			return 'current';
 	},
 	mfTransOrig: function() {
-		var str = mfStrings.findOne({
+		var str = mfPkg.mfStrings.findOne({
 			key: Session.get('mfTransKey'),
 			lang: this.orig
 		});
 		return str ? str.text : '';
 	},
 	mfTransTrans: function() {
-		var str = mfStrings.findOne({
+		var str = mfPkg.mfStrings.findOne({
 			key: Session.get('mfTransKey'),
 			lang: this.trans
 		});
 		return str ? str.text : '';
 	},
 	keyInfo: function() {
-		var str = mfStrings.findOne({
+		var str = mfPkg.mfStrings.findOne({
 			key: Session.get('mfTransKey'),
 			lang: this.orig
 		});
@@ -272,24 +368,3 @@ Template.mfTransLang.rendered = function() {
 
 	initialRender();
 };
-
-/* todo, load policies.
- * don't load native
- * option to load all, current, list
- */
-MessageFormatPkg.loadLangs();
-
-/*
-
-TODO
-
-* Since MessageFormatCache is always up to date, use it instead of db queries,
-  just have a Session var track when it's updated to selectively allow for
-  reactivity
-
-* Pub/sub only required string data
-
-* Revisions, show diff
-* Mark stuff as fuzzy or invalid depending on how big the change is
-
-*/
