@@ -1,6 +1,7 @@
-**Note, this is an early pre-release.**  You can use it to start building your app, but
-there is extraction tool is still quite simple, and there is no code yet to manage
-translations online, etc (but you won't have to change any of your code once it becomes available).  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
+**Note, this is a preview release.**  The primary MessageFormat use is pretty solid
+(use of mf template and function), but the translation system is in an early phase
+and is not intended for use in production.  Note, no further API changes
+are expected.  **If anyone else is using this, let me know**, right now I'm developing on the assumption that I'm the only one using this, with no pressure :)
 
 # MessageFormat for Meteor
 
@@ -142,8 +143,8 @@ There are a lot of other cool things you can do with MessageFormat.  And most im
 
 ## Adding other languages
 
-Again, this is still a work in progress.  Currently there is a very simple tool to extract
-strings from *templates* (block helper and JavaScript coming soon), and no real management tools (for updating translations, etc) -- *yet* (it is planned).  Go to your project root
+Again, this is still a work in progress.  Currently there is a tool to extact strings
+from *templates* (JavaScript coming soon), and early management for translations. Go to your project root
 dir:
 
 ```bash
@@ -151,34 +152,18 @@ sudo npm install -g meteor-messageformat
 mf_extract > client/trans.js
 ```
 
-Edit trans.js and copy and paste the block for each language, changing 'en' to the
-desired language code and changing the value of each key.  The output will look like
-this (THE FORMAT MIGHT STILL CHNAGE):
-
-```js
-MessageFormatCache.compiled.he = {};
-  MessageFormatCache.strings.he = {
-    'Vegan': 'טבעוני',
-    'add_new_product': 'הוסף מוצר חדש',
-    'edit_ingredients': 'ערוך רשימת הרכיבים',
-    'Everything': 'הכל',
-    'in_category': 'בתוך',
-    'all_categories': 'כל הקטגוריות',
-    'edit': 'ערוך',
-    'long': 'אתה {NUM_ADDS, etc...}'
-  };
-```
+Manage translations at /translate in your app (security/authentication coming soon).
 
 ## TODO
 
-1. Extract all strings from templates to allow for translation and precompilation (started,
-working simple implementation, but still a work in progress; see above.).
+1. ~~Extract all strings from templates to allow for translation~~ DONE (TODO, consider
+precompilation options)
 
 1. It would be nice if *keyname* could be unique *per template*, but currently [there is no way for a template helper to know the name of a calling template](https://github.com/meteor/meteor/issues/658)
 
-1. Longer term: Allow additional languages to be loaded *as needed*, and reactively rerender all dependencies once it's available.
+1. ~~Longer term: Allow additional languages to be loaded *as needed*, and reactively rerender all dependencies once it's available.~~ DONE
 
-1. Longest term: create a system to allow for string building and translation online (also in MessageFormat.js' TODO)
+1. ~~Longest term: create a system to allow for string building and translation online (also in MessageFormat.js' TODO)~~ STARTED, early release
 
 ## Differences to the original MessageFormat.js by Alex Sexton
 

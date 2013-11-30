@@ -1,3 +1,7 @@
+/*
+ * Used to import mfExtracts.js and mfTrans.js
+ * Load each string and update the database if necessary
+ */
 mfPkg.addStrings = function(lang, strings, meta) {
 
     if (!mfPkg.compiled[lang])
@@ -55,6 +59,7 @@ mfPkg.addStrings = function(lang, strings, meta) {
 }
 
 Meteor.methods({
+	// Method to send language data to client, see note in client file.
 	mfLoadLangs: function(reqLang) {
 		var strings = {};
 		for (lang in mfPkg.strings) {
@@ -66,7 +71,7 @@ Meteor.methods({
 		}
 		return {
 			strings: strings,
-			lastSync: mfPkg.lastSync
+			lastSync: new Date().getTime()
 		}
 	}
 });

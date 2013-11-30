@@ -73,6 +73,3 @@ mf = function(key, params, message, locale) {
     
     return cmessage;
 }
-
-/* todo,
-record observeFrom cursor on client, use for reactrivity */

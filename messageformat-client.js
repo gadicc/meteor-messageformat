@@ -1,19 +1,13 @@
 /*
-
-TODO
-
-* Since mfPkg is always up to date, use it instead of db queries,
-  just have a Session var track when it's updated to selectively allow for
-  reactivity (in trans stuff)
-
-* Revisions, show diff
-* Mark stuff as fuzzy or invalid depending on how big the change is
-
-* sendNative stuff
-* ready() function for loadlang, sub.  XXX
-
-*/
-
+ * TODO
+ *
+ * -> Revisions, show diff
+ * -> Mark stuff as fuzzy or invalid depending on how big the change is
+ *
+ * sendNative code (force send of native strings in case not kept inline)
+ * ready() function for loadlang, sub.  XXX
+ *
+ */
 
 
 /*
@@ -61,18 +55,14 @@ Handlebars.registerHelper('mf', function(key, message, params) {
 });
 
 /*
- * Send initial lang data to client, more efficiently than through a
- * collection publish
+ * Fetch lang data from server, more efficiently than through a
+ * collection publish (which we only use when editing translations)
  */
 mfPkg.lastSync = {};
 mfPkg.loadLangs = function(reqLang, callback) {
-	console.log('called loadlang ' + reqLang);
 	Meteor.call('mfLoadLangs', reqLang, function(error, data) {
 		if (error)
 			throw new Error(error);
-
-		console.log('data received');
-		console.log(data);
 
 		for (lang in data.strings) {
 			mfPkg.strings[lang] = data.strings[lang];
@@ -85,13 +75,13 @@ mfPkg.loadLangs = function(reqLang, callback) {
 	});
 };
 
+/*
+ * Update our subscription for language updates.  If we change languages, we'll
+ * we'll still have all the lang data in mfPkg, we just stop getting updates for
+ * that language.  If we change back, we'll get all the updates since our last
+ * sync for that lang.
+ */
 function updateSubs() {
-	console.log('updateSubs');
-	/*
-	 * If we change languages, we'll still have all the lang data in mfPkg, we
-	 * just stop getting updates for that language.  If we change back, we'll
-	 * get all the updates since our last sync for that lang.
-	 */
 	var locale = Session.get('locale');
 	mfPkg.observeFrom(mfPkg.lastSync[locale]);
 	if (mfPkg.mfStringsSub)
@@ -103,11 +93,6 @@ function updateSubs() {
 
 Deps.autorun(function() {
 	var locale = Session.get('locale') || mfPkg.native;
-
-	/* todo, load policies.
-	 * don't load native
-	 * option to load all, current, list
-	 */
 
 	// If we requested the lang previously, or requesting native lang,
 	// don't retrieve the strings [again], just update the subscription
@@ -184,16 +169,6 @@ function saveChange(lang, key, text) {
 			mtime: new Date().getTime(),
 			revisionId: revisionId
 		});
-
-	/*
-	mfStrings.upsert({key: existing && existing._id}, { $set: {
-		lang: lang,
-		text: text,
-		ctime: new Date().getTime(),
-		mtime: new Date().getTime(),
-		revisionId: revisionId
-	}});
-	*/
 }
 
 /*

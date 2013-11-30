@@ -1,5 +1,5 @@
 Package.describe({
-    summary: "MessageFormat support for Meteor"
+    summary: "MessageFormat support, the Meteor way"
 });
 
 Package.on_use(function (api) {
