@@ -1,13 +1,10 @@
-/*
- * Used to import mfExtracts.js and mfTrans.js
- * Load each string and update the database if necessary
- */
-mfPkg.addStrings = function(lang, strings, meta) {
+// Load each string and update the database if necessary
+mfPkg.langUpdate = function(lang, strings, meta, lsKey) {
 
     if (!mfPkg.compiled[lang])
         mfPkg.compiled[lang] = {};
 
-    // TODO, merge
+    // TODO, merge?
     mfPkg.strings[lang] = strings;
 
     if (!mfPkg.meta[lang])
@@ -18,9 +15,9 @@ mfPkg.addStrings = function(lang, strings, meta) {
 	 * the database and update them accordingly
 	 */
 
-	var lastSync = this.mfStrings.findOne({key: '__mfLastSync'});
+	var lastSync = this.mfMeta.findOne(lsKey);
 	if (!lastSync) {
-		lastSync = { text: 0 };
+		lastSync = { mtime: 0 };
 	}
 
 	var str, revId;
@@ -28,7 +25,7 @@ mfPkg.addStrings = function(lang, strings, meta) {
 		str = strings[key];
 
 		// skip keys which haven't been modified since last sync
-		if ((str.mtime || str.ctime) <= lastSync.text)
+		if ((str.mtime || str.ctime) <= lastSync.mtime)
 			continue;
 
 		revisionId = this.mfRevisions.insert({
@@ -51,12 +48,29 @@ mfPkg.addStrings = function(lang, strings, meta) {
 		}});
 	}
 
-	this.lastSync = new Date().getTime();
-	this.mfStrings.upsert({key: '__mfLastSync'}, {$set: {text: this.lastSync } });
+	this[lsKey] = new Date().getTime();
+	this.mfMeta.upsert(lsKey, {$set: {mtime: this[lsKey] } });
 
-	// Continually watch database for any changes newer than last extraction
-    this.observeFrom(meta.extractedAt);
 }
+
+// called from mfExract.js
+mfPkg.addNative = function(strings, meta) {
+	this.langUpdate(mfPkg.native, strings, meta, 'syncExtracts');
+    this.observeFrom(meta.extractedAt, 'native');
+}
+// called from mfTrans.js
+mfPkg.addTrans = function(strings, meta) {
+	for (lang in strings)
+		this.langUpdate(lang, strings[lang], meta, 'syncTrans');
+    this.observeFrom(meta.exportedAt, 'trans');
+}
+Meteor.startup(function() {
+	// If addTrans() was never called, observe full translation database
+	if (!mfPkg.syncTrans)
+		mfPkg.observeFrom(0, 'trans');
+});
+
+// TODO, store the above in a queue until init() called.
 
 Meteor.methods({
 	// Method to send language data to client, see note in client file.
@@ -157,24 +171,5 @@ Meteor.publish('mfStats', function() {
 
 	self.onStop(function () {
 		handle.stop();
-	});
-});
-
-Router.map(function() {
-	this.route('mfTransExport', {
-		path: '/translate/export',
-		where: 'server',
-		action: function() {
-			var out = '';
-			for (lang in mfPkg.strings) {
-				if (lang == mfPkg.native)
-					continue;
-				out += 'mfPkg.addStrings("'+lang+'",'
-					+ JSON.stringify(mfPkg.strings[lang], null, 2)
-					+ ', { exportedAt: ' + new Date().getTime() + '});\n'
-			}
-			this.response.writeHead(200, {'Content-Type': 'application/javascript'});
-			this.response.end(out, 'utf8');
-		}
 	});
 });

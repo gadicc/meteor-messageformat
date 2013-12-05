@@ -1,4 +1,8 @@
-body { background: #f0f0f0;}
+#examples {
+	background: #f0f0f0;
+	margin-left: 0; margin-right: 0;
+	padding-left: 32px; padding-right: 32px;
+}
 div.exampleWrapper  { }
 table.example .syntaxhighlighter { margin: 0 !important; direction: ltr; }
 table.example { border-collapse: collapse; margin-bottom: 1em; background: white; }

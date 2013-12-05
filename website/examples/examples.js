@@ -1,6 +1,13 @@
 if (Meteor.isClient) {
 
-  Template.main.getName = function() {
+  Router.map(function () {
+    this.route('examples', {
+      path: '/examples'
+    });
+  });
+
+
+  Template.examples.getName = function() {
     var lang = Session.get('lang');
     return lang == 'he' ? 'גדי' : 'Gadi';
   }
@@ -13,7 +20,7 @@ if (Meteor.isClient) {
     return text.replace(re, indent).replace(/\s*$/, '');
   }
 
-  Template.main.example = function(key, message, params) {
+  Template.examples.example = function(key, message, params) {
     var js, longMessage;
     if (typeof key == "function") {
         // if called as a block helper
@@ -80,7 +87,7 @@ if (Meteor.isClient) {
     return Session.equals('NUM', num);
     */
   }
-  Template.main.getNum = function() {
+  Template.examples.getNum = function() {
     return Session.get('NUM');
   }
 
@@ -100,7 +107,7 @@ if (Meteor.isClient) {
     return Session.equals('NUM', num);
     */
   }
-  Template.main.getNum2 = function() {
+  Template.examples.getNum2 = function() {
     return Session.get('NUM2');
   }
 
@@ -114,7 +121,7 @@ if (Meteor.isClient) {
   Template.genderButtons.isGender = function(gender) {
     return Session.equals('GENDER', gender);
   }
-  Template.main.getGender = function() {
+  Template.examples.getGender = function() {
     return Session.get('GENDER');
   }
 

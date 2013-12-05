@@ -1,0 +1,42 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "messageformat": {
+        "path": ".."
+      },
+      "SyntaxHighlighter": {
+        "path": "../../SyntaxHighlighter"
+      },
+      "bootstrap-3": {}
+    },
+    "packages": {
+      "messageformat": {
+        "path": ".."
+      },
+      "SyntaxHighlighter": {
+        "path": "../../SyntaxHighlighter"
+      },
+      "bootstrap-3": {
+        "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
+        "tag": "v0.3.6",
+        "commit": "711dbcabe333c8714298b2fd1de97fdcdae6efa7"
+      },
+      "headers": {
+        "git": "https://github.com/gadicohen/meteor-headers.git",
+        "tag": "v0.0.10",
+        "commit": "6058f4570a708215cc7adb80934ecddab2957ff3"
+      },
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.6.1",
+        "commit": "4e1ee0581d68bff422a915dacb0bd30eae10fe08"
+      },
+      "sp-marked": {
+        "git": "https://bitbucket.org/parhelium/sp-marked",
+        "tag": "v0.0.2",
+        "commit": "fd044a222eeb4902a62da5839162b3d6dbd477be"
+      }
+    }
+  }
+}

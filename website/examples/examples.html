@@ -1,13 +1,7 @@
-<head>
-  <title>Meteor MessageFormat examples</title>
-</head>
+<template name="examples">
+	<div class="container" id="examples">
 
-<body>
-  {{> main}}
-</body>
-
-<template name="main">
-	<h1>Meteor MessageFormat examples</h1>
+	<h1>{{mf 'examples_header' 'Meteor MessageFormat examples'}}</h1>
 
 	<p>This site is a live example of the various functionalities of the
 		<a href="http://atmosphere.meteor.com/package/messageformat">messageformat</a>
@@ -156,6 +150,7 @@
 	{{> numButtons}}<br />
 	{{> numButtons2}}
 
+	</div>
 </template>
 
 <template name="example">

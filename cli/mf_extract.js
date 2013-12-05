@@ -8,19 +8,21 @@ var strings = {};
 if (!fs.existsSync('.meteor'))
 	throw new Error('Not in a Meteor project\'s root directory');
 
+/*
 if (!fs.existsSync('client')) {
 	console.log('Creating ./client directory');
 	fs.mkdir('client');
 }
+*/
 
 if (!fs.existsSync('server')) {
 	console.log('Creating ./server directory');
 	fs.mkdir('server');
 }
 
-MessageFormatPkg = {
+mfPkg = {
 	strings: {},
-    addStrings: function(lang, strings, meta) {
+    addNative: function(strings, meta) {
     	this.strings = strings;
     }
 };
@@ -48,11 +50,11 @@ walker.on('end', function() {
 
 	// set ctime for new additions, mtime for modifications
 	for (key in strings) {
-		if (MessageFormatPkg.strings[key]) {
-			strings[key].ctime = MessageFormatPkg.strings[key].ctime;
-			if (MessageFormatPkg.strings[key].mtime)
-				strings[key].mtime = MessageFormatPkg.strings[key].mtime;
-			if (strings[key].text != MessageFormatPkg.strings[key].text)
+		if (mfPkg.strings[key]) {
+			strings[key].ctime = mfPkg.strings[key].ctime;
+			if (mfPkg.strings[key].mtime)
+				strings[key].mtime = mfPkg.strings[key].mtime;
+			if (strings[key].text != mfPkg.strings[key].text)
 				strings[key].mtime = new Date().getTime();
 		} else {
 			strings[key].ctime = new Date().getTime();
@@ -60,9 +62,9 @@ walker.on('end', function() {
 	}
 
 	// if a key existed before but not anymore, mark as removed
-	for (key in MessageFormatPkg.strings) {
+	for (key in mfPkg.strings) {
 		if (!strings[key]) {
-			strings[key] = MessageFormatPkg.strings[key];
+			strings[key] = mfPkg.strings[key];
 			strings[key].removed = true;
 			strings[key].mtime = new Date().getTime();
 		}
@@ -113,12 +115,11 @@ function processHtml(file, data) {
 }
 
 function serverStrings(strings) {
-	var xlsInfo = { extractedAt: new Date().getTime() };
+	var meta = { extractedAt: new Date().getTime() };
 
-	var lang = 'en';
-	var out = 'mfPkg.addStrings("' + lang + '",\n'
+	var out = 'mfPkg.addNative(\n'
 			+ JSON.stringify(strings, null, 2) + ', \n'
-			+ JSON.stringify(xlsInfo, null, 2) + ');\n';
+			+ JSON.stringify(meta, null, 2) + ');\n';
 
 	fs.writeFile("server/mfExtracts.js", out);
 }

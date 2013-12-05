@@ -16,7 +16,7 @@
  */
 headers.ready(function() {
     var lang, acceptLangs;
-    if (Session.get('lang') || !headers.get['accept-language'])
+    if (Session.get('locale') || !headers.get['accept-language'])
         return;
 
     acceptLangs = headers.get['accept-language'].split(',');
@@ -24,9 +24,11 @@ headers.ready(function() {
         lang = acceptLangs[i].split(';')[0];
         if (mfPkg.strings[lang]) {
             Session.set('locale', lang);
-            break;
+            return;
         }
     }
+
+    Session.set('locale', mfPkg.native);
 });
 
 

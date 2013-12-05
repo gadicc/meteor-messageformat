@@ -9,13 +9,23 @@ mfPkg = {
     mfRevisions: new Meteor.Collection('mfRevisions'),
     mfMeta: new Meteor.Collection('mfMeta'),
 
+    init: function(native, options) {
+        this.native = native;
+        
+    },
+
     /*
      * Observe additions/changes from after our last extract time, and
      * update the local cache accordingly
      */
-    currentObserveMtime: 0,     
-    observeFrom: function(mtime) {
-        this.mfStrings.find({mtime: {$gt: mtime}}).observe({
+    observeFrom: function(mtime, which) {
+        var query = {mtime: {$gt: mtime}};
+        if (which == 'native')
+            query.lang = mfPkg.native;
+        else if (which == 'trans')
+            query.lang = { $not: mfPkg.native };
+
+        this.mfStrings.find().observe({
             added: function(doc) {
 //                console.log('added ' + doc.key + ' ' + doc.text);
                 if (!mfPkg.strings[doc.lang])
@@ -73,3 +83,24 @@ mf = function(key, params, message, locale) {
     
     return cmessage;
 }
+
+
+// needs to be on client and server for routing to work properly
+Router.map(function() {
+    this.route('mfTransExport', {
+        path: '/translate/export',
+        where: 'server',
+        action: function() {
+            var out = '';
+            for (lang in mfPkg.strings) {
+                if (lang == mfPkg.native)
+                    continue;
+                out += 'mfPkg.addStrings("'+lang+'",'
+                    + JSON.stringify(mfPkg.strings[lang], null, 2)
+                    + ', { exportedAt: ' + new Date().getTime() + '});\n'
+            }
+            this.response.writeHead(200, {'Content-Type': 'application/javascript'});
+            this.response.end(out, 'utf8');
+        }
+    });
+});

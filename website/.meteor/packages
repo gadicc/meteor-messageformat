@@ -4,6 +4,15 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-autopublish
 insecure
 preserve-inputs
+headers
+messageformat
+SyntaxHighlighter
+bootstrap-3
+iron-router
+accounts-ui
+accounts-password
+accounts-github
+accounts-google
+accounts-facebook
