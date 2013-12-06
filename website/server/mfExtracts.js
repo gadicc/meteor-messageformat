@@ -32,11 +32,19 @@ mfPkg.addNative(
     "template": "layout",
     "ctime": 1386263778331
   },
+  "open_source": {
+    "key": "open_source",
+    "text": "Open Source",
+    "file": "./messageformat.html",
+    "line": 26,
+    "template": "layout",
+    "ctime": 1386363031834
+  },
   "examples_header": {
     "key": "examples_header",
     "text": "Meteor MessageFormat examples",
     "file": "./examples/examples.html",
-    "line": 2,
+    "line": 4,
     "template": "examples",
     "ctime": 1386179946507
   },
@@ -44,7 +52,7 @@ mfPkg.addNative(
     "key": "simple_use",
     "text": "Simple Use",
     "file": "./examples/examples.html",
-    "line": 38,
+    "line": 36,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -52,7 +60,7 @@ mfPkg.addNative(
     "key": "simple_string",
     "text": "Simple string translation",
     "file": "./examples/examples.html",
-    "line": 41,
+    "line": 39,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -60,7 +68,7 @@ mfPkg.addNative(
     "key": "simple_variable",
     "text": "String with a static variable",
     "file": "./examples/examples.html",
-    "line": 46,
+    "line": 45,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -76,7 +84,7 @@ mfPkg.addNative(
     "key": "plural_extension",
     "text": "Plural Extension",
     "file": "./examples/examples.html",
-    "line": 63,
+    "line": 66,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -84,7 +92,7 @@ mfPkg.addNative(
     "key": "string_plural",
     "text": "String with a plural",
     "file": "./examples/examples.html",
-    "line": 66,
+    "line": 69,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -92,7 +100,7 @@ mfPkg.addNative(
     "key": "plural_offset",
     "text": "Plural Offset (\"and one other\")",
     "file": "./examples/examples.html",
-    "line": 82,
+    "line": 92,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -100,7 +108,7 @@ mfPkg.addNative(
     "key": "selectformat",
     "text": "SelectFormat",
     "file": "./examples/examples.html",
-    "line": 98,
+    "line": 108,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -108,7 +116,7 @@ mfPkg.addNative(
     "key": "string_gender",
     "text": "String with a gender",
     "file": "./examples/examples.html",
-    "line": 101,
+    "line": 111,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -116,7 +124,7 @@ mfPkg.addNative(
     "key": "mixing_it_up",
     "text": "Mixing it Up",
     "file": "./examples/examples.html",
-    "line": 119,
+    "line": 129,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -124,15 +132,31 @@ mfPkg.addNative(
     "key": "string_gender_plural",
     "text": "Gender and 2 plurals",
     "file": "./examples/examples.html",
-    "line": 121,
+    "line": 131,
     "template": "examples",
     "ctime": 1386176744490
+  },
+  "i_am_str": {
+    "key": "i_am_str",
+    "text": "I am a string.",
+    "file": "./examples/examples.html",
+    "line": 40,
+    "template": "examples",
+    "ctime": 1386363031834
+  },
+  "hello_name": {
+    "key": "hello_name",
+    "text": "Hello, {NAME}.",
+    "file": "./examples/examples.html",
+    "line": 52,
+    "template": "examples",
+    "ctime": 1386363031834
   },
   "template": {
     "key": "template",
     "text": "Template",
     "file": "./examples/examples.html",
-    "line": 156,
+    "line": 167,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -140,7 +164,7 @@ mfPkg.addNative(
     "key": "javascript",
     "text": "JavaScript",
     "file": "./examples/examples.html",
-    "line": 162,
+    "line": 173,
     "template": "examples",
     "ctime": 1386176744490
   },
@@ -148,11 +172,30 @@ mfPkg.addNative(
     "key": "result",
     "text": "Result",
     "file": "./examples/examples.html",
-    "line": 163,
+    "line": 174,
     "template": "examples",
     "ctime": 1386176744490
+  },
+  "there_are_widgets": {
+    "key": "there_are_widgets",
+    "text": "There {NUM, plural,\n\t\t     =0 {are no widgets}\n\t\t    one {is one widget}\n\t\t  other {are # widgets}\n\t\t}.",
+    "file": "./examples/examples.html",
+    "line": 70,
+    "template": "examples",
+    "ctime": 1386363031834,
+    "mtime": 1386363842086
+  },
+  "hello_name2": {
+    "key": "hello_name2",
+    "text": "Hello, {NAME}.",
+    "file": "./examples/examples.html",
+    "line": 55,
+    "template": "examples",
+    "ctime": 1386363625032,
+    "removed": true,
+    "mtime": 1386363842086
   }
 }, 
 {
-  "extractedAt": 1386263778331
+  "extractedAt": 1386363842086
 });

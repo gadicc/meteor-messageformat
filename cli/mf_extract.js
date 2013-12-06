@@ -100,7 +100,7 @@ function processHtml(file, data) {
 	}
 
 	// {{#mf KEY="key" attr2=val2 etc}}text{{/mf}}
-	re = /{{#mf (.*?)}}\s*(.*?)\s*{{\/mf}}/g;
+	re = /{{#mf (.*?)}}\s*([^]*?)\s*{{\/mf}}/g;
 	while (result = re.exec(data)) {
 		var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
 		strings[key] = {
@@ -111,6 +111,7 @@ function processHtml(file, data) {
 			template: /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
 				.exec(data.substring(0, result.index))[2]  // TODO, optimize
 		};
+		console.log(key,text);
 	}
 }
 

@@ -248,7 +248,8 @@ Router.map(function() {
 
 			// summarise matching keys (orig + trans) to a single record
 			strings = mfPkg.mfStrings.find({
-				$or: [{lang: data.orig}, {lang: this.params.lang}]
+				$and: [{$or: [{lang: data.orig}, {lang: this.params.lang}]},
+					{removed: undefined}]
 			}).fetch();
 			_.each(strings, function(str) {
 				if (!out[str.key])

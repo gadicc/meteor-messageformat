@@ -1,4 +1,5 @@
 <template name="mfTrans">
+	<div class="container" id="mfTransContainer">
 	<h2>{{mf 'mf_site_translations' 'Site Translations'}}</h2>
 	<p>Native language: <b>{{native}}</b> ({{stats.total}} strings)</p>
 
@@ -41,12 +42,11 @@
 	<p>
 		Download <a href="/translate/export">server/mfTrans.js</a>
 	</p>
-
-
+	</div>
 </template>
 
 <template name="mfTransLang">
-	<div id="mfTransLang">
+	<div class="container" id="mfTransLang">
 
 		<div id="mfTransPreview">
 			<table>

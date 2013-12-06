@@ -1,3 +1,254 @@
 <template name="docs">
-	docs...
+
+	<div id="tocFrame">
+		<div id="docTOC">
+
+			<div class="heading"><a href="#intro">MessageFormat</a></div>
+			<div class="sub1">
+				<a href="#features">Features</a><br />
+				<a href="#quickstart">Quick Start</a><br />
+				<a href="#options">Options</a><br />
+			</div>
+
+			<div class="heading"><a href="#underhood">Under the Hood</a></div>
+			<div class="sub1">
+				<a href="#extraction">Extraction</a><br />
+				<a href="#translation">Translation</a><br />
+				<a href="#clientsync">Client Sync</a><br />
+				<a href="#whyusekeys">Why use Keys</a><br />
+			</div>
+
+			<div class="heading"><a href="#misc">Misc</a></div>
+			<div class="sub1">
+				<a href="#roadmap">Roadmap</a><br />
+				<a href="#differences">Differences</a></div>
+			</div>
+
+		</div>
+	</div>
+
+	<div id="docs">
+		<a name="intro"></a>
+		<p><i>NB: this is still a preview release.  Some things marked as TODO aren't implemented yet.</i></p>
+
+		<p><b>MessageFormat for Meteor</b> seamlessly adds support for complicated strings
+		(multiple gender, plural, offset, in any permutation) to your project, and
+		facilitates the translation of these strings to multiple languages.  All in
+		a way you'd expect from a Meteor package.</p>
+
+		<p>{{#markdown}}The package provides both a JavaScript `mf()` function, and
+		Handlebars `{{dstache}}mf}}` and `{{dstache}}#mf}}` helpers to be used in templates.  The
+		latter are automatically reactive, and will rerender themselves when any
+		of the variables used are changed by a reactive computation (e.g. string,
+		gender, count, or language).{{/markdown}}</p>
+
+		<p>The package builds on <a href="https://github.com/SlexAxton/messageformat.js/"
+		>MessageFormat.js by Alex Sexton</a>.  You should read that page for a good 
+		explanation of how MessageFormat works and why it's a better option than <i>gettext</i>, or simply browse the <a href="/examples">examples</a> page to see the different
+		combinations possible and how they rerender themselves reactively, with no
+		additional work on your part.</p>
+
+{{#markdown}}
+
+<a name="features"></a>
+## Features
+
+* [Reactive](/examples) (strings will update themselves when variables or language changes)
+* Handles MessageFormat.js plural and offset, and selectformat (e.g. for gender)
+* [Full translation Web UI](/translate), no need to redeploy your app as new translations arrive
+
+<a name="quickstart"></a>
+## Quick Start
+
+Meteor MessageFormat can be installed with
+[Meteorite](https://github.com/oortcloud/meteorite/). From inside a Meteorite-managed app:
+
+```bash
+$ mrt add messageformat
+```
+
+In your project, add:
+
+```js
+mfPkg.init('en');
+```
+
+replacing 'en' with the native language of your project, if appropriate.  Additionally,
+a second argument may be supplied, more on that [below](#options).
+
+### Handlebars styled Templates
+
+```html
+{{dstache}}mf 'keyname' 'keytext' VAR1=TemplateVar VAR2=etc}}
+```
+
+For longer MessageFormat Strings, you can do this:
+```html
+{{dstache}}#mf KEY='keyname' VAR1=TemplateVar VAR2=etc}}
+    long keytext
+{{dstache}}/#mf}
+```
+
+For real live example, see the [examples](/examples) page.
+
+Notes:
+
+1. *TemplateVar*, etc, are *regular template variables or helper functions*.  Reactivity is maintained!  You can throw in a quoted value here for testing (e.g. VAR1='male')
+
+2. *keytext* is potentially optional.  You could have all text compiled in advance (by hand, for now), and thus also reduce the size of your templates.  However, I made this available as an option since it's much easier to have text inline in your code and automatically extract it later; I feel this was what made the adoption of gettext so successful.  It also provides a useful fallback.
+
+3. You can also optionally pass a `LOCALE=value` to control the translation of just a single block.
+ 
+### Javascript (if needed)
+
+```
+mf(key, params, message, locale);
+```
+
+Notes:
+
+1. *message* is optional (can be *null*), as per the above.
+2. *locale* is optional, defaults to Session.get('locale');
+
+### Translation
+
+Again, this is still a work in progress. Currently there is a tool to extact strings from templates (JavaScript coming soon), and early management for translations. Go to your project root dir:
+
+```bash
+sudo npm install -g meteor-messageformat
+mf_extract > client/trans.js
+```
+
+Manage translations at `/translate` in your app (security/authentication coming soon).
+
+<a name="options"></a>
+### Options
+
+Options are specified at init time.  Usage:
+
+```js
+mfPkg.init('en', {
+	option: value,
+	...
+});
+```
+
+Available options:
+
+<table id="tOptions">
+	<tr>
+		<th>Option</th>
+		<th>Values</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>loadlangs</td>
+		<td>langName, array, 'current', 'all'</td>
+		<td>Which languages to load at startup</td>
+	</tr>
+</table>
+
+<a name="underhood"></a>
+## Under the Hood
+
+<a name="extraction"></a>
+### Extraction
+
+**Always run mf_extract in the root directory of your project**
+
+The `mf_extract` tool will recursively walk through your project (skipping symlinks),
+looking for *.js and *.html files, and extracting the strings from any calls to
+`mf()`, `{{dstache}}mf}}` and `{{dstache}}#mf}}`.
+
+It writes a `server/mfExtract.js` where it notes the string, the file and line
+number where it was found, and the name of the containing template or function
+name.  **When this file is loaded by Meteor, the Web UI is enabled by default,
+allowing translations by any logged in user.  See [options](#options), above,
+to fine tune the security policy.  TODO.
+
+Note, it doesn't only write to this file.  If the file already exists, it is
+loaded first, and this is how we know if a string has been updated or removed
+since the last run.
+
+In the future, when Meteor [allows multiple source handlers](https://groups.google.com/d/msg/meteor-core/0QJa5EAXQhc/lJ71DqLipcQJ), this process will be handled
+automatically when Meteor loads, without the need to run an external utility.
+
+<a name="translation"></a>
+### Translation
+
+The `mfStrings` collection contains the info of all *current* strings in the project.
+The `mfRevisions` collection contains the revision history of each string.
+
+When a source/native string is updated, all translations for that key are marked
+as **fuzzy** (just like machine translations).
+
+Strings that are translations contain a `sourceId` field, which is the `revisionId`
+of the source string it was translated against.  In the future, translators will
+be able to see the diff of a source string for fuzzy translations, for convenience.
+
+<a name="clientsync"></a>
+### Client Sync (what's sent over the wire)
+
+Native strings are always sent to the client, since they are already compiled into
+your templates.  This is both convenient for developers, and useful as a fallback
+for clients, if a translation does not exist.
+
+However, since `keytext` is optional, you could opt to omit it, and thus avoid
+sending the native strings for users of other languages.  However, missing strings
+will just show the `keyname` (TODO, logic to auto fill missing keys).
+
+By default, translations are loaded *on demand*.  When a user changes languages,
+translations are sent in a { key1: text1, key2: text2 } format using a Meteor method.
+Updated keys for the current language are sent through a regular publish function.
+Strings are cached; if the user changs languages, strings will not be sent over the
+wire again, except for strings that were updated.
+
+If you want language changing to be quicker, you use run `mfPkg.init` with the
+`loadLangs: 'all`' option.
+
+Note: the strings themselves are not reactive.  Users will see updated strings
+next time the string is rendered.  This is to avoid annoying and confusing the
+user with strings changing before their eyes if people are working on translations.
+
+TODO: reactive ready() functions to wait on.
+
+In the future, offline collections will be supported (via e.g.
+[offline-data](https://github.com/awwx/meteor-offline-data) or
+[GroundedDB](https://github.com/GroundMeteor/Meteor-GroundDB)), and strings
+will be cached offline on the client and only updated strings will be synced
+on reconnect.
+
+<a name="misc"></a>
+## Misc
+
+<a name="roadmap"></a>
+### Roadmap
+
+1. ~~Extract all strings from templates to allow for translation~~ DONE (TODO, consider
+precompilation options)
+
+1. It would be nice if *keyname* could be unique *per template*, but currently [there is no way for a template helper to know the name of a calling template](https://github.com/meteor/meteor/issues/658)
+
+1. ~~Longer term: Allow additional languages to be loaded *as needed*, and reactively rerender all dependencies once it's available.~~ DONE
+
+1. ~~Longest term: create a system to allow for string building and translation online (also in MessageFormat.js')~~ STARTED, early release, TODO - string builder wizard for
+translators, with dropdown blocks and permutation previews
+
+1. ~~Longest term~~: a centrally hosted website to handle translation for apps using the
+smart package.
+
+<a name="differences"></a>
+### Differences to the original MessageFormat.js by Alex Sexton
+
+1. The original package requires all language strings to be defined externally (optionally in a per-directory basis).  I prefered the option to define them inline and have a tool to extract them for precompilation (see note about this, above).
+
+2. The above naming structure is another reason why I don't currently allow for the existing precompilation code to be used.  In a Meteor style project, it makes more sense to use the Template names as part of the hierarchy.
+
+2. It's unclear whether the original package, once it adds multi-language support, will allow multiple languages to be loaded in memory simultaneously.
+
+
+{{/markdown}}
+
+
+	</div>
 </template>

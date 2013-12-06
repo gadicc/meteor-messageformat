@@ -2,15 +2,17 @@
 	background: #f0f0f0;
 	margin-left: 0; margin-right: 0;
 	padding-left: 32px; padding-right: 32px;
+	width: 100%; padding-bottom: 15px;
 }
 div.exampleWrapper  { }
-table.example .syntaxhighlighter { margin: 0 !important; direction: ltr; }
+/* table.example */ .syntaxhighlighter { margin: 0 !important; direction: ltr; }
+.syntaxhighlighter { overflow: auto !important }
 table.example { border-collapse: collapse; margin-bottom: 1em; background: white; }
 table.example tr td { padding: 5px 10px 5px 10px; border: 1px solid black; vertical-align: top; }
 body[dir=ltr] table.example tr td:first-child { text-align: right; }
 body[dir=rtl] table.example tr td:first-child { text-align: left; }
+.syntaxhighlighter .toolbar { display: none; }
 
-ddiv.indent { margin-left: 20px; }
 button.selected { border: 2px solid black; }
 button { direction: ltr; }
 
