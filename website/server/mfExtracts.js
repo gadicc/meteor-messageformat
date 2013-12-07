@@ -207,21 +207,31 @@ mfPkg.addNative(
     "ctime": 1386363031834,
     "mtime": 1386431819659
   },
-  "test_key2": {
-    "key": "test_key2",
-    "text": "test_text2",
-    "file": "./docs/docs.js",
-    "line": 11,
-    "func": "Handlebars.registerHelper('dstache', function()",
-    "ctime": 1386432436775
-  },
   "test_key": {
     "key": "test_key",
-    "text": "test_text",
+    "text": "Example mf() use in a declared function",
     "file": "./docs/docs.js",
-    "line": 12,
+    "line": 10,
+    "func": "function testFunc(arg1)",
+    "ctime": 1386431857282,
+    "mtime": 1386435100673
+  },
+  "test_key2": {
+    "key": "test_key2",
+    "text": "Example mf() use in an assigned function",
+    "file": "./docs/docs.js",
+    "line": 14,
+    "func": "var testFunc2 = function(arg1)",
+    "ctime": 1386432436775,
+    "mtime": 1386435100673
+  },
+  "test_key3": {
+    "key": "test_key3",
+    "text": "Example mf() use in a helper / anonymous func",
+    "file": "./docs/docs.js",
+    "line": 19,
     "func": "Handlebars.registerHelper('dstache', function()",
-    "ctime": 1386431857282
+    "ctime": 1386435100673
   },
   "hello_name2": {
     "key": "hello_name2",
@@ -231,9 +241,9 @@ mfPkg.addNative(
     "template": "examples",
     "ctime": 1386363625032,
     "removed": true,
-    "mtime": 1386433765884
+    "mtime": 1386435226491
   }
 }, 
 {
-  "extractedAt": 1386433765884
+  "extractedAt": 1386435226491
 });

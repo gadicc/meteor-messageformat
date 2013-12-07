@@ -6,10 +6,17 @@ if (Meteor.isClient) {
     });
   });
 
+  function testFunc(arg1) {
+  	return mf('test_key', 'Example mf() use in a declared function');
+  }
+
+  var testFunc2 = function(arg1) {
+  	return mf('test_key2', 'Example mf() use in an assigned function');  	
+  }
+
   Handlebars.registerHelper('dstache', function() {
   	return '{{';
-  	return mf ( 'test_key2', 'test_text2' );
-  	return mf('test_key', 'test_text');
+  	return mf('test_key3', 'Example mf() use in a helper / anonymous func');
   });
 
   Handlebars.registerHelper('markdown', function(options) {
@@ -25,6 +32,8 @@ if (Meteor.isClient) {
   		}
   	}
   });
+
+
 
 
 	// http://lions-mark.com/jquery/scrollTo/

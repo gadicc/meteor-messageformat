@@ -130,7 +130,7 @@ function processJS(file, data) {
 			text: text,
 			file: file,
 			line: data.substring(0, result.index).split('\n').length,
-			func: /[\s\S]*\n(.*?function\s*\([\s\S]*?\))[\s\S]*?$/
+			func: /[\s\S]*\n(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
 				.exec(data.substring(0, result.index))[1].replace(/^\s+|\s+$/g, '')
 		};
 	}
