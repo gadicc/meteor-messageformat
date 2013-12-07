@@ -73,7 +73,13 @@
 			{{/isolate}}
 		</div>
 		<p>Use ctrl-up and ctrl-down to quickly change keys</p>
-		<span>{{keyInfo}}</span><br />
+		<span><b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{keyInfo.line
+			}}{{#if keyInfo.template}} (template
+				{{#if keyInfo.routeUrl}}
+					<a href="{{keyInfo.routeUrl}}">{{keyInfo.template}}</a
+				>{{else}}"{{keyInfo.template}}"{{/if}}){{/if
+			}}{{#if keyInfo.func}}; {{keyInfo.func}}{{/if}}
+		</span><br />
 		<textarea id="mfTransOrig" readonly>{{mfTransOrig}}</textarea>
 		<textarea id="mfTransDest">{{mfTransTrans}}</textarea>
 

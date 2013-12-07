@@ -33,8 +33,8 @@ if (fs.existsSync('server/mfExtracts.js'))
 var walker  = walk.walk('.', { followLinks: false });
 
 walker.on('file', function(root, stat, next) {
-    // Add this file to the list of files
-    if (stat.name.match(/html|js$/)) {
+    // Add this file to the list of files (skip .dirs)
+    if (root.substr(0,3) != './.' && stat.name.match(/html|js$/)) {
 	    files.push(root + '/' + stat.name);
     }
     next();
@@ -46,6 +46,8 @@ walker.on('end', function() {
     	data = fs.readFileSync(file, 'utf8');
     	if (file.match(/html$/))
 			processHtml(file, data);
+		else if (file.match(/js$/))
+			processJS(file, data);
     });
 
 	// set ctime for new additions, mtime for modifications
@@ -111,7 +113,26 @@ function processHtml(file, data) {
 			template: /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
 				.exec(data.substring(0, result.index))[2]  // TODO, optimize
 		};
-		console.log(key,text);
+	}
+}
+
+function processJS(file, data) {
+	// XXX TODO, escaped quotes
+	var result, re;
+
+	// function blah(), blah = function(), helper('moo', function() {...
+	// mf('test_key', 'test_text')
+	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*(['"])(.*?)\3,?.*?\)/g;
+	while (result = re.exec(data)) {
+		var key = result[2], text = result[4], attributes = attrDict(result[5]);
+		strings[key] = {
+			key: key,
+			text: text,
+			file: file,
+			line: data.substring(0, result.index).split('\n').length,
+			func: /[\s\S]*\n(.*?function\s*\([\s\S]*?\))[\s\S]*?$/
+				.exec(data.substring(0, result.index))[1].replace(/^\s+|\s+$/g, '')
+		};
 	}
 }
 
@@ -124,35 +145,3 @@ function serverStrings(strings) {
 
 	fs.writeFile("server/mfExtracts.js", out);
 }
-
-/*
-
-preloaded translations to be included with source, synced to database with timestamp
-option to precompile
-
-
-xls
-* lang (avoid sending multiple times with each publish)
-* key
-* text
-* ctime (avoid sending to clinet)
-* mtime (avoid sending to client)
-* revid (avoid sending to client)
-
-(how to find outdated translation: compare mtime?  strcmp to invalidate?)
-
-xlsRevs
-* lang
-* key
-* text
-* userId
-* ctime
-* xlsSourceId
-
-check text for key, if different, do update:
-* change xls (update text, mtime), insert revision
-
-- DDP to allow central translation of many apps on one site
-- codesets
-
-*/

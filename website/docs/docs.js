@@ -8,6 +8,8 @@ if (Meteor.isClient) {
 
   Handlebars.registerHelper('dstache', function() {
   	return '{{';
+  	return mf ( 'test_key2', 'test_text2' );
+  	return mf('test_key', 'test_text');
   });
 
   Handlebars.registerHelper('markdown', function(options) {

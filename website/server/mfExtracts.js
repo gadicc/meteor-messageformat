@@ -6,7 +6,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 22,
     "template": "layout",
-    "ctime": 1386263778331
+    "ctime": 1386263778331,
+    "mtime": 1386431819659
   },
   "menu_docs": {
     "key": "menu_docs",
@@ -14,7 +15,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 23,
     "template": "layout",
-    "ctime": 1386263778331
+    "ctime": 1386263778331,
+    "mtime": 1386431819659
   },
   "menu_examples": {
     "key": "menu_examples",
@@ -22,7 +24,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 24,
     "template": "layout",
-    "ctime": 1386263778331
+    "ctime": 1386263778331,
+    "mtime": 1386431819659
   },
   "menu_trans": {
     "key": "menu_trans",
@@ -30,7 +33,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 25,
     "template": "layout",
-    "ctime": 1386263778331
+    "ctime": 1386263778331,
+    "mtime": 1386431819659
   },
   "open_source": {
     "key": "open_source",
@@ -38,7 +42,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 26,
     "template": "layout",
-    "ctime": 1386363031834
+    "ctime": 1386363031834,
+    "mtime": 1386431819659
   },
   "examples_header": {
     "key": "examples_header",
@@ -46,7 +51,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 4,
     "template": "examples",
-    "ctime": 1386179946507
+    "ctime": 1386179946507,
+    "mtime": 1386431819659
   },
   "simple_use": {
     "key": "simple_use",
@@ -54,7 +60,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 36,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "simple_string": {
     "key": "simple_string",
@@ -62,7 +69,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 39,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "simple_variable": {
     "key": "simple_variable",
@@ -70,7 +78,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 45,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "simple_helper": {
     "key": "simple_helper",
@@ -78,7 +87,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 51,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "plural_extension": {
     "key": "plural_extension",
@@ -86,7 +96,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 66,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "string_plural": {
     "key": "string_plural",
@@ -94,7 +105,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 69,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "plural_offset": {
     "key": "plural_offset",
@@ -102,7 +114,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 92,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "selectformat": {
     "key": "selectformat",
@@ -110,7 +123,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 108,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "string_gender": {
     "key": "string_gender",
@@ -118,7 +132,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 111,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "mixing_it_up": {
     "key": "mixing_it_up",
@@ -126,7 +141,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 129,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "string_gender_plural": {
     "key": "string_gender_plural",
@@ -134,7 +150,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 131,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "i_am_str": {
     "key": "i_am_str",
@@ -142,7 +159,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 40,
     "template": "examples",
-    "ctime": 1386363031834
+    "ctime": 1386363031834,
+    "mtime": 1386431819659
   },
   "hello_name": {
     "key": "hello_name",
@@ -150,7 +168,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 52,
     "template": "examples",
-    "ctime": 1386363031834
+    "ctime": 1386363031834,
+    "mtime": 1386431819659
   },
   "template": {
     "key": "template",
@@ -158,7 +177,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 167,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "javascript": {
     "key": "javascript",
@@ -166,7 +186,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 173,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "result": {
     "key": "result",
@@ -174,7 +195,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 174,
     "template": "examples",
-    "ctime": 1386176744490
+    "ctime": 1386176744490,
+    "mtime": 1386431819659
   },
   "there_are_widgets": {
     "key": "there_are_widgets",
@@ -183,7 +205,23 @@ mfPkg.addNative(
     "line": 70,
     "template": "examples",
     "ctime": 1386363031834,
-    "mtime": 1386363842086
+    "mtime": 1386431819659
+  },
+  "test_key2": {
+    "key": "test_key2",
+    "text": "test_text2",
+    "file": "./docs/docs.js",
+    "line": 11,
+    "func": "Handlebars.registerHelper('dstache', function()",
+    "ctime": 1386432436775
+  },
+  "test_key": {
+    "key": "test_key",
+    "text": "test_text",
+    "file": "./docs/docs.js",
+    "line": 12,
+    "func": "Handlebars.registerHelper('dstache', function()",
+    "ctime": 1386431857282
   },
   "hello_name2": {
     "key": "hello_name2",
@@ -193,9 +231,9 @@ mfPkg.addNative(
     "template": "examples",
     "ctime": 1386363625032,
     "removed": true,
-    "mtime": 1386363842086
+    "mtime": 1386433765884
   }
 }, 
 {
-  "extractedAt": 1386363842086
+  "extractedAt": 1386433765884
 });

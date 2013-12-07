@@ -1,9 +1,29 @@
+/*
+ * TODO
+ *
+ * -> Revisions, show diff
+ * -> Mark stuff as fuzzy or invalid depending on how big the change is
+ * -> transUI, enable on load, etc... decide on mfTrans.js format
+ *
+ * sendNative code (force send of native strings in case not kept inline)
+ * ready() function for loadlang, sub.  XXX
+ *
+ */
+
+
 mfPkg = {
     native: 'en',
     objects: {},
-    compiled: { en: {} },
-    strings: { en: { en: 'English' }},
-    meta: { en: {} },
+    compiled: {},
+    strings: {},
+    meta: {},
+    initted: false,
+
+    sendPolicy: 'all',
+    sendNative: false,
+    transUI: {
+        enabled: true
+    },
 
     mfStrings: new Meteor.Collection('mfStrings'),
     mfRevisions: new Meteor.Collection('mfRevisions'),
@@ -11,7 +31,11 @@ mfPkg = {
 
     init: function(native, options) {
         this.native = native;
-        
+        this.initted = true;
+        if (Meteor.isServer)
+            this.serverInit(native, options);
+        else
+            this.clientInit(native, options);
     },
 
     /*

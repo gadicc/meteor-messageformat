@@ -1,5 +1,9 @@
 // Load each string and update the database if necessary
-mfPkg.langUpdate = function(lang, strings, meta, lsKey) {
+mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
+
+	/*
+	 * Part 1, update our mfPkg object with the given data
+	 */
 
     if (!mfPkg.compiled[lang])
         mfPkg.compiled[lang] = {};
@@ -15,17 +19,12 @@ mfPkg.langUpdate = function(lang, strings, meta, lsKey) {
 	 * the database and update them accordingly
 	 */
 
-	var lastSync = this.mfMeta.findOne(lsKey);
-	if (!lastSync) {
-		lastSync = { mtime: 0 };
-	}
-
 	var str, revId;
 	for (key in strings) {
 		str = strings[key];
 
 		// skip keys which haven't been modified since last sync
-		if ((str.mtime || str.ctime) <= lastSync.mtime)
+		if ((str.mtime || str.ctime) <= lastSync)
 			continue;
 
 		revisionId = this.mfRevisions.insert({
@@ -43,41 +42,68 @@ mfPkg.langUpdate = function(lang, strings, meta, lsKey) {
 			file: str.file,
 			line: str.line,
 			template: str.template,
+			func: str.func,
 			removed: str.removed,
 			revisionId: revisionId
 		}});
 	}
-
-	this[lsKey] = new Date().getTime();
-	this.mfMeta.upsert(lsKey, {$set: {mtime: this[lsKey] } });
-
 }
 
 // called from mfExract.js
 mfPkg.addNative = function(strings, meta) {
-	this.langUpdate(mfPkg.native, strings, meta, 'syncExtracts');
-    this.observeFrom(meta.extractedAt, 'native');
+	if (!this.initted) {
+
+		// not initted yet, we don't know what the native lang is
+		this.nativeQueue = { strings: strings, meta: meta };
+
+	} else {
+
+		var lastSync = this.mfMeta.findOne('syncExtracts');
+		lastSync = lastSync ? lastSync.mtime : 0;
+
+		this.langUpdate(mfPkg.native, strings, meta, lastSync);
+
+		this['syncExtracts'] = new Date().getTime();
+		this.mfMeta.upsert('syncExtracts', {$set: {mtime: this['syncExtracts'] } });
+
+	    this.observeFrom(meta.extractedAt, 'native');
+	}
 }
+
 // called from mfTrans.js
 mfPkg.addTrans = function(strings, meta) {
-	for (lang in strings)
-		this.langUpdate(lang, strings[lang], meta, 'syncTrans');
-    this.observeFrom(meta.exportedAt, 'trans');
-}
-Meteor.startup(function() {
-	// If addTrans() was never called, observe full translation database
-	if (!mfPkg.syncTrans)
-		mfPkg.observeFrom(0, 'trans');
-});
 
-// TODO, store the above in a queue until init() called.
+	var lastSync = this.mfMeta.findOne('syncExtracts');
+	lastSync = lastSync ? lastSync.mtime : 0;
+
+	for (lang in strings)
+		this.langUpdate(lang, strings[lang], meta, lastSync);
+
+	this['syncExtracts'] = new Date().getTime();
+	this.mfMeta.upsert('syncExtracts', {$set: {mtime: this['syncExtracts'] } });
+
+	if (!this.syncTrans || meta.exportedAt < this.syncTrans)
+	    this.observeFrom(meta.exportedAt, 'trans');
+}
+
+mfPkg.serverInit = function(native, options) {
+    if (this.nativeQueue) {
+        this.addNative(this.nativeQueue.strings, this.nativeQueue.meta);
+        delete this.nativeQueue;
+    }
+
+    // If addTrans() was never called, observe full translation database
+    if (!mfPkg.syncTrans)
+        mfPkg.observeFrom(0, 'trans');	
+}
 
 Meteor.methods({
 	// Method to send language data to client, see note in client file.
 	mfLoadLangs: function(reqLang) {
+		console.log(reqLang);
 		var strings = {};
 		for (lang in mfPkg.strings) {
-			if (reqLang && reqLang != lang)
+			if (reqLang != lang && reqLang != 'all')
 				continue;
 			strings[lang] = {};
 			for (key in mfPkg.strings[lang])
@@ -94,7 +120,7 @@ Meteor.publish('mfStrings', function(lang, after, fullInfo) {
 	var query = {}, options = {};
 	if (_.isArray(lang))
 		query.lang = {$in: lang};
-	else if (lang)
+	else if (lang != 'all')
 		query.lang = lang == 'native' ? mfPkg.native : lang;
 	if (after)
 		query.mtime = {$gt: after};
@@ -138,13 +164,15 @@ function mfStats() {
 		totals[lang].untrans = total - totals[lang].trans - totals[lang].fuzzy;
 		totals[lang].transPercent = Math.round(totals[lang].trans / total * 100);
 		totals[lang].fuzzyPercent = Math.round(totals[lang].fuzzy / total * 100);
-		totals[lang].untransPercent = Math.round(totals[lang].untrans / total * 100);
+		totals[lang].untransPercent = 100
+			- totals[lang].transPercent - totals[lang].fuzzyPercent;
 
 		totals[lang].transWidth = 'width: ' + (2 * totals[lang].transPercent) + 'px';
 		totals[lang].fuzzyWidth = 'width: ' + (2 * totals[lang].fuzzyPercent) + 'px';
 		totals[lang].untransWidth = 'width: ' + (2 * totals[lang].untransPercent) + 'px';
 	}
 
+	totals = _.sortBy(totals, 'lang');
 	return { total: total, langs: _.values(totals) };
 }
 

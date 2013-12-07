@@ -1,16 +1,4 @@
 /*
- * TODO
- *
- * -> Revisions, show diff
- * -> Mark stuff as fuzzy or invalid depending on how big the change is
- *
- * sendNative code (force send of native strings in case not kept inline)
- * ready() function for loadlang, sub.  XXX
- *
- */
-
-
-/*
  * On user connect, honor their language preferences if no Session var
  * already set
  */
@@ -28,6 +16,7 @@ headers.ready(function() {
         }
     }
 
+    // fallback
     Session.set('locale', mfPkg.native);
 });
 
@@ -55,6 +44,26 @@ Handlebars.registerHelper('mf', function(key, message, params) {
     // XXX TODO think about this.  Allows for <a href="...">strings</a>.
     return new Handlebars.SafeString(mf(key, params, message, params ? params.LOCALE : null));
 });
+
+mfPkg.sendPolicy = 'current';
+mfPkg.clientInit = function(native, options) {
+	if (options.sendPolicy)
+		this.sendPolicy = options.sendPolicy;
+
+	Deps.autorun(function() {
+		var locale =
+			mfPkg.sendPolicy == 'all' ? 'all'
+			: Session.get('locale') || mfPkg.native;
+			console.log(locale);
+
+		// If we requested the lang previously, or requesting native lang,
+		// don't retrieve the strings [again], just update the subscription
+		if (mfPkg.strings[locale] || (!mfPkg.sendNative && locale == mfPkg.native))
+			updateSubs();
+		else
+			mfPkg.loadLangs(locale, updateSubs);
+	});
+}
 
 /*
  * Fetch lang data from server, more efficiently than through a
@@ -92,17 +101,6 @@ function updateSubs() {
 		= Meteor.subscribe('mfStrings', locale,
 			mfPkg.lastSync[locale], false);
 }
-
-Deps.autorun(function() {
-	var locale = Session.get('locale') || mfPkg.native;
-
-	// If we requested the lang previously, or requesting native lang,
-	// don't retrieve the strings [again], just update the subscription
-	if (mfPkg.strings[locale] || (!mfPkg.sendNative && locale == mfPkg.native))
-		updateSubs();
-	else
-		mfPkg.loadLangs(locale, updateSubs);
-});
 
 /*
  * Finds the name of the first route using the given template
@@ -310,20 +308,9 @@ Template.mfTransLang.helpers({
 			key: Session.get('mfTransKey'),
 			lang: this.orig
 		});
-		if (!str)
-			return '';
-		var out = '<b>' + str.key + '</b>'
-			+ ' in ' + str.file + ':' + str.line;
-		if (str.template) {
-			var routeName = routeNameFromTemplate(str.template);
-			out += ' (template ';
-			if (routeName)
-				out += '<a href="' + Router.path(routeName)
-					+ '">' + str.template + '</a>)';
-			else
-				out += '"' + str.template + '")';
-		}
-		return new Handlebars.SafeString(out);
+		if (str && str.template)
+			str.routeUrl = Router.path(routeNameFromTemplate(str.template));
+		return str || {};
 	}
 });
 

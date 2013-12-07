@@ -1,5 +1,5 @@
 mfPkg.init('en', {
-	
+	sendPolicy: 'all'
 });
 
 if (Meteor.isClient) {

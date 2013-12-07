@@ -112,12 +112,16 @@ Notes:
 
 ### Translation
 
-Again, this is still a work in progress. Currently there is a tool to extact strings from templates (JavaScript coming soon), and early management for translations. Go to your project root dir:
+Again, this is still a work in progress. Currently there is a tool to extact strings from templates and javascript, and early management for translations. Go to your project root dir:
 
 ```bash
 sudo npm install -g meteor-messageformat
-mf_extract > client/trans.js
+mf_extract
 ```
+
+Run `mf_extract` every time you want to update the strings in your project.  Make sure
+to always run it in the root directory of your project.  The program reads and writes
+to `server/mfExtract.js`.
 
 Manage translations at `/translate` in your app (security/authentication coming soon).
 
@@ -142,9 +146,9 @@ Available options:
 		<th>Description</th>
 	</tr>
 	<tr>
-		<td>loadlangs</td>
-		<td>langName, array, 'current', 'all'</td>
-		<td>Which languages to load at startup</td>
+		<td>sendPolicy</td>
+		<td>'current' (default) or 'all'</td>
+		<td>Languages to send to client</td>
 	</tr>
 </table>
 
@@ -218,8 +222,29 @@ In the future, offline collections will be supported (via e.g.
 will be cached offline on the client and only updated strings will be synced
 on reconnect.
 
+<a name="whyusekeys"></a>
+## Why use Keys?
+
+It's true that *gettext* doesn't require us to name our strings with keys, and
+has a smart algorithm to know if a string is a new string or an update to an
+existing string, through a combination of string simularity (fuzzy matching)
+and string location (file, approx. position).
+
+This is very convenient for the programmer, but not fullproof.  It can occassionally
+cause problems (mismatched translations) which are better to be avoided.  Also, in
+the case where we're sending all strings over the wire, we might prefer to optimize
+our app, sending over smaller key names rather than all the complete strings (when
+not using the native lang) -- although currently we don't recommend this yet (TODO).
+
 <a name="misc"></a>
 ## Misc
+
+<a name="glossary"></a>
+## Glossary
+
+* **Internationalization (i18n)** - support for multiple languages (translation)
+* **Localization (l10n)** - cultural support for e.g. dates, number formatting, etc.
+* **Locale** - language and culture info, e.g. en_US is both US English and US formatting
 
 <a name="roadmap"></a>
 ### Roadmap
