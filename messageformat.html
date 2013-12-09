@@ -3,45 +3,63 @@
 	<h2>{{mf 'mf_site_translations' 'Site Translations'}}</h2>
 	<p>Native language: <b>{{native}}</b> ({{stats.total}} strings)</p>
 
-	<table class="mfTrans">
-		<tr>
-			<th>Language</th>
-			<th>trans.</th>
-			<th>%</th>
-			<th>fuzzy</th>
-			<th>%</th>
-			<th>untrans</th>
-			<th>%</th>
-			<th>graph</th>
-		</tr>
-		{{#each stats.langs}}
-		<tr>
-			<td><a href="/translate/{{lang}}">{{lang}}</a></td>
-			<td>{{trans}}</td>
-			<td>{{transPercent}}</td>
-			<td>{{fuzzy}}</td>
-			<td>{{fuzzyPercent}}</td>
-			<td>{{untrans}}</td>
-			<td>{{untransPercent}}</td>
-			<td>
-				<div class="mfTransGraph trans" style="{{transWidth}}"></div
-				><div class="mfTransGraph fuzzy" style="{{fuzzyWidth}}"></div
-				><div class="mfTransGraph untrans" style="{{untransWidth}}"></div>
-			</td>
-		</tr>
-		{{/each}}
-	</table>
+	{{#if stats.total}}
 
-	<br />
-	<p>
-		New language:
-		<input type="text" id="mfTransNewText" placeholder="fr, en_GB, etc" />
-		<input type="submit" id="mfTransNewSubmit" value="Go" />
-	</p>
+		<table class="mfTrans">
+			<tr>
+				<th>Language</th>
+				<th>trans.</th>
+				<th>%</th>
+				<th>fuzzy</th>
+				<th>%</th>
+				<th>untrans</th>
+				<th>%</th>
+				<th>graph</th>
+			</tr>
+			{{#each stats.langs}}
+			<tr>
+				<td><a href="/translate/{{lang}}">{{lang}}</a></td>
+				<td>{{trans}}</td>
+				<td>{{transPercent}}</td>
+				<td>{{fuzzy}}</td>
+				<td>{{fuzzyPercent}}</td>
+				<td>{{untrans}}</td>
+				<td>{{untransPercent}}</td>
+				<td>
+					<div class="mfTransGraph trans" style="{{transWidth}}"></div
+					><div class="mfTransGraph fuzzy" style="{{fuzzyWidth}}"></div
+					><div class="mfTransGraph untrans" style="{{untransWidth}}"></div>
+				</td>
+			</tr>
+			{{/each}}
+		</table>
 
-	<p>
-		Download <a href="/translate/export">server/mfTrans.js</a>
-	</p>
+		<br />
+		<p>
+			New language:
+			<input type="text" id="mfTransNewText" placeholder="fr, en_GB, etc" />
+			<input type="submit" id="mfTransNewSubmit" value="Go" />
+		</p>
+
+		<p>
+			Download <a href="/translate/mfAll.js">server/mfAll.js</a>
+			(all strings, db dump; save before redeploying/releasing an app)
+		</p>
+		<p>
+			Download <a href="/translate/mfSmart.js">server/mfSmart.js</a>
+			(all strings, untranslateable; save before releasing a smart package)
+		</p>
+
+	{{else}}
+
+		<p>Run <b>mf_extract</b> in the root directory of your project to extract
+		all the translateable strings.</p>
+
+		<p>For more details see:
+		<a href="http://messageformat.meteor.com/">messageformat.meteor.com</a>.
+		</p>
+
+	{{/if}}
 	</div>
 </template>
 
@@ -62,7 +80,7 @@
 				<table>
 					<tbody>
 					{{#each strings}}
-						<tr data-key="{{key}}" class="{{isCurrent}}">
+						<tr data-key="{{key}}" class="{{stateClass}} {{isCurrent}}">
 							<td>{{orig}}</td>
 							<td>{{trans}}</td>
 						</tr>
@@ -89,10 +107,4 @@
 	</p>
 
 	</div>
-</template>
-
-<template name="mfTransExport">
-{{#each lang}}
-MessageFormatPkg.addStrings("{{name}}", {{strings}}, {{meta}});
-{{/each}}
 </template>

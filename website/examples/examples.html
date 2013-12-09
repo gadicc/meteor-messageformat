@@ -43,16 +43,16 @@
 
 	<a name="simple_variable"></a>
 	<h3>{{mf 'simple_variable' 'String with a static variable'}}</h3>
-	<!-- {{mf 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}} -->
+	<!-- {{mf 'hello_name' 'Hello, {NAME}. 2' NAME='Gadi'}} -->
 	{{example 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
 	{{> langButtons}}	
 
 	<a name="simple_helper"></a>
 	<h3>{{mf 'simple_helper' 'String with a variable from a helper function'}}</h3>
-	<!-- {{#mf KEY='hello_name' NUM=getNum}}
+	<!-- {{#mf KEY='hello_name2' NUM=getNum}}
 			Hello, {NAME}.
 		{{/mf}} -->
-	{{#example KEY='hello_name' NAME=getName paramOverride='NUM=getName'}}
+	{{#example KEY='hello_name2' NAME=getName paramOverride='NUM=getName'}}
 		Hello, {NAME}.
 	{{else}}
 	  Template.main.getName = function() {

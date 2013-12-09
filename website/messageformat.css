@@ -5,6 +5,7 @@ body {
 body[dir="rtl"] .navbar-header { float: right; }
 body[dir="rtl"] .navbar-right { float: left !important; }
 body[dir="rtl"] .navbar-nav { float: right; }
+body[dir="rtl"] .navbar-nav > li { float: right; }
 
 #login-dropdown-list { left: inherit; right: 0; }
 #login-dropdown-list .login-close-text { float: right; }

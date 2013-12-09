@@ -159,7 +159,7 @@ function saveChange(lang, key, text) {
 			text: text,
 			mtime: new Date().getTime(),
 			revisionId: revisionId
-		}});
+		}, $unset: { fuzzy: "" }});
 	else
 		mfPkg.mfStrings.insert({
 			key: key,
@@ -285,6 +285,14 @@ Template.mfTransLang.preserve({
 });
 
 Template.mfTransLang.helpers({
+	stateClass: function() {
+		if (this.fuzzy)
+			return 'fuzzy';
+		if (this.trans)
+			return 'trans';
+		else
+			return 'untrans';
+	},
 	isCurrent: function() {
 		if (this.key == Session.get('mfTransKey'))
 			return 'current';

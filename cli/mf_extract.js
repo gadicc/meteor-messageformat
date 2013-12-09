@@ -54,10 +54,10 @@ walker.on('end', function() {
 	for (key in strings) {
 		if (mfPkg.strings[key]) {
 			strings[key].ctime = mfPkg.strings[key].ctime;
-			if (mfPkg.strings[key].mtime)
-				strings[key].mtime = mfPkg.strings[key].mtime;
 			if (strings[key].text != mfPkg.strings[key].text)
 				strings[key].mtime = new Date().getTime();
+			else if (mfPkg.strings[key].mtime)
+				strings[key].mtime = mfPkg.strings[key].mtime;
 		} else {
 			strings[key].ctime = new Date().getTime();
 		}

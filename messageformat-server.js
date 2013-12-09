@@ -22,7 +22,6 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	var str, revId;
 	for (key in strings) {
 		str = strings[key];
-
 		// skip keys which haven't been modified since last sync
 		if ((str.mtime || str.ctime) <= lastSync)
 			continue;
@@ -38,7 +37,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 			lang: lang,
 			text: str.text,
 			ctime: str.ctime,
-			mtime: str.mtime,
+			mtime: str.mtime || str.ctime,
 			file: str.file,
 			line: str.line,
 			template: str.template,
@@ -46,6 +45,15 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 			removed: str.removed,
 			revisionId: revisionId
 		}});
+
+		// mark translations of this key as fuzzy
+		if (lang == mfPkg.native) {
+			// TODO, consider string comparison with threshold to mark as fuzzy
+			this.mfStrings.update(
+				{ key: key, lang: {$ne: lang} },
+				{ $set: { fuzzy: true } }
+			);
+		}
 	}
 }
 
@@ -71,19 +79,22 @@ mfPkg.addNative = function(strings, meta) {
 }
 
 // called from mfTrans.js
-mfPkg.addTrans = function(strings, meta) {
+mfPkg.syncAll = function(strings, meta) {
 
-	var lastSync = this.mfMeta.findOne('syncExtracts');
+	var lastSync = this.mfMeta.findOne('syncTrans');
 	lastSync = lastSync ? lastSync.mtime : 0;
 
 	for (lang in strings)
-		this.langUpdate(lang, strings[lang], meta, lastSync);
+		if (lang != this.native)
+			this.langUpdate(lang, strings[lang], meta, lastSync);
 
-	this['syncExtracts'] = new Date().getTime();
-	this.mfMeta.upsert('syncExtracts', {$set: {mtime: this['syncExtracts'] } });
+	// TODO.  Sync native strings too, ensure _id's are the same,
+	// allow for random load order	
 
-	if (!this.syncTrans || meta.exportedAt < this.syncTrans)
-	    this.observeFrom(meta.exportedAt, 'trans');
+	this['syncTrans'] = new Date().getTime();
+	this.mfMeta.upsert('syncTrans', {$set: {mtime: this['syncTrans'] } });
+
+    this.observeFrom(meta.exportedAt, 'trans');
 }
 
 mfPkg.serverInit = function(native, options) {
@@ -118,14 +129,21 @@ Meteor.methods({
 
 Meteor.publish('mfStrings', function(lang, after, fullInfo) {
 	var query = {}, options = {};
+
+	// ['en', 'he'] or 'en' or 'native' or 'all'
 	if (_.isArray(lang))
 		query.lang = {$in: lang};
+	else if (lang == 'native')
+		query.lang = mfPkg.native;
 	else if (lang != 'all')
-		query.lang = lang == 'native' ? mfPkg.native : lang;
+		query.lang = lang;
+
 	if (after)
 		query.mtime = {$gt: after};
+
 	if (!fullInfo)
 		options.fields = { key: 1, lang: 1, text: 1 };
+
 	return mfPkg.mfStrings.find(query, options);
 });
 
@@ -143,6 +161,9 @@ Meteor.publish('mfRevisions', function(lang, limit) {
 function mfStats() {
 	var totals = { };
 	var nativeLang = mfPkg.native;
+	if (!mfPkg.strings[nativeLang])
+		return { total: 0, langs: [] };
+
 	var total = Object.keys(mfPkg.strings[nativeLang]).length;
 
 	for (lang in mfPkg.strings) {

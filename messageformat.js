@@ -111,19 +111,15 @@ mf = function(key, params, message, locale) {
 
 // needs to be on client and server for routing to work properly
 Router.map(function() {
-    this.route('mfTransExport', {
-        path: '/translate/export',
+    this.route('mfAll', {
+        path: '/translate/mfAll.js',
         where: 'server',
         action: function() {
-            var out = '';
-            for (lang in mfPkg.strings) {
-                if (lang == mfPkg.native)
-                    continue;
-                out += 'mfPkg.addStrings("'+lang+'",'
-                    + JSON.stringify(mfPkg.strings[lang], null, 2)
-                    + ', { exportedAt: ' + new Date().getTime() + '});\n'
-            }
-            this.response.writeHead(200, {'Content-Type': 'application/javascript'});
+            var out = 'mfPkg.syncAll('
+                + JSON.stringify(mfPkg.strings, null, 2)
+                + ', { exportedAt: ' + new Date().getTime() + '});\n'
+            //this.response.writeHead(200, {'Content-Type': 'application/javascript'});
+            this.response.writeHead(200, {'Content-Disposition': 'attachment; filename=mfAll.js'});
             this.response.end(out, 'utf8');
         }
     });

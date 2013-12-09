@@ -164,12 +164,12 @@ mfPkg.addNative(
   },
   "hello_name": {
     "key": "hello_name",
-    "text": "Hello, {NAME}.",
+    "text": "Hello, {NAME}. 2",
     "file": "./examples/examples.html",
-    "line": 52,
+    "line": 46,
     "template": "examples",
     "ctime": 1386363031834,
-    "mtime": 1386431819659
+    "mtime": 1386520816633
   },
   "template": {
     "key": "template",
@@ -198,6 +198,15 @@ mfPkg.addNative(
     "ctime": 1386176744490,
     "mtime": 1386431819659
   },
+  "hello_name2": {
+    "key": "hello_name2",
+    "text": "Hello, {NAME}.",
+    "file": "./examples/examples.html",
+    "line": 52,
+    "template": "examples",
+    "ctime": 1386363625032,
+    "mtime": 1386520737976
+  },
   "there_are_widgets": {
     "key": "there_are_widgets",
     "text": "There {NUM, plural,\n\t\t     =0 {are no widgets}\n\t\t    one {is one widget}\n\t\t  other {are # widgets}\n\t\t}.",
@@ -214,7 +223,7 @@ mfPkg.addNative(
     "line": 10,
     "func": "function testFunc(arg1)",
     "ctime": 1386431857282,
-    "mtime": 1386435100673
+    "mtime": 1386435645667
   },
   "test_key2": {
     "key": "test_key2",
@@ -232,18 +241,8 @@ mfPkg.addNative(
     "line": 19,
     "func": "Handlebars.registerHelper('dstache', function()",
     "ctime": 1386435100673
-  },
-  "hello_name2": {
-    "key": "hello_name2",
-    "text": "Hello, {NAME}.",
-    "file": "./examples/examples.html",
-    "line": 55,
-    "template": "examples",
-    "ctime": 1386363625032,
-    "removed": true,
-    "mtime": 1386435226491
   }
 }, 
 {
-  "extractedAt": 1386435226491
+  "extractedAt": 1386520816633
 });
