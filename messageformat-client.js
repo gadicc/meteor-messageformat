@@ -287,8 +287,6 @@ Template.mfTransLang.preserve({
 
 Template.mfTransLang.helpers({
 	stateClass: function() {
-		if (this.key == 'hello_name')
-			console.log(this);
 		if (this.fuzzy)
 			return 'fuzzy';
 		if (this.trans)
@@ -319,8 +317,11 @@ Template.mfTransLang.helpers({
 			key: Session.get('mfTransKey'),
 			lang: this.orig
 		});
-		if (str && str.template)
-			str.routeUrl = Router.path(routeNameFromTemplate(str.template));
+		if (str && str.template) {
+			var routeName = routeNameFromTemplate(str.template);
+			if (routeName)
+				str.routeUrl = Router.path(routeName);
+		}
 		return str || {};
 	}
 });
@@ -330,6 +331,7 @@ var initialRender = _.once(function() {
 		tr = $('#mfTransLang tr[data-key="'+key+'"]');
 	if (tr.length) 
 		$('#mfTransPreview .tbodyScroll').scrollTop(tr.position().top);
+
 	$('#mfTransDest').focus();
 });
 
@@ -342,5 +344,6 @@ Template.mfTransLang.rendered = function() {
 		Session.set('mfTransKey', key);
 	}
 
+	$('#mfTransDest').tabOverride();
 	initialRender();
 };

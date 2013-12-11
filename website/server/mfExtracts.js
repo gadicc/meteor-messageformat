@@ -121,7 +121,7 @@ mfPkg.addNative(
     "key": "selectformat",
     "text": "SelectFormat",
     "file": "./examples/examples.html",
-    "line": 108,
+    "line": 116,
     "template": "examples",
     "ctime": 1386176744490,
     "mtime": 1386431819659
@@ -130,7 +130,7 @@ mfPkg.addNative(
     "key": "string_gender",
     "text": "String with a gender",
     "file": "./examples/examples.html",
-    "line": 111,
+    "line": 119,
     "template": "examples",
     "ctime": 1386176744490,
     "mtime": 1386431819659
@@ -139,7 +139,7 @@ mfPkg.addNative(
     "key": "mixing_it_up",
     "text": "Mixing it Up",
     "file": "./examples/examples.html",
-    "line": 129,
+    "line": 144,
     "template": "examples",
     "ctime": 1386176744490,
     "mtime": 1386431819659
@@ -148,7 +148,7 @@ mfPkg.addNative(
     "key": "string_gender_plural",
     "text": "Gender and 2 plurals",
     "file": "./examples/examples.html",
-    "line": 131,
+    "line": 145,
     "template": "examples",
     "ctime": 1386176744490,
     "mtime": 1386431819659
@@ -175,7 +175,7 @@ mfPkg.addNative(
     "key": "template",
     "text": "Template",
     "file": "./examples/examples.html",
-    "line": 167,
+    "line": 196,
     "template": "examples",
     "ctime": 1386176744490,
     "mtime": 1386773667213
@@ -184,7 +184,7 @@ mfPkg.addNative(
     "key": "javascript",
     "text": "JavaScript",
     "file": "./examples/examples.html",
-    "line": 173,
+    "line": 202,
     "template": "examples",
     "ctime": 1386176744490,
     "mtime": 1386431819659
@@ -193,7 +193,7 @@ mfPkg.addNative(
     "key": "result",
     "text": "Result",
     "file": "./examples/examples.html",
-    "line": 174,
+    "line": 203,
     "template": "examples",
     "ctime": 1386176744490,
     "mtime": 1386431819659
@@ -215,6 +215,33 @@ mfPkg.addNative(
     "template": "examples",
     "ctime": 1386363031834,
     "mtime": 1386431819659
+  },
+  "added_to_profile": {
+    "key": "added_to_profile",
+    "text": "You {NUM_ADDS, plural, offset:1\n\t\t\t    =0 {didnt add this to your profile}\n\t\t\t    =1 {added this to your profile}\n\t\t\t   one {and one other person added this to their profile}\n\t\t\t other {and # others added this to their profiles}}.",
+    "file": "./examples/examples.html",
+    "line": 94,
+    "template": "examples",
+    "mtime": 1386784327515,
+    "ctime": 1386784327515
+  },
+  "select_gender": {
+    "key": "select_gender",
+    "text": "{GENDER, select,\n\t\t\t\tmale {He}\n\t\t\tfemale {She}\n\t\t\t other {They}} liked this.",
+    "file": "./examples/examples.html",
+    "line": 121,
+    "template": "examples",
+    "mtime": 1386784327515,
+    "ctime": 1386784327515
+  },
+  "gender_plural": {
+    "key": "gender_plural",
+    "text": "{GENDER, select,\n\t          male {He}\n\t        female {She}\n\t         other {They}\n\t    } found {NUM_RESULTS, plural,\n\t            =0 {no results}\n\t           one {1 result}\n\t         other {# results}\n\t    } in {NUM_CATS, plural,\n\t           one {1 category}\n\t         other {# categories}\n\t    }.",
+    "file": "./examples/examples.html",
+    "line": 147,
+    "template": "examples",
+    "mtime": 1386784327515,
+    "ctime": 1386784327515
   },
   "test_key": {
     "key": "test_key",
@@ -244,6 +271,6 @@ mfPkg.addNative(
   }
 }, 
 {
-  "extractedAt": 1386773667213,
-  "updatedAt": 1386773667213
+  "extractedAt": 1386784327515,
+  "updatedAt": 1386784327515
 });

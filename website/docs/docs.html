@@ -126,7 +126,7 @@ Notes:
 
 ### Translation
 
-Again, this is still a work in progress. Currently there is a tool to extact strings from templates and javascript, and early management for translations. Go to your project root dir:
+Again, this is still a work in progress. Currently there is a tool to extact strings from templates and javascript, and early management for translations.  Inside your Meteor project directory:
 
 ```bash
 sudo npm install -g meteor-messageformat
@@ -134,8 +134,8 @@ mf_extract
 ```
 
 Run `mf_extract` every time you want to update the strings in your project.  Make sure
-to always run it in the root directory of your project.  The program reads and writes
-to `server/mfExtract.js`.
+to always run it inside your project directory.  The program reads and writes
+to `server/mfExtract.js` in the project root.
 
 Manage translations at `/translate` in your app (security/authentication coming soon).
 
@@ -172,13 +172,12 @@ Available options:
 <a name="extraction"></a>
 ### Extraction
 
-**Always run mf_extract in the root directory of your project**
-
 The `mf_extract` tool will recursively walk through your project (skipping symlinks),
 looking for *.js and *.html files, and extracting the strings from any calls to
 `mf()`, `{{dstache}}mf}}` and `{{dstache}}#mf}}`.
 
-It writes a `server/mfExtract.js` where it notes the string, the file and line
+It writes a `server/mfExtract.js` in the root directory of your project,
+where it notes the string, the file and line
 number where it was found, and the name of the containing template or function
 name.  **When this file is loaded by Meteor, the Web UI is enabled by default,
 allowing translations by any logged in user.  See [options](#options), above,

@@ -90,6 +90,14 @@
 
 	<a name='plural_offset'></a>
 	<h3>{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</h3>
+	<!--
+		{{#mf KEY="added_to_profile" NUM_ADDS=getNum}}
+			You {NUM_ADDS, plural, offset:1
+			    =0 {didnt add this to your profile}
+			    =1 {added this to your profile}
+			   one {and one other person added this to their profile}
+			 other {and # others added this to their profiles}}.{{/mf}}
+	-->
 	{{#example KEY="added_to_profile" NUM_ADDS=getNum paramOverride='NUM_ADDS=getNum'}}
 		You {NUM_ADDS, plural, offset:1
 		    =0 {didnt add this to your profile}
@@ -109,6 +117,13 @@
 
 	<a name='string_gender'></a>
 	<h3>{{mf 'string_gender' 'String with a gender'}}</h3>
+	<!--
+	{{#mf KEY='select_gender' GENDER=getGender}}
+		{GENDER, select,
+				male {He}
+			female {She}
+			 other {They}} liked this.{{/mf}}
+	-->
 	{{#example KEY='select_gender' GENDER=getGender paramOverride='GENDER=getGender'}}
 		{GENDER, select,
 				male {He}
@@ -127,8 +142,22 @@
 
 	<a name="mixing_it_up"></a>
 	<h2>{{mf 'mixing_it_up' 'Mixing it Up'}}</h2>
-
 	<h3>{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</h3>
+	<!--
+		{{#mf KEY='gender_plural' GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2}}
+	   {GENDER, select,
+	          male {He}
+	        female {She}
+	         other {They}
+	    } found {NUM_RESULTS, plural,
+	            =0 {no results}
+	           one {1 result}
+	         other {# results}
+	    } in {NUM_CATS, plural,
+	           one {1 category}
+	         other {# categories}
+	    }.{{/mf}}
+	-->
 	{{#example KEY='gender_plural' GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2 paramOverride='GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2'}}
    {GENDER, select,
           male {He}
