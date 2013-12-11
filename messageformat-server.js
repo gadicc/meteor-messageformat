@@ -1,37 +1,33 @@
 // Load each string and update the database if necessary
 mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
-	/*
-	 * Part 1, update our mfPkg object with the given data
-	 */
-
-    if (!mfPkg.compiled[lang])
-        mfPkg.compiled[lang] = {};
-
-    // TODO, merge?
-    mfPkg.strings[lang] = strings;
-
-    if (!mfPkg.meta[lang])
-        mfPkg.meta[lang] = meta;
+	_.each(['strings', 'compiled', 'meta'], function(key) {
+		if (!mfPkg[key][lang])
+			mfPkg[key][lang] = {};
+	});
+	mfPkg.meta[lang].extractedAt = meta.extractedAt;
+	mfPkg.meta[lang].updatedAt = meta.updatedAt;
 
 	/*
 	 * See if any of our extracted strings are newer than their copy in
-	 * the database and update them accordingly
+	 * the database and update them accordingly, then update mfPkg.string key
 	 */
 
-	var str, revisionId, obj, updating,
-		optional = ['_id', 'file', 'line', 'template', 'func', 'removed'];
+	var str, existing, revisionId, obj, updating, dbInsert, result,
+		optional = ['_id', 'file', 'line', 'template', 'func', 'removed', 'fuzzy'];
 	for (key in strings) {
 		str = strings[key];
+		existing = this.strings[lang][key];
+
 		// skip keys which haven't been modified since last sync
 		if (str.mtime <= lastSync)
 			continue;
 
 		// skip key if local copy is newer than this one (i.e. from other file)
-		if (this.strings[lang][key] && this.strings[lang][key].mtime > str.mtime)
+		if (existing && existing.mtime > str.mtime)
 			continue;
 
 		// if text has changed, create a new revision, else preserve revisionId
-		if (this.strings[lang][key] && this.strings[lang][key].text == str.text) {
+		if (existing && existing.text == str.text) {
 			updating = false;
 			revisionId = this.strings[lang][key].revisionId;
 		} else {
@@ -45,6 +41,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 		}
 
 		obj = {
+			key: key,
 			lang: lang,
 			text: str.text,
 			ctime: str.ctime,
@@ -55,23 +52,54 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 			if (str[optional[i]])
 				obj[optional[i]] = str[optional[i]];
 
-		// remove on non-matching ID, so we can insert with correct ID
+		// insert unfound, or re-insert on wrong _id, otherwise update
+		if (existing) {
+			if (str._id && existing._id == str._id) {
+				dbInsert = false;
+			} else {
+				// non-matching ID.  remove and insert with correct ID (mfAll.js)
+				this.mfStrings.remove({_id: existing._id});
+				dbInsert = true;
+			}
+		} else {
+			dbInsert = true;
+		}
+
+		/* meteor upsert does allow _id even for insert upsert
 		if (this.strings[lang][key] && str._id
 				&& this.strings[lang][key]._id != str._id) {
+			console.log('remove');
 			this.mfStrings.remove({_id: this.strings[lang][key]._id});
 		}
 
-		this.mfStrings.upsert({key: key, lang: lang}, { $set: obj });
+		result = this.mfStrings.upsert({key: key, lang: lang}, { $set: obj });
+		if (result.insertedId)
+			obj._id = insertedId;
+		if (updating)
+			this.strings[lang][key] = obj;
+		*/
 
-		// mark translations of this key as fuzzy
-		if (updating && lang == mfPkg.native) {
-			// TODO, consider string comparison with threshold to mark as fuzzy
-			this.mfStrings.update(
-				{ key: key, lang: {$ne: lang} },
-				{ $set: { fuzzy: true } }
-			);
+		if (dbInsert) {
+			obj._id = this.mfStrings.insert(obj)
+		} else {
+			this.mfStrings.update(obj._id, obj);
 		}
-	}
+
+		if (updating) {
+			// update local cache
+			this.strings[lang][key] = obj;
+
+			// mark translations of this key as fuzzy
+			if (existing && lang == mfPkg.native) {
+				// TODO, consider string comparison with threshold to mark as fuzzy
+				this.mfStrings.update(
+					{ key: key, lang: {$ne: lang} },
+					{ $set: { fuzzy: true } }
+				);
+			}
+		}
+
+	} /* for (key in strings) */
 }
 
 // called from mfExract.js

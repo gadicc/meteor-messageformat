@@ -229,7 +229,6 @@ Router.map(function() {
 			});
 
 			// Note, this is in ADDITION to the regular mfStrings sub
-			// TODO, cancel on unload
 			Meteor.subscribe('mfStrings',
 				[mfPkg.native, this.params.lang], 0, true);
 
