@@ -43,7 +43,13 @@ div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 	cursor: pointer;
 }
 #mfTransPreview table tr:nth-child(even) { background: #f2f2f2; }
+#mfTransPreview table tr.fuzzy { background: #ffffaa; }
+/*
+#mfTransPreview table tr.trans { background: #f2fff2; }
+#mfTransPreview table tr.untrans { background: #fff2f2; }
+*/
 #mfTransPreview table tr.current { background: #5598d7; color: white;}
+
 
 #mfTransLang textarea {
 	font-family: monospace;

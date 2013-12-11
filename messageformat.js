@@ -115,9 +115,15 @@ Router.map(function() {
         path: '/translate/mfAll.js',
         where: 'server',
         action: function() {
-            var out = 'mfPkg.syncAll('
+            var out, meta = { exportedAt: new Date().getTime(), updatedAt: 0 };
+            for (lang in mfPkg.strings)
+                for (key in mfPkg.strings[lang])
+                    if (mfPkg.strings[lang][key].mtime > meta.updatedAt)
+                        meta.updatedAt = mfPkg.strings[lang][key].mtime;
+
+            out = 'mfPkg.syncAll('
                 + JSON.stringify(mfPkg.strings, null, 2)
-                + ', { exportedAt: ' + new Date().getTime() + '});\n'
+                + ', ' + JSON.stringify(meta, null, 2) + ');';
             //this.response.writeHead(200, {'Content-Type': 'application/javascript'});
             this.response.writeHead(200, {'Content-Disposition': 'attachment; filename=mfAll.js'});
             this.response.end(out, 'utf8');

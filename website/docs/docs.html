@@ -67,7 +67,7 @@ Meteor MessageFormat can be installed with
 $ mrt add messageformat
 ```
 
-In your project, add:
+In your project, add (in your lib/config.js or other file for both server+client)
 
 ```js
 mfPkg.init('en');
@@ -75,6 +75,20 @@ mfPkg.init('en');
 
 replacing 'en' with the native language of your project, if appropriate.  Additionally,
 a second argument may be supplied, more on that [below](#options).
+
+Now, you just have to use the `mf` helper to mark your strings as translatable, e.g.
+
+```html
+<p>This string is translatable</p>
+```
+
+becomes
+
+```html
+<p>{{dstache}}mf 'trans_string' 'This string is translatable'}}</p>
+```
+
+Note that each string needs to be given a unique key ([why?](#whyusekeys)).  Full options are as follows:
 
 ### Handlebars styled Templates
 

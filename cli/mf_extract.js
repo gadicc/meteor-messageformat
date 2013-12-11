@@ -2,18 +2,21 @@
 var walk    = require('walk');
 var fs 		= require('fs')
 var _       = require('underscore');
+var path	= require('path');
 var files   = [];
 var strings = {};
+var projRoot;
 
-if (!fs.existsSync('.meteor'))
-	throw new Error('Not in a Meteor project\'s root directory');
+for (projRoot = process.cwd();
+	projRoot != '/' && !fs.existsSync(projRoot + '/.meteor/release');
+	projRoot = path.normalize(projRoot + '/..'));
 
-/*
-if (!fs.existsSync('client')) {
-	console.log('Creating ./client directory');
-	fs.mkdir('client');
+if (!fs.existsSync(projRoot + '/.meteor/release')) {
+	console.log('Error: mf_extract must be run from inside a Meteor project directory')
+	process.exit(1);
 }
-*/
+
+process.chdir(projRoot);
 
 if (!fs.existsSync('server')) {
 	console.log('Creating ./server directory');
@@ -50,7 +53,7 @@ walker.on('end', function() {
 			processJS(file, data);
     });
 
-	// set ctime for new additions, mtime for modifications
+	// Update mtime if modified, otherwise init ctime+mtime to now
 	for (key in strings) {
 		if (mfPkg.strings[key]) {
 			strings[key].ctime = mfPkg.strings[key].ctime;
@@ -59,7 +62,7 @@ walker.on('end', function() {
 			else if (mfPkg.strings[key].mtime)
 				strings[key].mtime = mfPkg.strings[key].mtime;
 		} else {
-			strings[key].ctime = new Date().getTime();
+			strings[key].ctime = strings[key].mtime = new Date().getTime();
 		}
 	}
 
@@ -138,6 +141,7 @@ function processJS(file, data) {
 
 function serverStrings(strings) {
 	var meta = { extractedAt: new Date().getTime() };
+	meta.updatedAt = _.max(strings, function(s) { return s.mtime; }).mtime;
 
 	var out = 'mfPkg.addNative(\n'
 			+ JSON.stringify(strings, null, 2) + ', \n'

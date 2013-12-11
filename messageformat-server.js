@@ -1,6 +1,5 @@
 // Load each string and update the database if necessary
 mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
-
 	/*
 	 * Part 1, update our mfPkg object with the given data
 	 */
@@ -19,35 +18,53 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	 * the database and update them accordingly
 	 */
 
-	var str, revId;
+	var str, revisionId, obj, updating,
+		optional = ['_id', 'file', 'line', 'template', 'func', 'removed'];
 	for (key in strings) {
 		str = strings[key];
 		// skip keys which haven't been modified since last sync
-		if ((str.mtime || str.ctime) <= lastSync)
+		if (str.mtime <= lastSync)
 			continue;
 
-		revisionId = this.mfRevisions.insert({
-			lang: lang,
-			key: key,
-			text: str.text,
-			ctime: str.ctime,
-		});
+		// skip key if local copy is newer than this one (i.e. from other file)
+		if (this.strings[lang][key] && this.strings[lang][key].mtime > str.mtime)
+			continue;
 
-		this.mfStrings.upsert({key: key}, { $set: {
+		// if text has changed, create a new revision, else preserve revisionId
+		if (this.strings[lang][key] && this.strings[lang][key].text == str.text) {
+			updating = false;
+			revisionId = this.strings[lang][key].revisionId;
+		} else {
+			updating = true;
+			revisionId = this.mfRevisions.insert({
+				lang: lang,
+				key: key,
+				text: str.text,
+				ctime: str.ctime,
+			});
+		}
+
+		obj = {
 			lang: lang,
 			text: str.text,
 			ctime: str.ctime,
-			mtime: str.mtime || str.ctime,
-			file: str.file,
-			line: str.line,
-			template: str.template,
-			func: str.func,
-			removed: str.removed,
+			mtime: str.mtime,
 			revisionId: revisionId
-		}});
+		};
+		for (var i=0; i < optional.length; i++)
+			if (str[optional[i]])
+				obj[optional[i]] = str[optional[i]];
+
+		// remove on non-matching ID, so we can insert with correct ID
+		if (this.strings[lang][key] && str._id
+				&& this.strings[lang][key]._id != str._id) {
+			this.mfStrings.remove({_id: this.strings[lang][key]._id});
+		}
+
+		this.mfStrings.upsert({key: key, lang: lang}, { $set: obj });
 
 		// mark translations of this key as fuzzy
-		if (lang == mfPkg.native) {
+		if (updating && lang == mfPkg.native) {
 			// TODO, consider string comparison with threshold to mark as fuzzy
 			this.mfStrings.update(
 				{ key: key, lang: {$ne: lang} },
@@ -71,10 +88,10 @@ mfPkg.addNative = function(strings, meta) {
 
 		this.langUpdate(mfPkg.native, strings, meta, lastSync);
 
-		this['syncExtracts'] = new Date().getTime();
+		this['syncExtracts'] = meta.updatedAt;
 		this.mfMeta.upsert('syncExtracts', {$set: {mtime: this['syncExtracts'] } });
 
-	    this.observeFrom(meta.extractedAt, 'native');
+	    this.observeFrom(meta.updatedAt, 'native');
 	}
 }
 
@@ -91,10 +108,10 @@ mfPkg.syncAll = function(strings, meta) {
 	// TODO.  Sync native strings too, ensure _id's are the same,
 	// allow for random load order	
 
-	this['syncTrans'] = new Date().getTime();
+	this['syncTrans'] = meta.updatedAt;
 	this.mfMeta.upsert('syncTrans', {$set: {mtime: this['syncTrans'] } });
 
-    this.observeFrom(meta.exportedAt, 'trans');
+    this.observeFrom(meta.updatedAt, 'trans');
 }
 
 mfPkg.serverInit = function(native, options) {

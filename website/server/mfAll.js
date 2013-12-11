@@ -259,11 +259,11 @@ mfPkg.syncAll({
       "key": "hello_name",
       "lang": "en",
       "line": 46,
-      "mtime": 1386520816633,
+      "mtime": 1386558951209,
       "removed": null,
-      "revisionId": "mP267NtBpJbi4vEYf",
+      "revisionId": "brx789bRgMCxM2ybz",
       "template": "examples",
-      "text": "Hello, {NAME}. 2",
+      "text": "Hello, {NAME}.",
       "_id": "Eg8K5XGkrG6dnJpLr"
     },
     "template": {
@@ -521,11 +521,10 @@ mfPkg.syncAll({
     },
     "hello_name": {
       "ctime": 1386478779444,
-      "fuzzy": true,
       "key": "hello_name",
       "lang": "he",
-      "mtime": 1386478779444,
-      "revisionId": "paaC5pBZeB56qhDJT",
+      "mtime": 1386763258251,
+      "revisionId": "NvPuvmcrnsvzdEFWr",
       "text": "שלום, {NAME}.",
       "_id": "MdN9o9BXH3fpqgP2P"
     }
@@ -603,15 +602,6 @@ mfPkg.syncAll({
       "revisionId": "aKW7Ny8eECs6c7Nxg",
       "_id": "8TffKKcYwR7xigCdZ"
     },
-    "hello_name": {
-      "key": "hello_name",
-      "lang": "af",
-      "text": "Hallo, {NAME}.",
-      "ctime": 1386479483279,
-      "mtime": 1386479483279,
-      "revisionId": "C5vRtH7nsLQWP42Z3",
-      "_id": "yhLZ6SsHwHNr35n3o"
-    },
     "javascript": {
       "key": "javascript",
       "lang": "af",
@@ -620,6 +610,19 @@ mfPkg.syncAll({
       "mtime": 1386479509481,
       "revisionId": "xwcrHprfymPe9ZApq",
       "_id": "Tkyqpqnm36hEYrRMk"
+    },
+    "hello_name": {
+      "ctime": 1386479483279,
+      "fuzzy": true,
+      "key": "hello_name",
+      "lang": "af",
+      "mtime": 1386479483279,
+      "revisionId": "C5vRtH7nsLQWP42Z3",
+      "text": "Hallo, {NAME}.",
+      "_id": "yhLZ6SsHwHNr35n3o"
     }
   }
-}, { exportedAt: 1386556204620});
+}, {
+  "exportedAt": 1386764036764,
+  "updatedAt": 1386763258251
+});

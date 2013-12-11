@@ -256,6 +256,8 @@ Router.map(function() {
 					out[str.key].orig = str.text;
 				else
 					out[str.key].trans = str.text;
+				if (str.fuzzy)
+					out[str.key].fuzzy = true;
 			});
 			data.strings = _.values(out);
 
@@ -286,6 +288,8 @@ Template.mfTransLang.preserve({
 
 Template.mfTransLang.helpers({
 	stateClass: function() {
+		if (this.key == 'hello_name')
+			console.log(this);
 		if (this.fuzzy)
 			return 'fuzzy';
 		if (this.trans)

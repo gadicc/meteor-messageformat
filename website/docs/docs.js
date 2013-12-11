@@ -2,39 +2,24 @@ if (Meteor.isClient) {
 
   Router.map(function () {
     this.route('docs', {
-      path: '/docs'
+      path: '/docs',
+      action: function() {
+        this.render('docs');
+        if (this.params.hash) {
+          var a = $('a[name="' + this.params.hash + '"]');
+          $('body').scrollTo(a.offset().top - 50, { duration: 300 });
+        }
+      }
     });
   });
 
-  function testFunc(arg1) {
-  	return mf('test_key', 'Example mf() use in a declared function');
-  }
-
-  var testFunc2 = function(arg1) {
-  	return mf('test_key2', 'Example mf() use in an assigned function');  	
-  }
-
   Handlebars.registerHelper('dstache', function() {
   	return '{{';
-  	return mf('test_key3', 'Example mf() use in a helper / anonymous func');
   });
 
   Handlebars.registerHelper('markdown', function(options) {
   	return marked(options.fn(this));
   });
-
-  Template.docs.events({
-  	'click a': function(event, tpl) {
-  		var a = $('a[name="' + event.target.hash.substr(1) + '"]');
-  		if (a.length) {
-	  		event.stopPropagation(); event.preventDefault();
-	  		$('body').scrollTo(a.offset().top - 50, { duration: 150 });
-  		}
-  	}
-  });
-
-
-
 
 	// http://lions-mark.com/jquery/scrollTo/
 	$.fn.scrollTo = function( target, options, callback ){
@@ -56,3 +41,21 @@ if (Meteor.isClient) {
 	}
 
 }
+
+/*
+ * The below functions are never used/called.  They only exist in this file so they
+ * can be extracted with mf_extract to demonstrate Javascript function extraction
+ */
+
+function testFunc(arg1) {
+  return mf('test_key', 'Example mf() use in a declared function');
+}
+
+var testFunc2 = function(arg1) {
+  return mf('test_key2', 'Example mf() use in an assigned function');   
+}
+
+if (Meteor.isClient)
+  Handlebars.registerHelper('testHelper', function() {
+    return mf('test_key3', 'Example mf() use in a helper / anonymous func');
+  });
