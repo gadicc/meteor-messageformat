@@ -40,6 +40,32 @@ if (Meteor.isClient) {
 	  });
 	}
 
+  /* Minimalist ScrollSpy - Gadi */
+  var anchors = [];
+  var currentAnchor = 0;
+  Template.docs.rendered = function() {
+    $('#docs a[name]').each(function() {
+      var $this = $(this);
+      anchors.push({
+        name: $this.attr('name'),
+        top: Math.floor($this.offset().top) - 80
+      });
+    });
+  }
+  $(window).scroll(function() {
+    var i, pos = $('body').scrollTop();
+    if (pos > anchors[currentAnchor].top)
+      for (i=currentAnchor; i < anchors.length-1 && pos > anchors[i+1].top; i++);
+    else
+      for (i=currentAnchor; i > 1 && pos < anchors[i-1].top; i--);
+    if (i && i != currentAnchor) {
+      var toc = $('#docTOC');
+      toc.find('a[href=#'+anchors[currentAnchor].name+']').removeClass('current');
+      toc.find('a[href=#'+anchors[i].name+']').addClass('current');
+      currentAnchor = i;
+    }
+  });
+
 }
 
 /*

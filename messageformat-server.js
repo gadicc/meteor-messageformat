@@ -12,7 +12,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	 * the database and update them accordingly, then update mfPkg.string key
 	 */
 
-	var str, existing, revisionId, obj, updating, dbInsert, result,
+	var str, existing, revisionId, obj, updating, dbInsert, result, query,
 		optional = ['_id', 'file', 'line', 'template', 'func', 'removed', 'fuzzy'];
 	for (key in strings) {
 		str = strings[key];
@@ -27,7 +27,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 			continue;
 
 		// if text has changed, create a new revision, else preserve revisionId
-		if (existing && existing.text == str.text) {
+		if (existing && existing.text == str.text && existing.removed == str.removed) {
 			updating = false;
 			revisionId = this.strings[lang][key].revisionId;
 		} else {
@@ -86,17 +86,21 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 		}
 
 		if (updating) {
-			// update local cache
-			this.strings[lang][key] = obj;
+			// does this update affect translations?
+			if (existing) {
+				query = { $set: {} };
+				if (lang == mfPkg.native) {
+					// TODO, consider string comparison with threshold to mark as fuzzy
+					query['$set'].fuzzy = true;
+				}
+				if (str.removed)
+					query['$set'].removed = true;
 
-			// mark translations of this key as fuzzy
-			if (existing && lang == mfPkg.native) {
-				// TODO, consider string comparison with threshold to mark as fuzzy
-				this.mfStrings.update(
-					{ key: key, lang: {$ne: lang} },
-					{ $set: { fuzzy: true } }
-				);
+				this.mfStrings.update( { key: key, lang: {$ne: lang} }, query);
 			}
+
+			// finally, update the local cache
+			this.strings[lang][key] = obj;			
 		}
 
 	} /* for (key in strings) */
@@ -174,6 +178,10 @@ Meteor.methods({
 
 Meteor.publish('mfStrings', function(lang, after, fullInfo) {
 	var query = {}, options = {};
+
+	// fake sub
+	if (lang == 'notReady')
+		return null;
 
 	// ['en', 'he'] or 'en' or 'native' or 'all'
 	if (_.isArray(lang))

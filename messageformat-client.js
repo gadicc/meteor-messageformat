@@ -28,6 +28,9 @@ headers.ready(function() {
  * data source.
  */
 Handlebars.registerHelper('mf', function(key, message, params) {
+	// For best performance, waiton mfPkg.ready() before drawing template
+	var dep = mfPkg.updated();
+
     if (typeof key == "function") {
         // if called as a block helper
         message = key.fn(this);
@@ -46,15 +49,18 @@ Handlebars.registerHelper('mf', function(key, message, params) {
 });
 
 mfPkg.sendPolicy = 'current';
+mfPkg.mfStringsSub = Meteor.subscribe('mfStrings', 'notReady');
 mfPkg.clientInit = function(native, options) {
 	if (options.sendPolicy)
 		this.sendPolicy = options.sendPolicy;
+
+	mfPkg.strings[native] = {};
 
 	Deps.autorun(function() {
 		var locale =
 			mfPkg.sendPolicy == 'all' ? 'all'
 			: Session.get('locale') || mfPkg.native;
-			console.log(locale);
+			console.log(locale); 
 
 		// If we requested the lang previously, or requesting native lang,
 		// don't retrieve the strings [again], just update the subscription
@@ -70,7 +76,10 @@ mfPkg.clientInit = function(native, options) {
  * collection publish (which we only use when editing translations)
  */
 mfPkg.lastSync = {};
+mfPkg.langsLoading = false;
 mfPkg.loadLangs = function(reqLang, callback) {
+	mfPkg.langsLoading = true;
+	mfPkg.readyDep.changed();
 	Meteor.call('mfLoadLangs', reqLang, function(error, data) {
 		if (error)
 			throw new Error(error);
@@ -83,8 +92,42 @@ mfPkg.loadLangs = function(reqLang, callback) {
 		mfPkg.lastSync[reqLang || 'all'] = data.lastSync;
 		if (callback)
 			callback();
+
+		mfPkg.langsLoading = false;
+		mfPkg.readyDep.changed();
 	});
 };
+
+/*
+ * Reactive ready function.  All our subscriptions are dependencies.
+ * Additionally, this is set to false when loadLang is called, and
+ * true when it returns.
+ */
+mfPkg.readyDep = new Deps.Dependency;
+mfPkg.ready = function() {
+	var ready = !mfPkg.langsLoading && mfPkg.mfStringsSub.ready();
+	console.log('changed to: ' + ready);
+	this.readyDep.depend();
+	return ready;
+}
+
+/*
+ * Similar to the above, but only gets invalidated each time ready() set to true
+ */
+mfPkg.updatedDep = new Deps.Dependency;
+mfPkg.updatedCurrent = false;
+mfPkg.updated = function() {
+	this.updatedDep.depend();
+	return null; 
+}
+Deps.autorun(function() {
+	if (mfPkg.ready() && !mfPkg.updatedCurrent) {
+		mfPkg.updatedCurrent = true;
+		mfPkg.updatedDep.changed();
+	} else if (mfPkg.updatedCurrent) {
+		mfPkg.updatedCurrent = false;
+	}
+});
 
 /*
  * Update our subscription for language updates.  If we change languages, we'll
@@ -195,8 +238,8 @@ Router.map(function() {
 	// Main translation page, summary of all language data
 	this.route('mfTrans', {
 		path: '/translate',
-		before: function() {
-			Meteor.subscribe('mfStats');
+		waitOn: function() {
+			return Meteor.subscribe('mfStats');
 		},
 		data: function() {
 			var data = {};
@@ -210,7 +253,17 @@ Router.map(function() {
 	// Modify translations for a particular language
 	this.route('mfTransLang', {
 		path: '/translate/:lang',
+		waitOn: function() {
+			// Note, this is in ADDITION to the regular mfStrings sub
+			return Meteor.subscribe('mfStrings',
+				[mfPkg.native, this.params.lang], 0, true);
+		},
 		before: function() {
+			if (!mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this)) {
+				this.render('mfTransLangDenied');
+				this.stop();
+			}
+
 			// Temporary, only used to override preserve on dest
 			Session.set('mfTransTrans', this.params.lang);
 
@@ -227,10 +280,6 @@ Router.map(function() {
 					}					
 				}
 			});
-
-			// Note, this is in ADDITION to the regular mfStrings sub
-			Meteor.subscribe('mfStrings',
-				[mfPkg.native, this.params.lang], 0, true);
 
 			this.subscribe('mfRevisions', this.params.lang, 10);
 		},

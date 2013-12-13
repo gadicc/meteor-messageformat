@@ -6,13 +6,16 @@
  * -> transUI, enable on load, etc... decide on mfTrans.js format
  *
  * sendNative code (force send of native strings in case not kept inline)
- * ready() function for loadlang, sub.  XXX
+ * ready() function for loadlang, sub.  XXX-
+* setLocale()
+* language loader tooltip
+
  *
  */
 
 
 mfPkg = {
-    native: 'en',
+    native: 'en',   // Fine to use reserved words for IdentifierNames (vs Identifiers)
     objects: {},
     compiled: {},
     strings: {},
@@ -66,8 +69,33 @@ mfPkg = {
                     delete mfPkg.compiled[doc.lang][doc.key];
             }
         });
+    },
+
+    webUI: {
+        allowFuncs: [ function() { return !!Meteor.userId(); } ],
+        denyFuncs: [],
+        allow: function(func) { this.allowFuncs.push(func); },
+        deny: function(func) { this.denyFuncs.push(func); },
+        allowed: function() {
+            var self = this, args = arguments;
+            return _.some(mfPkg.webUI.allowFuncs, function(func) {
+                return func.apply(self, args);
+            });
+        },
+        denied: function() {
+            var self = this, args = arguments;
+            return _.every(mfPkg.webUI.allowFuncs, function(func) {
+                return !func.apply(self, args);
+            });
+        }
     }
 }
+
+mfPkg.mfStrings.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});
+mfPkg.mfStrings.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
+mfPkg.mfRevisions.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});
+mfPkg.mfRevisions.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
+mfPkg.mfMeta.deny(function() { return true; });
 
 mf = function(key, params, message, locale) {
     if (!locale && Meteor.isClient)

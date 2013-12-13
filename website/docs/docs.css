@@ -14,6 +14,7 @@
 
 #docTOC a:hover { text-decoration: none; background: #ffff00; }
 #docTOC a { color: black; padding: 5px; }
+#docTOC a.current { color: red; }
 #docTOC .heading { font-size: 150%; font-weight: bold; margin-top: 11px; }
 #docTOC .sub1 { margin-top: 5px; margin-bottom: 10px; line-height: 1.8em; padding-left: 8px; }
 #docTOC .sub1 a { font-size: 120%; margin-bottom: 10px; }
@@ -36,6 +37,9 @@
 	overflow: hidden !important;
 }
 
-#tOptions { width: 100%; }
-#tOptions tr th { border: 1px solid black; padding: 5px 10px 5px 10px; }
-#tOptions tr td { border: 1px solid black; padding: 5px 10px 5px 10px; }
+.docTable { width: 100%; }
+.docTable tr th { border: 1px solid black; padding: 5px 10px 5px 10px; }
+.docTable tr td { border: 1px solid black; padding: 5px 10px 5px 10px; }
+
+#tMethods tr td:nth-child(1) { width: 20%; }
+#tMethods tr td:nth-child(2) { width: 25%; }

@@ -2,7 +2,10 @@ if (Meteor.isClient) {
 
   Router.map(function () {
     this.route('examples', {
-      path: '/examples'
+      path: '/examples',
+//      waitOn: function() {
+//        return [{ ready: function() { return true; }}];
+//      }
     });
   });
 
