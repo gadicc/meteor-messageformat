@@ -102,8 +102,6 @@ mf = function(key, params, message, locale) {
         locale = Session.get('locale');
     if (!locale) {
         locale = mfPkg.native;
-        if (Meteor.isClient)
-            Session.set('locale', locale);
     }
 
     var mf = mfPkg.objects[locale];

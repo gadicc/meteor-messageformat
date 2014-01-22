@@ -1,27 +1,4 @@
 /*
- * On user connect, honor their language preferences if no Session var
- * already set
- */
-headers.ready(function() {
-    var lang, acceptLangs;
-    if (Session.get('locale') || !headers.get('accept-language'))
-        return;
-
-    acceptLangs = headers.get('accept-language').split(',');
-    for (var i=0; i < acceptLangs.length; i++) {
-        lang = acceptLangs[i].split(';')[0];
-        if (mfPkg.strings[lang]) {
-            Session.set('locale', lang);
-            return;
-        }
-    }
-
-    // fallback
-    Session.set('locale', mfPkg.native);
-});
-
-
-/*
  * Main Handlebars regular helper / block helper, calls mf() with correct
  * parameters.  On the client, mf() honors the Session locale if none is
  * manually specified here (see messageformat.js), making this a reactive
@@ -124,6 +101,25 @@ Deps.autorun(function() {
 	if (mfPkg.ready() && !mfPkg.updatedCurrent) {
 		mfPkg.updatedCurrent = true;
 		mfPkg.updatedDep.changed();
+
+        /*
+         * On user connect, honor their language preferences if no Session var
+         * already set
+         */
+        headers.ready(function() {
+            var lang, acceptLangs;
+            if (Session.get('locale') || !headers.get('accept-language'))
+                return;
+
+            acceptLangs = headers.get('accept-language').split(',');
+            for (var i=0; i < acceptLangs.length; i++) {
+                lang = acceptLangs[i].split(';')[0];
+                if (mfPkg.strings[lang]) {
+                    Session.set('locale', lang);
+                    return;
+                }
+            }
+        });
 	} else if (mfPkg.updatedCurrent) {
 		mfPkg.updatedCurrent = false;
 	}
@@ -136,7 +132,7 @@ Deps.autorun(function() {
  * sync for that lang.
  */
 function updateSubs() {
-	var locale = Session.get('locale');
+	var locale = Session.get('locale') || mfPkg.native;
 	mfPkg.observeFrom(mfPkg.lastSync[locale]);
 	if (mfPkg.mfStringsSub)
 		mfPkg.mfStringsSub.stop();	
