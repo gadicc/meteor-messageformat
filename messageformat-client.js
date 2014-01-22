@@ -4,10 +4,10 @@
  */
 headers.ready(function() {
     var lang, acceptLangs;
-    if (Session.get('locale') || !headers.get['accept-language'])
+    if (Session.get('locale') || !headers.get('accept-language'))
         return;
 
-    acceptLangs = headers.get['accept-language'].split(',');
+    acceptLangs = headers.get('accept-language').split(',');
     for (var i=0; i < acceptLangs.length; i++) {
         lang = acceptLangs[i].split(';')[0];
         if (mfPkg.strings[lang]) {
