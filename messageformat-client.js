@@ -46,6 +46,12 @@ mfPkg.clientInit = function(native, options) {
 		else
 			mfPkg.loadLangs(locale, updateSubs);
 	});
+
+	// if momentjs is used on the client, we reactively change the locale on moment globally
+	if(typeof moment == 'function')
+		Deps.autorun(function() {
+			moment.lang(Session.get('locale') || mfPkg.native);
+		});
 }
 
 /*
