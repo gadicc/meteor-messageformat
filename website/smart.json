@@ -1,7 +1,7 @@
 {
   "packages": {
     "messageformat": {
-      "path": "/home/dragon/www/smart/messageformat"
+      "path": ".."
     },
     "SyntaxHighlighter": {
       "path": "/home/dragon/www/smart/SyntaxHighlighter"
