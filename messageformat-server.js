@@ -160,6 +160,7 @@ mfPkg.serverInit = function(native, options) {
 Meteor.methods({
 	// Method to send language data to client, see note in client file.
 	mfLoadLangs: function(reqLang) {
+		check(reqLang, String);
 		console.log(reqLang);
 		var strings = {};
 		for (lang in mfPkg.strings) {
@@ -178,6 +179,10 @@ Meteor.methods({
 
 Meteor.publish('mfStrings', function(lang, after, fullInfo) {
 	var query = {}, options = {};
+	check(lang, Match.OneOf(String, [String]));
+	console.log(after);
+	check(after, Match.OneOf(Number, undefined, null));
+	check(fullInfo, Match.Optional(Boolean));
 
 	// fake sub
 	if (lang == 'notReady')
@@ -202,6 +207,9 @@ Meteor.publish('mfStrings', function(lang, after, fullInfo) {
 
 Meteor.publish('mfRevisions', function(lang, limit) {
 	var query = {}, options = {};
+	check(lang, Match.OneOf(String, [String]));
+	check(limit, Match.Optional(Number));
+
 	if (_.isArray(lang))
 		query.lang = {$in: lang};
 	else if (lang)
