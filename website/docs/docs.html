@@ -113,6 +113,13 @@ sudo npm install -g meteor-messageformat
 mf_extract
 ```
 
+Note:  Since v0.0.13, you shouldn't need to reinstall the npm package
+again. It will automatically run the mf_extract.js code for the current 
+package installed in your project.
+
+You may also use `mf_extract -v` for more verbose output, showing the
+current version, project dir, and each extracted string.
+
 The full translation Web UI will be available at `/translate` in your app
 (see [example](/translate), [security options](#security)).
 
@@ -171,6 +178,9 @@ mf_extract
 Run `mf_extract` every time you want to update the strings in your project.  Make sure
 to always run it inside your project directory.  The program reads and writes
 to `server/mfExtract.js` in the project root.
+
+You may also use `mf_extract -v` for more verbose output, showing the
+current version, project dir, and each extracted string.
 
 Manage translations at `/translate` in your app (see [security options](#security)).
 
@@ -325,6 +335,9 @@ name.
 Note, it doesn't only write to this file.  If the file already exists, it is
 loaded first, and this is how we know if a string has been updated or removed
 since the last run, and maintain a revision history.
+
+You may also use `mf_extract -v` for more verbose output, showing the
+current version, project dir, and each extracted string.
 
 In the future, when Meteor [allows multiple source handlers](https://groups.google.com/d/msg/meteor-core/0QJa5EAXQhc/lJ71DqLipcQJ), this process will be handled
 automatically when Meteor loads, without the need to run an external utility.

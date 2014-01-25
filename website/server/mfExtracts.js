@@ -222,8 +222,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 94,
     "template": "examples",
-    "mtime": 1386784327515,
-    "ctime": 1386784327515
+    "ctime": 1386784327515,
+    "mtime": 1386784327515
   },
   "select_gender": {
     "key": "select_gender",
@@ -231,8 +231,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 121,
     "template": "examples",
-    "mtime": 1386784327515,
-    "ctime": 1386784327515
+    "ctime": 1386784327515,
+    "mtime": 1386784327515
   },
   "gender_plural": {
     "key": "gender_plural",
@@ -240,14 +240,14 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 147,
     "template": "examples",
-    "mtime": 1386784327515,
-    "ctime": 1386784327515
+    "ctime": 1386784327515,
+    "mtime": 1386784327515
   },
   "test_key": {
     "key": "test_key",
     "text": "Example mf() use in a declared function",
     "file": "./docs/docs.js",
-    "line": 51,
+    "line": 77,
     "func": "function testFunc(arg1)",
     "ctime": 1386431857282,
     "mtime": 1386435645667
@@ -256,8 +256,8 @@ mfPkg.addNative(
     "key": "test_key2",
     "text": "Example mf() use in an assigned function",
     "file": "./docs/docs.js",
-    "line": 55,
-    "func": "var testFunc2 = function(arg1)",
+    "line": 81,
+    "func": "function(arg1)",
     "ctime": 1386432436775,
     "mtime": 1386435100673
   },
@@ -265,12 +265,12 @@ mfPkg.addNative(
     "key": "test_key3",
     "text": "Example mf() use in a helper / anonymous func",
     "file": "./docs/docs.js",
-    "line": 60,
-    "func": "Handlebars.registerHelper('testHelper', function()",
+    "line": 86,
+    "func": "function()",
     "ctime": 1386435100673
   }
 }, 
 {
-  "extractedAt": 1386784327515,
+  "extractedAt": 1390610504434,
   "updatedAt": 1386784327515
 });

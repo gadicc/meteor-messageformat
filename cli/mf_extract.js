@@ -6,6 +6,7 @@ var path	= require('path');
 var files   = [];
 var strings = {};
 var projRoot;
+var log = process.argv[2] == '-v';
 
 for (projRoot = process.cwd();
 	projRoot != '/' && !fs.existsSync(projRoot + '/.meteor/release');
@@ -32,6 +33,15 @@ mfPkg = {
 
 if (fs.existsSync('server/mfExtracts.js'))
 	eval(fs.readFileSync('server/mfExtracts.js').toString());
+
+if (log) {
+	var smart = JSON.parse(
+		fs.readFileSync('./packages/messageformat/smart.json')
+	);
+	console.log('mf_extract, v' + smart.version);
+	console.log('Project root: ' + projRoot);
+
+}
 
 var walker  = walk.walk('.', { followLinks: false });
 
@@ -86,6 +96,19 @@ function attrDict(string) {
 	return out;
 }
 
+var lastFile = null;
+function logKey(file, key, text) {
+	if (!log)
+		return;
+
+	if (file != lastFile) {
+		lastFile = file;
+		console.log('\n' + file);
+	}
+
+	console.log(key + ': "' + text.replace(/\s+/g, ' ') + '"');
+}
+
 function processHtml(file, data) {
 	// XXX TODO, escaped quotes
 	var result, re;
@@ -94,6 +117,7 @@ function processHtml(file, data) {
 	re = /{{mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
 	while (result = re.exec(data)) {
 		var key = result[2], text = result[4], attributes = attrDict(result[5]);
+		logKey(file, key, text);
 		strings[key] = {
 			key: key,
 			text: text,
@@ -108,6 +132,7 @@ function processHtml(file, data) {
 	re = /{{#mf (.*?)}}\s*([^]*?)\s*{{\/mf}}/g;
 	while (result = re.exec(data)) {
 		var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
+		logKey(file, key, text);
 		strings[key] = {
 			key: key,
 			text: text,
@@ -124,16 +149,18 @@ function processJS(file, data) {
 	var result, re;
 
 	// function blah(), blah = function(), helper('moo', function() {...
-	// mf('test_key', 'test_text')
-	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*(['"])(.*?)\3,?.*?\)/g;
+	// mf('test_key', params, 'test_text')
+
+	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
 	while (result = re.exec(data)) {
 		var key = result[2], text = result[4], attributes = attrDict(result[5]);
+		logKey(file, key, text);
 		strings[key] = {
 			key: key,
 			text: text,
 			file: file,
 			line: data.substring(0, result.index).split('\n').length,
-			func: /[\s\S]*\n(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
+			func: /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
 				.exec(data.substring(0, result.index))[1].replace(/^\s+|\s+$/g, '')
 		};
 	}

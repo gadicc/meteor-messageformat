@@ -74,14 +74,14 @@ if (Meteor.isClient) {
  */
 
 function testFunc(arg1) {
-  return mf('test_key', 'Example mf() use in a declared function');
+  return mf('test_key', null, 'Example mf() use in a declared function');
 }
 
 var testFunc2 = function(arg1) {
-  return mf('test_key2', 'Example mf() use in an assigned function');   
+  return mf('test_key2', null, 'Example mf() use in an assigned function');   
 }
 
 if (Meteor.isClient)
   Handlebars.registerHelper('testHelper', function() {
-    return mf('test_key3', 'Example mf() use in a helper / anonymous func');
+    return mf('test_key3', null, 'Example mf() use in a helper / anonymous func');
   });
