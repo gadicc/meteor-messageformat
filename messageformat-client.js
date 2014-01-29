@@ -37,7 +37,7 @@ mfPkg.clientInit = function(native, options) {
 		var locale =
 			mfPkg.sendPolicy == 'all' ? 'all'
 			: Session.get('locale') || mfPkg.native;
-			console.log(locale); 
+			// console.log(locale); 
 
 		// If we requested the lang previously, or requesting native lang,
 		// don't retrieve the strings [again], just update the subscription
@@ -89,7 +89,7 @@ mfPkg.loadLangs = function(reqLang, callback) {
 mfPkg.readyDep = new Deps.Dependency;
 mfPkg.ready = function() {
 	var ready = !mfPkg.langsLoading && mfPkg.mfStringsSub.ready();
-	console.log('changed to: ' + ready);
+	//console.log('changed to: ' + ready);
 	this.readyDep.depend();
 	return ready;
 }
