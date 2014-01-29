@@ -121,7 +121,8 @@ mf = function(key, params, message, locale) {
         else
             message = message || key;
 
-        cmessage = mfPkg.compiled[locale][key] = mf.compile(message);
+        cmessage = mfPkg.compiled[locale][key]
+        	= mf.compile(Meteor.isServer ? message.key : message);
     }
 
     try {
