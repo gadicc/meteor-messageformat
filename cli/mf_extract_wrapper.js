@@ -4,11 +4,6 @@ var path	= require('path');
 var spawn = require('child_process').spawn;
 var projRoot, cli, args;
 
-// the following are used on mf_extract.js and are included here
-// just for dep autodetection on npm
-var walk    = require('walk');
-var _       = require('underscore');
-
 var cliPath = 'packages/messageformat/cli/mf_extract.js';
 
 for (projRoot = process.cwd();

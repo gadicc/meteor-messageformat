@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var walk    = require('walk');
+var walk    = require('../.npm/package/node_modules/walk');
 var fs 		= require('fs')
 var _       = require('underscore');
 var path	= require('path');

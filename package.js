@@ -2,6 +2,10 @@ Package.describe({
     summary: "MessageFormat support, the Meteor way"
 });
 
+Npm.depends({
+  "walk": "2.2.1"
+});
+
 Package.on_use(function (api) {
 	api.use(['headers', 'underscore'], ['client', 'server']);
 	api.use(['handlebars', 'templating', 'session', 'deps'], 'client');
