@@ -3,10 +3,10 @@
     "description": "MessageFormat support, i18n the Meteor way",
     "homepage": "https://github.com/gadicohen/meteor-messageformat",
     "author": "Gadi Cohen <dragon@wastelands.net>",
-    "version": "0.0.19",
+    "version": "0.0.20",
     "git": "https://github.com/gadicohen/meteor-messageformat.git",
 	"packages": {
-		"headers": "0.0.12",
+		"headers": "0.0.15",
 		"iron-router": "0.6.2"
 	}
 }

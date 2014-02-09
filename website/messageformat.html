@@ -27,7 +27,11 @@
           </ul>
 	        <div class="navbar-right">
 	        	<div style="padding: 12px">
-		        	{{loginButtons}}
+	        		{{#if MeteorUI}}
+	        			{{> loginButtons}}
+	        		{{else}}
+		        		{{loginButtons}}
+		        	{{/if}}
 		        </div>
 	        </div>
         </div><!--/.nav-collapse -->

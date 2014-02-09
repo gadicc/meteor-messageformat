@@ -8,21 +8,32 @@ Handlebars.registerHelper('mf', function(key, message, params) {
 	// For best performance, waiton mfPkg.ready() before drawing template
 	var dep = mfPkg.updated();
 
-    if (typeof key == "function") {
-        // if called as a block helper
-        message = key.fn(this);
-        params = key.hash;
-        key = params.KEY;
-    } else {
-        message = params ? message : null;
-        params = params ? params.hash : {};
-    }
+	if (typeof key == "object") {
+		// if called as a block helper (Meteor UI / Spacebars)
+		// working on Meteor shark branch as of 2014-02-09
+		var component = key.hash.__content;
+		message = UI.toRawText(component, component);
+		params = key.hash;
+		key = params.KEY;
+	} else if (typeof key == "function") {
+		// if called as a block helper (spark / pre UI)
+		message = key.fn(this);
+		params = key.hash;
+		key = params.KEY;
+	} else {
+		message = params ? message : null;
+		params = params ? params.hash : {};
+	}
 
     // Ideally we would like to automatically make available the entire template context.
     // Unfortunately, global helpers don't have access to it :(
 
     // XXX TODO think about this.  Allows for <a href="...">strings</a>.
-    return new Handlebars.SafeString(mf(key, params, message, params ? params.LOCALE : null));
+	if (typeof(UI) == 'object') {
+		return HTML.Raw(mf(key, params, message, params ? params.LOCALE : null));
+	} else {
+		return new Handlebars.SafeString(mf(key, params, message, params ? params.LOCALE : null));
+	}
 });
 
 mfPkg.sendPolicy = 'current';

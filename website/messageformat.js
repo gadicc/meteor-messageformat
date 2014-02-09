@@ -30,6 +30,10 @@ if (Meteor.isClient) {
     	$(document).scrollTop(scrolls[this.path] || 0);
     });
 
+    Template.layout.MeteorUI = function() {
+    	return typeof(UI) == 'object';
+    }
+
     // incase we redraw after the above or above called before we're rendered
     Template.layout.rendered = function() {
         var navbar = $('body .navbar:first-child');

@@ -1,7 +1,15 @@
 {
-  "meteor": {},
+  "meteor": {
+    "git": "https://github.com/meteor/meteor.git",
+    "branch": "shark",
+    "commit": "73090253483576ad05d07058f523ad2cae0677d9"
+  },
   "dependencies": {
     "basePackages": {
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "branch": "cmather"
+      },
       "messageformat": {
         "path": ".."
       },
@@ -13,6 +21,11 @@
       }
     },
     "packages": {
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "branch": "cmather",
+        "commit": "030f298074d4c3b0046ede7a3c15d7be6e2f96c1"
+      },
       "messageformat": {
         "path": ".."
       },
@@ -28,11 +41,6 @@
         "git": "https://github.com/gadicohen/meteor-headers.git",
         "tag": "v0.0.15",
         "commit": "0852ea4df6b1314914c4355160d0b0fd61675aea"
-      },
-      "iron-router": {
-        "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.6.2",
-        "commit": "ce56e58b45624dce992490f3a1c10f10d3948bae"
       },
       "sp-marked": {
         "git": "https://bitbucket.org/parhelium/sp-marked",

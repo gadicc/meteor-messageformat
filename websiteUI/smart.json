@@ -1,0 +1,20 @@
+{
+  "meteor": {
+    "git": "https://github.com/meteor/meteor.git",
+    "branch": "shark"
+  },
+  "packages": {
+    "iron-router": {
+      "git": "https://github.com/EventedMind/iron-router.git",
+      "XXbranch": "shark",
+      "branch": "cmather"
+    },
+    "messageformat": {
+      "path": ".."
+    },
+    "SyntaxHighlighter": {
+      "path": "/home/dragon/www/smart/SyntaxHighlighter"
+    },
+    "bootstrap-3": {}
+  }
+}

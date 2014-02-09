@@ -113,7 +113,7 @@
 	{{> numButtons}}
 
 	<a name='selectformat'></a>
-	<h2>{{mf 'selectformat' 'SelectFormat'}}
+	<h2>{{mf 'selectformat' 'SelectFormat'}}</h2>
 
 	<a name='string_gender'></a>
 	<h3>{{mf 'string_gender' 'String with a gender'}}</h3>
@@ -198,37 +198,37 @@
 					}}&#125;&#125;
 {{message}}
 &#123;&#123;/mf&#125;&#125;{{/sh_highlight}}{{else
-					}}<code>&#123;&#123;mf '{{key}}' '{{message}}'{{#if paramOverride}} {{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;{{/if}}</code></td></tr>
-			{{#if js}}<tr><td>{{mf 'javascript' 'JavaScript'}}:</td><td>{{#sh_highlight lang='js'}}{{js}}{{/sh_highlight}}</code></td></tr>{{/if}}
+					}}<code>&#123;&#123;mf '{{key}}' '{{message}}'{{#if paramOverride}} {{paramOverride}}{{else}}{{paramsStr}}{{/if}}&#125;&#125;</code>{{/if}}</td></tr>
+			{{#if js}}<tr><td>{{mf 'javascript' 'JavaScript'}}:</td><td>{{#sh_highlight lang='js'}}{{js}}{{/sh_highlight}}</td></tr>{{/if}}
 			<tr><td>{{mf 'result' 'Result'}}:</td><td>{{#if longMessage}}{{#sh_highlight lang='html'}}{{mf key message params}}{{/sh_highlight}}{{else}}{{mf key message params}}{{/if}}</td></tr>
 		</table>
 	</div>
 </template>
 
 <template name="langButtons">
-	<button {{#if isLang 'en'}}class="selected" {{/if}}value="en">Session.set('lang', 'en');</button>
-	<button {{#if isLang 'af'}}class="selected" {{/if}}value="af">Session.set('lang', 'af');</button>
-	<button {{#if isLang 'he'}}class="selected" {{/if}}value="he">Session.set('lang', 'he');</button>
+	<button class="{{#if isLang 'en'}}selected{{/if}}" value="en">Session.set('lang', 'en');</button>
+	<button class="{{#if isLang 'af'}}selected{{/if}}" value="af">Session.set('lang', 'af');</button>
+	<button class="{{#if isLang 'he'}}selected{{/if}}" value="he">Session.set('lang', 'he');</button>
 </template>
 
 <template name="numButtons">
-	<button {{#if isNum 0}}class="selected" {{/if}}value="0">Session.set('NUM', 0);</button>
-	<button {{#if isNum 1}}class="selected" {{/if}}value="1">Session.set('NUM', 1);</button>
-	<button {{#if isNum 2}}class="selected" {{/if}}value="2">Session.set('NUM', 2);</button>
-	<button {{#if isNum 3}}class="selected" {{/if}}value="3">Session.set('NUM', 3);</button>
-	<button {{#if isNum 4}}class="selected" {{/if}}value="4">Session.set('NUM', 4);</button>
+	<button class="{{#if isNum 0}}selected{{/if}}" value="0">Session.set('NUM', 0);</button>
+	<button class="{{#if isNum 1}}selected{{/if}}" value="1">Session.set('NUM', 1);</button>
+	<button class="{{#if isNum 2}}selected{{/if}}" value="2">Session.set('NUM', 2);</button>
+	<button class="{{#if isNum 3}}selected{{/if}}" value="3">Session.set('NUM', 3);</button>
+	<button class="{{#if isNum 4}}selected{{/if}}" value="4">Session.set('NUM', 4);</button>
 </template>
 
 <template name="numButtons2">
-	<button {{#if isNum 0}}class="selected" {{/if}}value="0">Session.set('NUM2', 0);</button>
-	<button {{#if isNum 1}}class="selected" {{/if}}value="1">Session.set('NUM2', 1);</button>
-	<button {{#if isNum 2}}class="selected" {{/if}}value="2">Session.set('NUM2', 2);</button>
-	<button {{#if isNum 3}}class="selected" {{/if}}value="3">Session.set('NUM2', 3);</button>
-	<button {{#if isNum 4}}class="selected" {{/if}}value="4">Session.set('NUM2', 4);</button>
+	<button class="{{#if isNum 0}}selected{{/if}}" value="0">Session.set('NUM2', 0);</button>
+	<button class="{{#if isNum 1}}selected{{/if}}" value="1">Session.set('NUM2', 1);</button>
+	<button class="{{#if isNum 2}}selected{{/if}}" value="2">Session.set('NUM2', 2);</button>
+	<button class="{{#if isNum 3}}selected{{/if}}" value="3">Session.set('NUM2', 3);</button>
+	<button class="{{#if isNum 4}}selected{{/if}}" value="4">Session.set('NUM2', 4);</button>
 </template>
 
 <template name="genderButtons">
-	<button {{#if isGender "male"}}class="selected" {{/if}}value="male">Session.set('GENDER', 'male');</button>
-	<button {{#if isGender "female"}}class="selected" {{/if}}value="female">Session.set('GENDER', 'female');</button>
-	<button {{#if isGender "other"}}class="selected" {{/if}}value="other">Session.set('GENDER', 'other');</button>
+	<button class="{{#if isGender "male"}}selected{{/if}}" value="male">Session.set('GENDER', 'male');</button>
+	<button class="{{#if isGender "female"}}selected{{/if}}" value="female">Session.set('GENDER', 'female');</button>
+	<button class="{{#if isGender "other"}}selected{{/if}}" value="other">Session.set('GENDER', 'other');</button>
 </template>
