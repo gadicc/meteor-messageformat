@@ -1,3 +1,5 @@
+# meteor-messageformat [![Build Status](https://travis-ci.org/gadicohen/meteor-messageformat.png?branch=master)](https://travis-ci.org/gadicohen/meteor-messageformat)
+
 MessageFormat support, the Meteor way.
 
 Easy reactive use of complicated strings (gender, plural, etc) with insanely easy
