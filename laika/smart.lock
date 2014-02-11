@@ -1,0 +1,25 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "messageformat": {
+        "path": ".."
+      }
+    },
+    "packages": {
+      "messageformat": {
+        "path": ".."
+      },
+      "headers": {
+        "git": "https://github.com/gadicohen/meteor-headers.git",
+        "tag": "v0.0.15",
+        "commit": "0852ea4df6b1314914c4355160d0b0fd61675aea"
+      },
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.6.2",
+        "commit": "ce56e58b45624dce992490f3a1c10f10d3948bae"
+      }
+    }
+  }
+}
