@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cat lib/messageformat.js/locale/* > locale-all.js
+cat lib/messageformat.js/locale/* > lib/mfPkg/locale-all.js

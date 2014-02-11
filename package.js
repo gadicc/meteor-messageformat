@@ -14,10 +14,23 @@ Package.on_use(function (api) {
 	// For now we're kind of coding like it's required
 	api.use('iron-router', ['client', 'server']);
 
+	// common adds
 	api.add_files('lib/messageformat.js/messageformat.js', ['client', 'server']);
-	api.add_files(['messageformat.js', 'locale-all.js'], ['client', 'server']);  
-	api.add_files('messageformat-server.js', 'server');
-	api.add_files(['messageformat.html', 'messageformat-client.js', 'messageformat.css'], 'client');
+	api.add_files([
+		'lib/mfPkg/messageformat.js',
+		'lib/mfPkg/locale-all.js'
+	], ['client', 'server']);
+
+	// server
+	api.add_files('lib/mfPkg/messageformat-server.js', 'server');
+
+	// client
+	api.add_files([
+		'lib/mfPkg/messageformat.html',
+		'lib/mfPkg/messageformat-client.js',
+		'lib/mfPkg/messageformat.css'
+	], 'client');
+
 	if (api.export)
 		api.export(['mfPkg', 'mf'], ['client', 'server']);
 });
