@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Npm.depends({
-  "walk": "2.2.1"
+  "walk": "2.3.1"
 });
 
 Package.on_use(function (api) {

@@ -43,7 +43,10 @@ if (log) {
 
 }
 
-var walker  = walk.walk('.', { followLinks: false });
+var walker  = walk.walk('.', {
+	followLinks: false,
+	filters: ["packages"]
+});
 
 walker.on('file', function(root, stat, next) {
     // Add this file to the list of files (skip .dirs)
