@@ -28,7 +28,9 @@ Package.on_use(function (api) {
 	api.add_files([
 		'lib/mfPkg/messageformat.html',
 		'lib/mfPkg/messageformat-client.js',
-		'lib/mfPkg/messageformat.css'
+		'lib/mfPkg/messageformat.css',
+		'lib/mfPkg/3rdparty/taboverride.js',
+		'lib/mfPkg/3rdparty/taboverride.jquery.js',
 	], 'client');
 
 	if (api.export)
