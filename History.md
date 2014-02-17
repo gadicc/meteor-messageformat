@@ -1,5 +1,10 @@
 ## vNEXT
 
+* Fixed no tabOverride() outside of example website (#22)
+* Now ignores anything in `packages` directory (#21)
+* Various browser compatibilitiy fixes for translation UI (#20) -
+thanks lalomartins!
+
 ## v0.0.20
 
 * Merged Meteor UI support from shark branch, updated to work with
