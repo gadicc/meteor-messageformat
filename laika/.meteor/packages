@@ -8,8 +8,6 @@ insecure
 preserve-inputs
 headers
 messageformat
-SyntaxHighlighter
-bootstrap-3
 iron-router
 accounts-ui
 accounts-password

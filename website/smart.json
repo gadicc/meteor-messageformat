@@ -3,9 +3,7 @@
     "messageformat": {
       "path": ".."
     },
-    "SyntaxHighlighter": {
-      "path": "/home/dragon/www/smart/SyntaxHighlighter"
-    },
+    "SyntaxHighlighter": {},
     "bootstrap-3": {}
   }
 }
