@@ -2,6 +2,10 @@
   "packages": {
     "messageformat": {
       "path": ".."
-    }
+    },
+    "SyntaxHighlighter": {
+      "path": "/home/dragon/www/smart/SyntaxHighlighter"
+    },
+    "bootstrap-3": {}
   }
 }
