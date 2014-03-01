@@ -1,14 +1,10 @@
 {
-  "meteor": {
-    "git": "https://github.com/meteor/meteor.git",
-    "branch": "shark",
-    "commit": "73090253483576ad05d07058f523ad2cae0677d9"
-  },
+  "meteor": {},
   "dependencies": {
     "basePackages": {
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "branch": "cmather"
+        "branch": "blaze-integration"
       },
       "messageformat": {
         "path": ".."
@@ -16,15 +12,14 @@
       "SyntaxHighlighter": {
         "path": "../../SyntaxHighlighter"
       },
-      "bootstrap-3": {
-        "version": "3.1.0-1"
-      }
+      "bootstrap-3": {},
+      "blaze-layout": {}
     },
     "packages": {
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "branch": "cmather",
-        "commit": "030f298074d4c3b0046ede7a3c15d7be6e2f96c1"
+        "branch": "blaze-integration",
+        "commit": "6fd133401bb6de65a30ba148f7d61ea1b4dc9b43"
       },
       "messageformat": {
         "path": ".."
@@ -36,6 +31,11 @@
         "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
         "tag": "v3.1.0-1",
         "commit": "329dccb08bfc18c635676dea600ac9953162cda9"
+      },
+      "blaze-layout": {
+        "git": "https://github.com/EventedMind/blaze-layout.git",
+        "tag": "v0.0.1",
+        "commit": "fa631b7b192618e8690d43f0033a3f4c7f77fa1d"
       },
       "headers": {
         "git": "https://github.com/gadicohen/meteor-headers.git",

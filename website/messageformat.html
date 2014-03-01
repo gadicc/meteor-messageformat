@@ -38,7 +38,11 @@
       </div>
     </div>
 
-	{{yield}}
+    {{#if MeteorUI}}
+    	{{> yield}}
+    {{else}}
+		{{yield}}
+	{{/if}}
 </template>
 
 <template name="home">

@@ -17,9 +17,19 @@ if (Meteor.isClient) {
   	return '{{';
   });
 
-  Handlebars.registerHelper('markdown', function(options) {
-  	return marked(options.fn(this));
-  });
+  if (Package.ui) {
+  	Handlebars.registerHelper('markdown', UI.block(function(options) {
+  		var self = this;
+  		return function() {
+  			var text = UI.toRawText(self.__content, self /*parentComponent*/);
+  			return HTML.Raw(marked(text));
+  		}
+  	}));
+  } else {
+		Handlebars.registerHelper('markdown', function(options) {
+			return marked(options.fn(this));
+		});
+  }
 
 	// http://lions-mark.com/jquery/scrollTo/
 	$.fn.scrollTo = function( target, options, callback ){

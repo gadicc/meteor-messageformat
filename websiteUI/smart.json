@@ -1,13 +1,9 @@
 {
-  "meteor": {
-    "git": "https://github.com/meteor/meteor.git",
-    "branch": "shark"
-  },
+  "meteor": {},
   "packages": {
     "iron-router": {
       "git": "https://github.com/EventedMind/iron-router.git",
-      "XXbranch": "shark",
-      "branch": "cmather"
+      "branch": "blaze-integration"
     },
     "messageformat": {
       "path": ".."
@@ -15,6 +11,7 @@
     "SyntaxHighlighter": {
       "path": "/home/dragon/www/smart/SyntaxHighlighter"
     },
-    "bootstrap-3": {}
+    "bootstrap-3": {},
+    "blaze-layout": {}
   }
 }

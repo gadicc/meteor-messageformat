@@ -10,6 +10,14 @@ Package.on_use(function (api) {
 	api.use(['headers', 'underscore'], ['client', 'server']);
 	api.use(['handlebars', 'templating', 'session', 'deps'], 'client');
 
+	// hack until #1358 is fixed (or until we drop spark support)
+	var fs = Npm.require('fs');
+	var path = Npm.require('path');
+	var packages = fs.readFileSync(path.resolve('.meteor/packages'), 'utf8');
+	if (packages.match(/blaze/))
+		// actually catches iron-router blaze support.  ok for now.
+		api.use(['ui', 'spacebars', 'htmljs'], 'client');
+
 	// Iron Router will be required until Issue #1358 is fixed
 	// For now we're kind of coding like it's required
 	api.use('iron-router', ['client', 'server']);
