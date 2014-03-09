@@ -7,6 +7,6 @@
     "git": "https://github.com/gadicohen/meteor-messageformat.git",
 	"packages": {
 		"headers": "0.0.15",
-		"iron-router": "0.6.2"
+		"iron-router": "0.6.4"
 	}
 }
