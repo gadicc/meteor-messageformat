@@ -1,11 +1,15 @@
 ## vNEXT
 
+## v0.0.23
+
 * Fixed no tabOverride() outside of example website (#22)
 * Now ignores anything in `packages` directory (#21)
 * Various browser compatibilitiy fixes for translation UI (#20) -
 thanks lalomartins!
 * Allow `mfInit('en')` with no {options}.
 * mf_extract now requires underscore from local install, like walk
+
+* what happened to 0.0.22 and 0.0.21? :)  includes some of the above.
 
 ## v0.0.20
 
