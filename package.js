@@ -3,7 +3,8 @@ Package.describe({
 });
 
 Npm.depends({
-  "walk": "2.3.1"
+  "walk": "2.3.1",
+  "underscore": "1.6.0"
 });
 
 Package.on_use(function (api) {

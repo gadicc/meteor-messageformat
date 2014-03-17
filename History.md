@@ -4,6 +4,8 @@
 * Now ignores anything in `packages` directory (#21)
 * Various browser compatibilitiy fixes for translation UI (#20) -
 thanks lalomartins!
+* Allow `mfInit('en')` with no {options}.
+* mf_extract now requires underscore from local install, like walk
 
 ## v0.0.20
 

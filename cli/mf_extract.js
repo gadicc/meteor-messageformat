@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-var walk    = require('../.npm/package/node_modules/walk');
 var fs 		= require('fs')
-var _       = require('underscore');
 var path	= require('path');
+var walk    = require('../.npm/package/node_modules/walk');
+var _       = require('../.npm/package/node_modules/underscore');
 var files   = [];
 var strings = {};
 var projRoot;
