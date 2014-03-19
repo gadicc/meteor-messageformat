@@ -19,7 +19,7 @@
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
         "branch": "blaze-integration",
-        "commit": "6fd133401bb6de65a30ba148f7d61ea1b4dc9b43"
+        "commit": "35ea9b93fff61af9f3a4c01d1c48ede00f176391"
       },
       "messageformat": {
         "path": ".."
@@ -29,13 +29,13 @@
       },
       "bootstrap-3": {
         "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
-        "tag": "v3.1.0-1",
-        "commit": "329dccb08bfc18c635676dea600ac9953162cda9"
+        "tag": "v3.1.1-1",
+        "commit": "63dd38968828bb8963636df93e9a1c45e2dfe67e"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
-        "tag": "v0.0.1",
-        "commit": "fa631b7b192618e8690d43f0033a3f4c7f77fa1d"
+        "tag": "v0.2.1",
+        "commit": "f52f416d6277f27b11832355298553e46b8cc6fd"
       },
       "headers": {
         "git": "https://github.com/gadicohen/meteor-headers.git",
