@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.0.24
+
+* Remove iron-router from smart.json.  See (#29)
+
 ## v0.0.23
 
 * Fixed no tabOverride() outside of example website (#22)
