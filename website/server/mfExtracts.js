@@ -3,9 +3,9 @@ mfPkg.addNative(
   "menu_home": {
     "key": "menu_home",
     "text": "Home",
-    "file": "./messageformat.html",
-    "line": 22,
-    "template": "layout",
+    "file": "./messageformat.js",
+    "line": 1,
+    "func": "unknown",
     "ctime": 1386263778331,
     "mtime": 1386431819659
   },
@@ -247,7 +247,7 @@ mfPkg.addNative(
     "key": "test_key",
     "text": "Example mf() use in a declared function",
     "file": "./docs/docs.js",
-    "line": 77,
+    "line": 87,
     "func": "function testFunc(arg1)",
     "ctime": 1386431857282,
     "mtime": 1386435645667
@@ -256,7 +256,7 @@ mfPkg.addNative(
     "key": "test_key2",
     "text": "Example mf() use in an assigned function",
     "file": "./docs/docs.js",
-    "line": 81,
+    "line": 91,
     "func": "function(arg1)",
     "ctime": 1386432436775,
     "mtime": 1386435100673
@@ -265,12 +265,12 @@ mfPkg.addNative(
     "key": "test_key3",
     "text": "Example mf() use in a helper / anonymous func",
     "file": "./docs/docs.js",
-    "line": 86,
+    "line": 96,
     "func": "function()",
     "ctime": 1386435100673
   }
 }, 
 {
-  "extractedAt": 1392652103565,
+  "extractedAt": 1395930152859,
   "updatedAt": 1386784327515
 });

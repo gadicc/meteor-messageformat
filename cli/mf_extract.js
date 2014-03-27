@@ -135,14 +135,15 @@ function processHtml(file, data) {
 	re = /{{#mf (.*?)}}\s*([^]*?)\s*{{\/mf}}/g;
 	while (result = re.exec(data)) {
 		var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
+		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
+			.exec(data.substring(0, result.index)); // TODO, optimize
 		logKey(file, key, text);
 		strings[key] = {
 			key: key,
 			text: text,
 			file: file,
 			line: data.substring(0, result.index).split('\n').length,
-			template: /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
-				.exec(data.substring(0, result.index))[2]  // TODO, optimize
+			template: tpl ? tpl[2] : 'unknown'
 		};
 	}
 }
@@ -157,14 +158,15 @@ function processJS(file, data) {
 	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
 	while (result = re.exec(data)) {
 		var key = result[2], text = result[4], attributes = attrDict(result[5]);
+		var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
+			.exec(data.substring(0, result.index));
 		logKey(file, key, text);
 		strings[key] = {
 			key: key,
 			text: text,
 			file: file,
 			line: data.substring(0, result.index).split('\n').length,
-			func: /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
-				.exec(data.substring(0, result.index))[1].replace(/^\s+|\s+$/g, '')
+			func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
 		};
 	}
 }

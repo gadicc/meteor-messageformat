@@ -1,3 +1,6 @@
+console.log(mf('menu_home', null, 'Home'));
+
+
 mfPkg.init('en', {
 	sendPolicy: 'all'
 });
@@ -43,5 +46,4 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
 	// server side test
-	console.log(mf('menu_home', null, 'Home'));
 }
