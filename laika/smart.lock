@@ -12,13 +12,13 @@
       },
       "headers": {
         "git": "https://github.com/gadicohen/meteor-headers.git",
-        "tag": "v0.0.15",
-        "commit": "0852ea4df6b1314914c4355160d0b0fd61675aea"
+        "tag": "v0.0.20",
+        "commit": "8dc6d6445def7151e2723b6f7e74818e1fe4b5b4"
       },
-      "iron-router": {
-        "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.6.2",
-        "commit": "ce56e58b45624dce992490f3a1c10f10d3948bae"
+      "inject-initial": {
+        "git": "https://github.com/gadicc/meteor-inject-initial.git",
+        "tag": "v0.0.3",
+        "commit": "7ebbbbdc3c4377bb9bbb1b683971451375d2233f"
       }
     }
   }
