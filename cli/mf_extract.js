@@ -100,7 +100,13 @@ function attrDict(string) {
 }
 
 var lastFile = null;
-function logKey(file, key, text) {
+function logKey(file, key, text, file, line) {
+	if (strings[key] && strings[key].text != text)
+		console.log('Warning, { ' + key + ': "' + text + '" } in '
+			+ file + ':' + line + ' replaces DUP_KEY\n         { '
+			+ key + ': "' + strings[key].text + '" } in '
+			+ strings[key].file + ':' + strings[key].line);
+
 	if (!log)
 		return;
 
@@ -120,14 +126,16 @@ function processHtml(file, data) {
 	re = /{{mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
 	while (result = re.exec(data)) {
 		var key = result[2], text = result[4], attributes = attrDict(result[5]);
-		logKey(file, key, text);
+		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
+				.exec(data.substring(0, result.index)); // TODO, optimize
+		var line = data.substring(0, result.index).split('\n').length;
+		logKey(file, key, text, file, line);
 		strings[key] = {
 			key: key,
 			text: text,
 			file: file,
-			line: data.substring(0, result.index).split('\n').length,
-			template: /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
-				.exec(data.substring(0, result.index))[2]  // TODO, optimize
+			line: line,
+			template: tpl ? tpl[2] : 'unknown'
 		};
 	}
 
@@ -137,12 +145,13 @@ function processHtml(file, data) {
 		var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
 		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
 			.exec(data.substring(0, result.index)); // TODO, optimize
-		logKey(file, key, text);
+		var line = data.substring(0, result.index).split('\n').length;
+		logKey(file, key, text, file, line);
 		strings[key] = {
 			key: key,
 			text: text,
 			file: file,
-			line: data.substring(0, result.index).split('\n').length,
+			line: line,
 			template: tpl ? tpl[2] : 'unknown'
 		};
 	}
@@ -160,12 +169,13 @@ function processJS(file, data) {
 		var key = result[2], text = result[4], attributes = attrDict(result[5]);
 		var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
 			.exec(data.substring(0, result.index));
-		logKey(file, key, text);
+		var line = data.substring(0, result.index).split('\n').length;
+		logKey(file, key, text, file, line);
 		strings[key] = {
 			key: key,
 			text: text,
 			file: file,
-			line: data.substring(0, result.index).split('\n').length,
+			line: line,
 			func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
 		};
 	}

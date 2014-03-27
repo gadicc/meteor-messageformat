@@ -1,5 +1,5 @@
+console.log(mf('menu_home', null, 'Home_1st'));
 console.log(mf('menu_home', null, 'Home'));
-
 
 mfPkg.init('en', {
 	sendPolicy: 'all'
