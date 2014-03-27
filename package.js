@@ -8,7 +8,7 @@ Npm.depends({
 });
 
 Package.on_use(function (api) {
-	api.use(['headers', 'underscore'], ['client', 'server']);
+	api.use(['headers', 'underscore', 'inject-initial'], ['client', 'server']);
 	api.use(['handlebars', 'templating', 'session', 'deps'], 'client');
 
 	// hack until #1358 is fixed (or until we drop spark support)

@@ -40,3 +40,8 @@ if (Meteor.isClient) {
         navbar.find('a[href="' + location.pathname + '"]').parent().addClass('active');
     }
 }
+
+if (Meteor.isServer) {
+	// server side test
+	console.log(mf('menu_home', null, 'Home'));
+}
