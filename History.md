@@ -1,5 +1,16 @@
 ## vNEXT
 
+## v0.0.26
+
+* faster loading with inject-initial, appcache fix for headers
+* mf_extract: warn on duplicate keys (fixes #31)
+* mf_extract. use tpl/func name of 'unknown' regexp fails (fixes #33)
+* server side mf should work even without mfExtract.js (fixes #34)
+
+## v0.0.25
+
+* blaze blockhelper fix (breaks rc0, works on rc1+)
+
 ## v0.0.24
 
 * Remove iron-router from smart.json.  See (#29)

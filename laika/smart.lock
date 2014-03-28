@@ -4,11 +4,17 @@
     "basePackages": {
       "messageformat": {
         "path": ".."
-      }
+      },
+      "iron-router": {}
     },
     "packages": {
       "messageformat": {
         "path": ".."
+      },
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.7.0",
+        "commit": "05f34bc48c4cad9fdaa366c1ddcabe6980232ece"
       },
       "headers": {
         "git": "https://github.com/gadicohen/meteor-headers.git",
@@ -19,6 +25,11 @@
         "git": "https://github.com/gadicc/meteor-inject-initial.git",
         "tag": "v0.0.3",
         "commit": "7ebbbbdc3c4377bb9bbb1b683971451375d2233f"
+      },
+      "blaze-layout": {
+        "git": "https://github.com/EventedMind/blaze-layout.git",
+        "tag": "v0.2.2",
+        "commit": "8bc53798fe5965669ae67c72f91829fcfdceabfd"
       }
     }
   }
