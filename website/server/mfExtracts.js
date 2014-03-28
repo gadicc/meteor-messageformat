@@ -4,10 +4,10 @@ mfPkg.addNative(
     "key": "menu_home",
     "text": "Home",
     "file": "./messageformat.js",
-    "line": 1,
+    "line": 2,
     "func": "unknown",
-    "ctime": 1386263778331,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395932256289
   },
   "menu_docs": {
     "key": "menu_docs",
@@ -15,8 +15,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 23,
     "template": "layout",
-    "ctime": 1386263778331,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "menu_examples": {
     "key": "menu_examples",
@@ -24,8 +24,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 24,
     "template": "layout",
-    "ctime": 1386263778331,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "menu_trans": {
     "key": "menu_trans",
@@ -33,8 +33,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 25,
     "template": "layout",
-    "ctime": 1386263778331,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "open_source": {
     "key": "open_source",
@@ -42,8 +42,8 @@ mfPkg.addNative(
     "file": "./messageformat.html",
     "line": 26,
     "template": "layout",
-    "ctime": 1386363031834,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "examples_header": {
     "key": "examples_header",
@@ -51,8 +51,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 4,
     "template": "examples",
-    "ctime": 1386179946507,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "simple_use": {
     "key": "simple_use",
@@ -60,8 +60,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 36,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "simple_string": {
     "key": "simple_string",
@@ -69,8 +69,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 39,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "simple_variable": {
     "key": "simple_variable",
@@ -78,8 +78,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 45,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "simple_helper": {
     "key": "simple_helper",
@@ -87,8 +87,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 51,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "plural_extension": {
     "key": "plural_extension",
@@ -96,8 +96,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 66,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "string_plural": {
     "key": "string_plural",
@@ -105,8 +105,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 69,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "plural_offset": {
     "key": "plural_offset",
@@ -114,8 +114,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 92,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "selectformat": {
     "key": "selectformat",
@@ -123,8 +123,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 116,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "string_gender": {
     "key": "string_gender",
@@ -132,8 +132,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 119,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "mixing_it_up": {
     "key": "mixing_it_up",
@@ -141,8 +141,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 144,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "string_gender_plural": {
     "key": "string_gender_plural",
@@ -150,8 +150,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 145,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "i_am_str": {
     "key": "i_am_str",
@@ -159,8 +159,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 40,
     "template": "examples",
-    "ctime": 1386363031834,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "hello_name": {
     "key": "hello_name",
@@ -168,8 +168,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 46,
     "template": "examples",
-    "ctime": 1386363031834,
-    "mtime": 1386558951209
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "template": {
     "key": "template",
@@ -177,8 +177,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 196,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386773667213
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "javascript": {
     "key": "javascript",
@@ -186,8 +186,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 202,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "result": {
     "key": "result",
@@ -195,8 +195,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 203,
     "template": "examples",
-    "ctime": 1386176744490,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "hello_name2": {
     "key": "hello_name2",
@@ -204,8 +204,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 52,
     "template": "examples",
-    "ctime": 1386363625032,
-    "mtime": 1386520737976
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "there_are_widgets": {
     "key": "there_are_widgets",
@@ -213,8 +213,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 70,
     "template": "examples",
-    "ctime": 1386363031834,
-    "mtime": 1386431819659
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "added_to_profile": {
     "key": "added_to_profile",
@@ -222,8 +222,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 94,
     "template": "examples",
-    "ctime": 1386784327515,
-    "mtime": 1386784327515
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "select_gender": {
     "key": "select_gender",
@@ -231,8 +231,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 121,
     "template": "examples",
-    "ctime": 1386784327515,
-    "mtime": 1386784327515
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "gender_plural": {
     "key": "gender_plural",
@@ -240,8 +240,8 @@ mfPkg.addNative(
     "file": "./examples/examples.html",
     "line": 147,
     "template": "examples",
-    "ctime": 1386784327515,
-    "mtime": 1386784327515
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "test_key": {
     "key": "test_key",
@@ -249,8 +249,8 @@ mfPkg.addNative(
     "file": "./docs/docs.js",
     "line": 87,
     "func": "function testFunc(arg1)",
-    "ctime": 1386431857282,
-    "mtime": 1386435645667
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "test_key2": {
     "key": "test_key2",
@@ -258,8 +258,8 @@ mfPkg.addNative(
     "file": "./docs/docs.js",
     "line": 91,
     "func": "function(arg1)",
-    "ctime": 1386432436775,
-    "mtime": 1386435100673
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   },
   "test_key3": {
     "key": "test_key3",
@@ -267,10 +267,11 @@ mfPkg.addNative(
     "file": "./docs/docs.js",
     "line": 96,
     "func": "function()",
-    "ctime": 1386435100673
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
   }
 }, 
 {
-  "extractedAt": 1395930152859,
-  "updatedAt": 1386784327515
+  "extractedAt": 1395932262276,
+  "updatedAt": 1395932256289
 });
