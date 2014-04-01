@@ -123,7 +123,7 @@ function processHtml(file, data) {
 	var result, re;
 
 	// {{mf "key" 'text' attr1=val1 attr2=val2 etc}}
-	re = /{{mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
+	re = /{{[\s]?mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
 	while (result = re.exec(data)) {
 		var key = result[2], text = result[4], attributes = attrDict(result[5]);
 		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
@@ -140,7 +140,7 @@ function processHtml(file, data) {
 	}
 
 	// {{#mf KEY="key" attr2=val2 etc}}text{{/mf}}
-	re = /{{#mf (.*?)}}\s*([^]*?)\s*{{\/mf}}/g;
+	re = /{{[\s]?#mf (.*?)}}\s*([^]*?)\s*{{\/mf}}/g;
 	while (result = re.exec(data)) {
 		var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
 		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
