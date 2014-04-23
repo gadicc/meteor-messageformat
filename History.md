@@ -1,5 +1,7 @@
 ## vNEXT
 
+## v0.0.29
+
 * 0.8.0+ only, iron-router 0.7.0+ identifiers (fixes #39)
 Related note: webUI to be moved out to separate package soon
 
