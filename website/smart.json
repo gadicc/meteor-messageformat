@@ -1,9 +1,13 @@
 {
+  "meteor": {},
   "packages": {
+    "iron-router": { },
     "messageformat": {
       "path": ".."
     },
-    "SyntaxHighlighter": {},
+    "SyntaxHighlighter": {
+      "path": "/home/dragon/www/smart/SyntaxHighlighter"
+    },
     "bootstrap-3": {}
   }
 }

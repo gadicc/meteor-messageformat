@@ -1,5 +1,5 @@
-console.log(mf('menu_home', null, 'Home_1st'));
-console.log(mf('menu_home', null, 'Home'));
+// console.log(mf('menu_home', null, 'Home_1st'));
+// console.log(mf('menu_home', null, 'Home'));
 
 mfPkg.init('en', {
 	sendPolicy: 'all'
@@ -19,7 +19,7 @@ if (Meteor.isClient) {
 
 	var scrolls = {};
 
-    Router.before(function() {
+    Router.onBeforeAction(function() {
   		// remember our scroll position for this page
     	scrolls[this.path] = $(document).scrollTop();
 
@@ -28,14 +28,10 @@ if (Meteor.isClient) {
         navbar.find('a[href="' + this.path + '"]').parent().addClass('active');
     });
 
-    Router.after(function() {
+    Router.onAfterAction(function() {
     	// start at last scroll position for this page, or the top if first time
     	$(document).scrollTop(scrolls[this.path] || 0);
     });
-
-    Template.layout.MeteorUI = function() {
-    	return typeof(UI) == 'object';
-    }
 
     // incase we redraw after the above or above called before we're rendered
     Template.layout.rendered = function() {
@@ -45,5 +41,4 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-	// server side test
 }

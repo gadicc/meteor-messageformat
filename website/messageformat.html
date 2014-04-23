@@ -27,22 +27,14 @@
           </ul>
 	        <div class="navbar-right">
 	        	<div style="padding: 12px">
-	        		{{#if MeteorUI}}
-	        			{{> loginButtons}}
-	        		{{else}}
-		        		{{loginButtons}}
-		        	{{/if}}
+        			{{> loginButtons}}
 		        </div>
 	        </div>
         </div><!--/.nav-collapse -->
       </div>
     </div>
 
-    {{#if MeteorUI}}
-    	{{> yield}}
-    {{else}}
-		{{yield}}
-	{{/if}}
+  	{{> yield}}
 </template>
 
 <template name="home">

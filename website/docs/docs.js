@@ -63,6 +63,9 @@ if (Meteor.isClient) {
     });
   }
   $(window).scroll(function() {
+  	if (Router.current().path != '/docs')
+  		return;
+
     var i, pos = $('body').scrollTop();
     if (pos > anchors[currentAnchor].top)
       for (i=currentAnchor; i < anchors.length-1 && pos > anchors[i+1].top; i++);

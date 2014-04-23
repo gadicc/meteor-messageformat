@@ -1,7 +1,7 @@
 if (Meteor.isClient) {
 
   Router.map(function () {
-    this.route('examples', {
+    this.route('examplesPage', {
       path: '/examples',
 //      waitOn: function() {
 //        return [{ ready: function() { return true; }}];
@@ -23,44 +23,49 @@ if (Meteor.isClient) {
     return text.replace(re, indent).replace(/\s*$/, '');
   }
 
-  Template.examples.example = function(key, message, params) {
-    var js, longMessage;
-    if (typeof key == "function") {
-        // if called as a block helper
-        message = myTrim(key.fn(this), '   ');
-        params = { hash: key.hash };
-        js = myTrim(key.inverse(this), '');
-        key = params.hash.KEY;
-        longMessage = true;
-    } else {
-        message = params ? message : null;
-        js = params.extra;
-        longMessage = false;
-    }
-    return new Handlebars.SafeString(Template.example({
-      longMessage: longMessage,
-      key: key, message: message, params: params, js: js,
-      paramOverride: params.hash && params.hash.paramOverride
-    }));
-  }
-  Template.example.blah = function() {
-    console.log(this);
+  /*
+  mfRuns = [];
+  Template.sh_origMfCall.helper = function(component, options) {
+    var call = '1';
+    var raw = UI.toRawText(component); // run mf helper inside tpl
+    var call = mfRuns.shift();
+    console.log(raw);
+    console.log('shift ' + call);
+    return Spacebars.SafeString(sh_highlight(call, 'html'));
   }
 
-  Template.example.paramsStr = function() {
-    var out = '';
-    var params = this.params.hash;
-    for (key in params)
-      out += ' ' + key + '="' + params[key] + '"';
-    return out;
-  }
+  var origMfHelper = Template.mf.helper;
+  Template.mf.helper = function(component, options) {
+    console.log('mf block');
+    var call = '{{#mf ';
+    for (key in this)
+      call += key + '="' + this[key] + '" ';
+    call += '}}' + UI.toRawText(component).trimRight() + '\n{{/mf}}';
+    console.log('push1 ' + call);
 
-/*
-  Template.example.longMessage = function() {
-    return 1;
-    return this.message.length > 20;
+    mfRuns.push(call);
+    return origMfHelper.apply(this, arguments);
   }
-*/
+  Template.examples.mf = function(key, message, options) {
+    if (typeof key === 'undefined')
+      return Template.mf;
+
+    var params = options.hash;
+    console.log(this, arguments);
+    if (!params.example)
+      return mfPkg.mfHelper.apply(this, arguments);
+
+    console.log('mf regular');
+    var call = '{{mf "' + key + '" "' + message + '"';
+    for (param in params)
+      if (param != 'hash' && param != 'example')
+        call += ' ' + param + '="' + params[param] + '"';
+    call += '}}';
+    console.log('push2 ' + call);
+    mfRuns.push(call);
+    return mfPkg.mfHelper.apply(this, arguments);
+  }
+  */
 
   Session.setDefault('lang', 'en');
   Template.langButtons.events({

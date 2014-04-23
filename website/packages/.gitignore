@@ -1,11 +1,8 @@
-messageformat
-headers
-SyntaxHighlighter
-iron-router
-sp-marked
-bootstrap-3
+/iron-router
+/messageformat
+/SyntaxHighlighter
 /bootstrap-3
 /headers
-/iron-router
-/SyntaxHighlighter
+/sp-marked
+/blaze-layout
 /inject-initial

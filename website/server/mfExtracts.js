@@ -50,7 +50,7 @@ mfPkg.addNative(
     "text": "Meteor MessageFormat examples",
     "file": "./examples/examples.html",
     "line": 4,
-    "template": "examples",
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -58,8 +58,8 @@ mfPkg.addNative(
     "key": "simple_use",
     "text": "Simple Use",
     "file": "./examples/examples.html",
-    "line": 36,
-    "template": "examples",
+    "line": 41,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -67,8 +67,8 @@ mfPkg.addNative(
     "key": "simple_string",
     "text": "Simple string translation",
     "file": "./examples/examples.html",
-    "line": 39,
-    "template": "examples",
+    "line": 44,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -76,8 +76,8 @@ mfPkg.addNative(
     "key": "simple_variable",
     "text": "String with a static variable",
     "file": "./examples/examples.html",
-    "line": 45,
-    "template": "examples",
+    "line": 70,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -85,8 +85,8 @@ mfPkg.addNative(
     "key": "simple_helper",
     "text": "String with a variable from a helper function",
     "file": "./examples/examples.html",
-    "line": 51,
-    "template": "examples",
+    "line": 96,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -94,8 +94,8 @@ mfPkg.addNative(
     "key": "plural_extension",
     "text": "Plural Extension",
     "file": "./examples/examples.html",
-    "line": 66,
-    "template": "examples",
+    "line": 138,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -103,8 +103,8 @@ mfPkg.addNative(
     "key": "string_plural",
     "text": "String with a plural",
     "file": "./examples/examples.html",
-    "line": 69,
-    "template": "examples",
+    "line": 141,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -112,8 +112,8 @@ mfPkg.addNative(
     "key": "plural_offset",
     "text": "Plural Offset (\"and one other\")",
     "file": "./examples/examples.html",
-    "line": 92,
-    "template": "examples",
+    "line": 184,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -121,8 +121,8 @@ mfPkg.addNative(
     "key": "selectformat",
     "text": "SelectFormat",
     "file": "./examples/examples.html",
-    "line": 116,
-    "template": "examples",
+    "line": 227,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -130,8 +130,8 @@ mfPkg.addNative(
     "key": "string_gender",
     "text": "String with a gender",
     "file": "./examples/examples.html",
-    "line": 119,
-    "template": "examples",
+    "line": 230,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -139,8 +139,8 @@ mfPkg.addNative(
     "key": "mixing_it_up",
     "text": "Mixing it Up",
     "file": "./examples/examples.html",
-    "line": 144,
-    "template": "examples",
+    "line": 274,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -148,26 +148,8 @@ mfPkg.addNative(
     "key": "string_gender_plural",
     "text": "Gender and 2 plurals",
     "file": "./examples/examples.html",
-    "line": 145,
-    "template": "examples",
-    "ctime": 1395931103550,
-    "mtime": 1395931103550
-  },
-  "i_am_str": {
-    "key": "i_am_str",
-    "text": "I am a string.",
-    "file": "./examples/examples.html",
-    "line": 40,
-    "template": "examples",
-    "ctime": 1395931103550,
-    "mtime": 1395931103550
-  },
-  "hello_name": {
-    "key": "hello_name",
-    "text": "Hello, {NAME}.",
-    "file": "./examples/examples.html",
-    "line": 46,
-    "template": "examples",
+    "line": 276,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -175,17 +157,8 @@ mfPkg.addNative(
     "key": "template",
     "text": "Template",
     "file": "./examples/examples.html",
-    "line": 196,
-    "template": "examples",
-    "ctime": 1395931103550,
-    "mtime": 1395931103550
-  },
-  "javascript": {
-    "key": "javascript",
-    "text": "JavaScript",
-    "file": "./examples/examples.html",
-    "line": 202,
-    "template": "examples",
+    "line": 351,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -193,8 +166,35 @@ mfPkg.addNative(
     "key": "result",
     "text": "Result",
     "file": "./examples/examples.html",
-    "line": 203,
-    "template": "examples",
+    "line": 371,
+    "template": "examplesPage",
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
+  },
+  "i_am_str": {
+    "key": "i_am_str",
+    "text": "I am a string.",
+    "file": "./examples/examples.html",
+    "line": 64,
+    "template": "examplesPage",
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
+  },
+  "hello_name": {
+    "key": "hello_name",
+    "text": "Hello, {NAME}.",
+    "file": "./examples/examples.html",
+    "line": 90,
+    "template": "examplesPage",
+    "ctime": 1395931103550,
+    "mtime": 1395931103550
+  },
+  "javascript": {
+    "key": "javascript",
+    "text": "JavaScript",
+    "file": "./examples/examples.html",
+    "line": 361,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
@@ -202,46 +202,46 @@ mfPkg.addNative(
     "key": "hello_name2",
     "text": "Hello, {NAME}.",
     "file": "./examples/examples.html",
-    "line": 52,
-    "template": "examples",
+    "line": 130,
+    "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
   },
   "there_are_widgets": {
     "key": "there_are_widgets",
-    "text": "There {NUM, plural,\n\t\t     =0 {are no widgets}\n\t\t    one {is one widget}\n\t\t  other {are # widgets}\n\t\t}.",
+    "text": "There {NUM, plural,\n\t\t\t\t\t\t\t     =0 {are no widgets}\n\t\t\t\t\t\t    \tone {is one widget}\n\t\t\t\t\t\t  \tother {are # widgets}\n\t\t\t\t\t\t\t}.",
     "file": "./examples/examples.html",
-    "line": 70,
-    "template": "examples",
+    "line": 169,
+    "template": "examplesPage",
     "ctime": 1395931103550,
-    "mtime": 1395931103550
+    "mtime": 1398266720690
   },
   "added_to_profile": {
     "key": "added_to_profile",
-    "text": "You {NUM_ADDS, plural, offset:1\n\t\t\t    =0 {didnt add this to your profile}\n\t\t\t    =1 {added this to your profile}\n\t\t\t   one {and one other person added this to their profile}\n\t\t\t other {and # others added this to their profiles}}.",
+    "text": "You {NUM_ADDS, plural, offset:1\n\t\t\t\t\t\t\t    =0 {didnt add this to your profile}\n\t\t\t\t\t\t\t    =1 {added this to your profile}\n\t\t\t\t\t\t\t   one {and one other person added this to their profile}\n\t\t\t\t\t\t\t other {and # others added this to their profiles}}.",
     "file": "./examples/examples.html",
-    "line": 94,
-    "template": "examples",
+    "line": 212,
+    "template": "examplesPage",
     "ctime": 1395931103550,
-    "mtime": 1395931103550
+    "mtime": 1398266720690
   },
   "select_gender": {
     "key": "select_gender",
-    "text": "{GENDER, select,\n\t\t\t\tmale {He}\n\t\t\tfemale {She}\n\t\t\t other {They}} liked this.",
+    "text": "{GENDER, select,\n\t\t\t\t\t\t\t\t\tmale {He}\n\t\t\t\t\t\t\t\tfemale {She}\n\t\t\t\t\t\t\t\t other {They}} liked this.",
     "file": "./examples/examples.html",
-    "line": 121,
-    "template": "examples",
+    "line": 257,
+    "template": "examplesPage",
     "ctime": 1395931103550,
-    "mtime": 1395931103550
+    "mtime": 1398266720690
   },
   "gender_plural": {
     "key": "gender_plural",
-    "text": "{GENDER, select,\n\t          male {He}\n\t        female {She}\n\t         other {They}\n\t    } found {NUM_RESULTS, plural,\n\t            =0 {no results}\n\t           one {1 result}\n\t         other {# results}\n\t    } in {NUM_CATS, plural,\n\t           one {1 category}\n\t         other {# categories}\n\t    }.",
+    "text": "{GENDER, select,\n\t\t\t\t\t          male {He}\n\t\t\t\t\t        female {She}\n\t\t\t\t\t         other {They}\n\t\t\t\t\t    } found {NUM_RESULTS, plural,\n\t\t\t\t\t            =0 {no results}\n\t\t\t\t\t           one {1 result}\n\t\t\t\t\t         other {# results}\n\t\t\t\t\t    } in {NUM_CATS, plural,\n\t\t\t\t\t           one {1 category}\n\t\t\t\t\t         other {# categories}\n\t\t\t\t\t    }.",
     "file": "./examples/examples.html",
-    "line": 147,
-    "template": "examples",
+    "line": 317,
+    "template": "examplesPage",
     "ctime": 1395931103550,
-    "mtime": 1395931103550
+    "mtime": 1398266720690
   },
   "test_key": {
     "key": "test_key",
@@ -272,6 +272,6 @@ mfPkg.addNative(
   }
 }, 
 {
-  "extractedAt": 1395932262276,
-  "updatedAt": 1395932256289
+  "extractedAt": 1398266741332,
+  "updatedAt": 1398266720690
 });
