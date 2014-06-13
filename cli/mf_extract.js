@@ -164,7 +164,7 @@ function processJS(file, data) {
 	// function blah(), blah = function(), helper('moo', function() {...
 	// mf('test_key', params, 'test_text')
 
-	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
+	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
 	while (result = re.exec(data)) {
 		var key = result[2], text = result[4], attributes = attrDict(result[5]);
 		var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
