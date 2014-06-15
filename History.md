@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.0.30
+
+* mf_extract: parse function calls with no spaces (fixes #42).  thanks @matteosaporiti
+
 ## v0.0.29
 
 * 0.8.0+ only, iron-router 0.7.0+ identifiers (fixes #39)
