@@ -3,10 +3,10 @@
     "description": "MessageFormat support, i18n the Meteor way",
     "homepage": "https://github.com/gadicohen/meteor-messageformat",
     "author": "Gadi Cohen <dragon@wastelands.net>",
-    "version": "0.0.30",
+    "version": "0.0.31",
     "git": "https://github.com/gadicohen/meteor-messageformat.git",
 	"packages": {
-		"headers": "0.0.21",
-		"inject-initial": "0.0.7"
+		"headers": "0.0.23",
+		"inject-initial": "0.0.8"
 	}
 }
