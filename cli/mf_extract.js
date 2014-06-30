@@ -50,7 +50,7 @@ var walker  = walk.walk('.', {
 
 walker.on('file', function(root, stat, next) {
     // Add this file to the list of files (skip .dirs)
-    if (root.substr(0,3) != './.' && stat.name.match(/html|js$/)) {
+    if (root.substr(0,3) != './.' && stat.name.match(/html|js|coffee$/)) {
 	    files.push(root + '/' + stat.name);
     }
     next();
@@ -62,8 +62,10 @@ walker.on('end', function() {
     	data = fs.readFileSync(file, 'utf8');
     	if (file.match(/html$/))
 			processHtml(file, data);
-		else if (file.match(/js$/))
-			processJS(file, data);
+        else if (file.match(/js$/))
+            processJS(file, data);
+        else if (file.match(/coffee$/))
+            processCoffee(file, data);
     });
 
 	// Update mtime if modified, otherwise init ctime+mtime to now
@@ -179,6 +181,30 @@ function processJS(file, data) {
 			func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
 		};
 	}
+}
+
+function processCoffee(file, data) {
+    // XXX TODO, escaped quotes
+    var result, re;
+
+    // function blah(), blah = function(), helper('moo', function() {...
+    // mf('test_key', params, 'test_text')
+
+    re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
+    while (result = re.exec(data)) {
+        var key = result[2], text = result[4], attributes = attrDict(result[5]);
+        var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
+            .exec(data.substring(0, result.index));
+        var line = data.substring(0, result.index).split('\n').length;
+        logKey(file, key, text, file, line);
+        strings[key] = {
+            key: key,
+            text: text,
+            file: file,
+            line: line,
+            func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
+        };
+    }
 }
 
 function serverStrings(strings) {
