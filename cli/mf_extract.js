@@ -193,8 +193,13 @@ function processCoffee(file, data) {
     re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
     while (result = re.exec(data)) {
         var key = result[2], text = result[4], attributes = attrDict(result[5]);
-        var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
-            .exec(data.substring(0, result.index));
+
+        var func = 'unknown'
+        var func_re = /(^|\n+)(.*[-=][>])/g
+        while(func_re_result = func_re.exec(data.substring(0, result.index))) {
+            func = func_re_result[2].replace(/^\s+|\s+$/g, '');
+        }
+
         var line = data.substring(0, result.index).split('\n').length;
         logKey(file, key, text, file, line);
         strings[key] = {
@@ -202,7 +207,7 @@ function processCoffee(file, data) {
             text: text,
             file: file,
             line: line,
-            func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
+            func: func
         };
     }
 }
