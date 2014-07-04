@@ -46,4 +46,15 @@ suite('Github Issues', function() {
 			done();
 		});
 	});
+
+	test('Inconsistent API, mf() should be flexible on ordering (#47)', function(done, server, client) {
+		server.eval(function() {
+			mfPkg.init('en');
+			emit('result', mf('test', {}, 'Test') === mf('test', 'Test'));
+		});
+		server.once('result', function(result) {
+			assert.equal(result, true);
+			done();
+		});
+	});
 });

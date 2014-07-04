@@ -156,14 +156,22 @@ Notes:
 <a name="javascript"></a>
 ### Javascript (if needed)
 
+```js
+mf(key [,params] [,message] [,locale]);
 ```
-mf(key, params, message, locale);
+
+e.g.
+
+```js
+mf('hello_name', { name: 'John' }, 'Hello {name}');
+mf('hello_there', 'Hello there');
 ```
 
 Notes:
 
-1. *message* is optional (can be *null*), as per the above.
-2. *locale* is optional, defaults to Session.get('locale') on the client (reactive);
+1. *params* are also optional when no substitution is required
+1. *message* is optional if key used previously or precompiled
+1. *locale* is optional, defaults to Session.get('locale') on the client (reactive);
 
 <a name="translation"></a>
 ### Translation

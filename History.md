@@ -1,5 +1,11 @@
 ## vNEXT
 
+## v0.0.33
+
+* `params` is now optional in `mf()`.  Fixes inconsistency in #47.
+* Remove `inject-initial` from smart.json since we ask for `headers` which includes it.
+This avoids needing to update both packages each time until Meteor 0.9 is released.
+
 ## v0.0.30
 
 * mf_extract: parse function calls with no spaces (fixes #42).  thanks @matteosaporiti
