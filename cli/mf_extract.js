@@ -1,23 +1,14 @@
 #!/usr/bin/env node
+
 var fs 		= require('fs')
 var path	= require('path');
-var walk    = require('../.npm/package/node_modules/walk');
-var _       = require('../.npm/package/node_modules/underscore');
+var projRoot = process.cwd();
+var npmbuild = projRoot + '/packages/messageformat/.build/npm/node_modules/';
+var walk    = require(npmbuild + 'walk');
+var _       = require(npmbuild + 'underscore');
 var files   = [];
 var strings = {};
-var projRoot;
 var log = process.argv[2] == '-v';
-
-for (projRoot = process.cwd();
-	projRoot != '/' && !fs.existsSync(projRoot + '/.meteor/release');
-	projRoot = path.normalize(projRoot + '/..'));
-
-if (!fs.existsSync(projRoot + '/.meteor/release')) {
-	console.log('Error: mf_extract must be run from inside a Meteor project directory')
-	process.exit(1);
-}
-
-process.chdir(projRoot);
 
 if (!fs.existsSync('server')) {
 	console.log('Creating ./server directory');
@@ -61,9 +52,9 @@ walker.on('end', function() {
     _.each(files, function(file) {
     	data = fs.readFileSync(file, 'utf8');
     	if (file.match(/html$/))
-			processHtml(file, data);
-		else if (file.match(/js$/))
-			processJS(file, data);
+				processHtml(file, data);
+			else if (file.match(/js$/))
+				processJS(file, data);
     });
 
 	// Update mtime if modified, otherwise init ctime+mtime to now
