@@ -41,7 +41,7 @@ var walker  = walk.walk('.', {
 
 walker.on('file', function(root, stat, next) {
     // Add this file to the list of files (skip .dirs)
-    if (root.substr(0,3) != './.' && stat.name.match(/html|js$/)) {
+    if (root.substr(0,3) != './.' && stat.name.match(/html|js|jade$/)) {
 	    files.push(root + '/' + stat.name);
     }
     next();
@@ -51,10 +51,12 @@ walker.on('end', function() {
 	var i = 0;
     _.each(files, function(file) {
     	data = fs.readFileSync(file, 'utf8');
-    	if (file.match(/html$/))
+    	if (file.match(/\.html$/))
 				processHtml(file, data);
-			else if (file.match(/js$/))
+			else if (file.match(/\.js$/))
 				processJS(file, data);
+			else if (file.match(/\.jade$/))
+				processJade(file, data);
     });
 
 	// Update mtime if modified, otherwise init ctime+mtime to now
@@ -146,6 +148,47 @@ function processHtml(file, data) {
 			template: tpl ? tpl[2] : 'unknown'
 		};
 	}
+}
+
+function processJade(file, data) {
+	// XXX TODO, escaped quotes
+	var result, re;
+
+	// #{mf 'home_hello_word' 'Hello World!'}
+	re = /{{[\s]*mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
+	while (result = re.exec(data)) {
+		var key = result[2], text = result[4], attributes = attrDict(result[5]);
+		var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])(.*?)\1\s*\)[\s\S]*?$/
+				.exec(data.substring(0, result.index)); // TODO, optimize
+		var line = data.substring(0, result.index).split('\n').length;
+		logKey(file, key, text, file, line);
+		strings[key] = {
+			key: key,
+			text: text,
+			file: file,
+			line: line,
+			template: tpl ? tpl[2] : 'unknown'
+		};
+	}
+
+	// {{mf 'home_hello_word' 'Hello World!'}}
+	re = /\#{[\s]*mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}/g;
+	while (result = re.exec(data)) {
+		var key = result[2], text = result[4], attributes = attrDict(result[5]);
+		var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])([^\1]+?)\1\s*\)[\s\S]*?$/
+				.exec(data.substring(0, result.index)); // TODO, optimize
+		var line = data.substring(0, result.index).split('\n').length;
+		logKey(file, key, text, file, line);
+		strings[key] = {
+			key: key,
+			text: text,
+			file: file,
+			line: line,
+			template: tpl ? tpl[2] : 'unknown'
+		};
+	}
+
+	// block helpers?
 }
 
 function processJS(file, data) {
