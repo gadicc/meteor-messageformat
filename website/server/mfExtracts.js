@@ -184,7 +184,7 @@ mfPkg.addNative(
     "key": "hello_name",
     "text": "Hello, {NAME}.",
     "file": "./examples/examples.html",
-    "line": 90,
+    "line": 121,
     "template": "examplesPage",
     "ctime": 1395931103550,
     "mtime": 1395931103550
@@ -247,7 +247,7 @@ mfPkg.addNative(
     "key": "test_key",
     "text": "Example mf() use in a declared function",
     "file": "./docs/docs.js",
-    "line": 87,
+    "line": 90,
     "func": "function testFunc(arg1)",
     "ctime": 1395931103550,
     "mtime": 1395931103550
@@ -256,7 +256,7 @@ mfPkg.addNative(
     "key": "test_key2",
     "text": "Example mf() use in an assigned function",
     "file": "./docs/docs.js",
-    "line": 91,
+    "line": 94,
     "func": "function(arg1)",
     "ctime": 1395931103550,
     "mtime": 1395931103550
@@ -265,13 +265,40 @@ mfPkg.addNative(
     "key": "test_key3",
     "text": "Example mf() use in a helper / anonymous func",
     "file": "./docs/docs.js",
-    "line": 96,
+    "line": 99,
     "func": "function()",
     "ctime": 1395931103550,
     "mtime": 1395931103550
+  },
+  "jade_home_hello_word": {
+    "key": "jade_home_hello_word",
+    "text": "Hello World!",
+    "file": "./client/test.jade",
+    "line": 6,
+    "template": "jade_home",
+    "ctime": 1405267624710,
+    "mtime": 1405267624710
+  },
+  "jade_about_about": {
+    "key": "jade_about_about",
+    "text": "About",
+    "file": "./client/test.jade",
+    "line": 13,
+    "template": "jade_about",
+    "ctime": 1405267624711,
+    "mtime": 1405267624711
+  },
+  "jade_about_go_back": {
+    "key": "jade_about_go_back",
+    "text": "Go back",
+    "file": "./client/test.jade",
+    "line": 16,
+    "template": "jade_about",
+    "ctime": 1405268014853,
+    "mtime": 1405268014853
   }
 }, 
 {
-  "extractedAt": 1398266741332,
-  "updatedAt": 1398266720690
+  "extractedAt": 1405269387853,
+  "updatedAt": 1405268014853
 });

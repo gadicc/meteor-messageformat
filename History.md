@@ -1,5 +1,10 @@
 ## vNEXT
 
+## v0.0.34
+
+* Removed obsolete {{#isolate}} that threw an exception in 0.8.3 (#49)
+  @DSpeichert, @matteosaporiti
+
 ## v0.0.33
 
 * `params` is now optional in `mf()`.  Fixes inconsistency in #47.
