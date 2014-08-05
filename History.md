@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.0.35
+
+* Fixes for 0.8.3, thanks @tarang (fixes #49)
+
 ## v0.0.34
 
 * Removed obsolete {{#isolate}} that threw an exception in 0.8.3 (#49)
