@@ -1,5 +1,6 @@
 Package.describe({
-    summary: "MessageFormat support, the Meteor way"
+    summary: "MessageFormat support, the Meteor way",
+    version: "0.0.36"
 });
 
 Npm.depends({
@@ -8,20 +9,16 @@ Npm.depends({
 });
 
 Package.on_use(function (api) {
-	api.use(['headers', 'underscore', 'inject-initial'], ['client', 'server']);
+	api.versionsFrom("METEOR-CORE@0.9.0-atm");
+
+	api.use(['gadicohen:headers@0.0.24', 'underscore', 'gadicohen:inject-initial@0.0.10'], ['client', 'server']);
 	api.use(['handlebars', 'templating', 'session', 'deps'], 'client');
 
-	// hack until #1358 is fixed (or until we drop spark support)
-	var fs = Npm.require('fs');
-	var path = Npm.require('path');
-	var packages = fs.readFileSync(path.resolve('.meteor/packages'), 'utf8');
-	if (packages.match(/blaze/))
-		// actually catches iron-router blaze support.  ok for now.
-		api.use(['ui', 'spacebars', 'htmljs'], 'client');
+	api.use(['ui', 'spacebars', 'htmljs'], 'client');
 
 	// Iron Router will be required until Issue #1358 is fixed
 	// For now we're kind of coding like it's required
-	api.use('iron-router', ['client', 'server']);
+	api.use('cmather:iron-router@0.8.2', ['client', 'server']);
 
 	// common adds
 	api.add_files('lib/messageformat.js/messageformat.js', ['client', 'server']);
