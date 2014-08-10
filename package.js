@@ -1,6 +1,6 @@
 Package.describe({
     summary: "MessageFormat support, the Meteor way",
-    version: "0.0.36"
+    version: "0.0.37"
 });
 
 Npm.depends({
