@@ -1,6 +1,6 @@
 Package.describe({
     summary: "MessageFormat support, the Meteor way",
-    version: "0.0.37"
+    version: "0.0.38"
 });
 
 Npm.depends({
@@ -9,7 +9,8 @@ Npm.depends({
 });
 
 Package.on_use(function (api) {
-	api.versionsFrom("METEOR-CORE@0.9.0-atm");
+	if (api.versionsFrom)
+		api.versionsFrom("METEOR-CORE@0.9.0-atm");
 
 	api.use(['gadicohen:headers@0.0.24', 'underscore', 'gadicohen:inject-initial@0.0.10'], ['client', 'server']);
 	api.use(['handlebars', 'templating', 'session', 'deps'], 'client');

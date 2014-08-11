@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.0.38
+
+* Fix for pre-0.9.0
+
 ## v0.0.37
 
 * CoffeeScript support!  thanks @betapi (#53)
