@@ -1,4 +1,4 @@
-# meteor-messageformat [![Build Status](https://travis-ci.org/gadicohen/meteor-messageformat.png?branch=master)](https://travis-ci.org/gadicohen/meteor-messageformat)
+# meteor-messageformat [![Build Status](https://api.travis-ci.org/gadicc/meteor-messageformat.svg?branch=master)](https://travis-ci.org/gadicc/meteor-messageformat)
 
 MessageFormat support, the Meteor way.
 
