@@ -13,9 +13,9 @@ Package.on_use(function (api) {
 		api.versionsFrom("METEOR@0.9.0");
 		api.use([
 			'gadicohen:headers@0.0.24',
-			'gadicohen:inject-initial@0.0.10'],
-			'iron:router@0.9.1',
-		[
+			'gadicohen:inject-initial@0.0.10',
+			'iron:router@0.9.1'
+		], [
 			'client',
 			'server'
 		]);
