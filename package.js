@@ -10,11 +10,11 @@ Npm.depends({
 
 Package.on_use(function (api) {
 	if (api.versionsFrom) {
-		api.versionsFrom("METEOR-CORE@0.9.0-atm");
+		api.versionsFrom("METEOR-CORE@0.9.0");
 		api.use([
 			'gadicohen:headers@0.0.24',
 			'gadicohen:inject-initial@0.0.10'],
-			'cmather:iron-router@0.8.2',
+			'iron:router@0.9.1',
 		[
 			'client',
 			'server'
