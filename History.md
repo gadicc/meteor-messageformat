@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.0.40
+
+* Fixes for breaking changes in private Blaze API in Meteor 0.9.1
+
 ## v0.0.39
 
 * More fixes for pre-0.9.0
