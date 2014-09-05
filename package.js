@@ -14,7 +14,7 @@ Package.on_use(function (api) {
 	if (api.versionsFrom) {
 		api.versionsFrom("METEOR@0.9.0");
 		api.use([
-			'mongo',
+			'mongo@1.0.4',
 			'gadicohen:headers@0.0.24',
 			'gadicohen:inject-initial@0.0.10',
 			'iron:router@0.9.1'
