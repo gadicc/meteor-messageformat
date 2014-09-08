@@ -13,7 +13,7 @@ ejson@1.0.1
 follower-livedata@1.0.1
 gadicohen:headers@0.0.24
 gadicohen:inject-initial@0.0.10
-gadicohen:messageformat@0.0.40
+gadicohen:messageformat@0.0.41
 geojson-utils@1.0.0
 html-tools@1.0.0
 htmljs@1.0.0
