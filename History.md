@@ -1,5 +1,15 @@
 ## vNEXT
 
+## v0.0.42
+
+* Critical security bug fixed (deny function were not enforced)
+
+## v0.0.41
+
+* fix compat with 0.8.3
+* initial but broken laika 0.9 support
+* fix for tests
+
 ## v0.0.40
 
 * Fixes for breaking changes in private Blaze API in Meteor 0.9.1

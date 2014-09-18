@@ -1,6 +1,6 @@
 Package.describe({
   name:    "gadicohen:messageformat",
-  version: "0.0.41",
+  version: "0.0.42",
   summary: "MessageFormat support, the Meteor way",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
