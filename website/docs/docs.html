@@ -422,8 +422,9 @@ and `mfPkg.webUI.deny()` calls, just like would you would in Meteor.
 
 Your `mfPkg.webUI.allow()` and `mfPkg.webUI.deny()` calls should be both in client
 and server-side code! It is not enough to define permission server-side because iron:router
-in the client is using them too. You can call those functions as many times as you like,
-passing one function at a time.
+in the client is using them too. Your functions must not require parameters such as the usual
+(userId, doc, fields, modifier) because they are not available client-side (they work server-side).
+You can call those functions as many times as you like, passing one function at a time.
 
 To recap, you can pass a boolean function as a parameter to these functions.  Access
 will be granted if *at least one* allow() function returns true, and *all* 

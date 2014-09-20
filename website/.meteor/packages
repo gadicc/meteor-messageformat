@@ -5,10 +5,8 @@
 
 standard-app-packages
 headers
-messageformat
-SyntaxHighlighter
-bootstrap-3
-iron-router
+mrt:bootstrap-3@3.1.1-1
+cmather:iron-router@0.7.1
 accounts-ui
 accounts-password
 accounts-github

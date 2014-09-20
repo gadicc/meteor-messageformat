@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.0.43
+
+* Security fix, optimization (#64)
+
 ## v0.0.42
 
 * Critical security bug fixed (deny function were not enforced)
