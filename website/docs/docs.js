@@ -13,23 +13,18 @@ if (Meteor.isClient) {
     });
   });
 
-  Handlebars.registerHelper('dstache', function() {
+  Blaze.registerHelper('dstache', function() {
   	return '{{';
   });
 
-  if (Package.ui) {
-  	Handlebars.registerHelper('markdown', UI.block(function(options) {
-  		var self = this;
-  		return function() {
-  			var text = UI.toRawText(self.__content, self /*parentComponent*/);
-  			return HTML.Raw(marked(text));
-  		}
-  	}));
-  } else {
-		Handlebars.registerHelper('markdown', function(options) {
-			return marked(options.fn(this));
-		});
-  }
+  Blaze.Template.registerHelper("markdown", new Template('markdown', function () {
+    var view = this;
+    var content = '';
+    if (view.templateContentBlock) {
+      content = Blaze._toText(view.templateContentBlock, HTML.TEXTMODE.STRING);
+    }
+    return HTML.Raw(marked(content));
+  }));
 
 	// http://lions-mark.com/jquery/scrollTo/
 	$.fn.scrollTo = function( target, options, callback ){
