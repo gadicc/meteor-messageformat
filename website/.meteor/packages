@@ -4,13 +4,13 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-headers
-mrt:bootstrap-3@3.1.1-1
-cmather:iron-router@0.7.1
 accounts-ui
 accounts-password
 accounts-github
 accounts-google
 accounts-facebook
-blaze-layout
-sp-marked
+iron:router
+mrt:sp-marked
+mizzao:bootstrap-3@3.2.0-2
+gadicohen:syntaxhighlighter@3.0.83-17
+gadicohen:messageformat

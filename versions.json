@@ -50,11 +50,7 @@
     ],
     [
       "gadicohen:headers",
-      "0.0.24"
-    ],
-    [
-      "gadicohen:inject-initial",
-      "0.0.10"
+      "0.0.25"
     ],
     [
       "geojson-utils",
@@ -107,6 +103,10 @@
     [
       "meteor",
       "1.1.0"
+    ],
+    [
+      "meteorhacks:inject-initial",
+      "1.0.2"
     ],
     [
       "minifiers",
