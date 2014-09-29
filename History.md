@@ -1,6 +1,6 @@
 ## vNEXT
 
-## v0.0.44
+## v0.0.44 / v0.0.45
 
 * Support for mf_extract when package installed from 0.9 package server
 

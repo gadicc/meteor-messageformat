@@ -5,7 +5,6 @@ var VERSION = '0.0.6';  // Keep in sync with cli/package.json
 var fs 		= require('fs')
 var path	= require('path');
 var projRoot = process.cwd();
-console.log(1);
 
 var npmbuild = process.argv[2];
 var walk    = require(path.join(npmbuild, 'walk'));
