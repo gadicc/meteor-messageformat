@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 
+var VERSION = '0.0.6';  // Keep in sync with cli/package.json
+
 var fs 		= require('fs')
 var path	= require('path');
 var projRoot = process.cwd();
-var npmbuild = projRoot + '/packages/messageformat/.build/npm/node_modules/';
-var walk    = require(npmbuild + 'walk');
-var _       = require(npmbuild + 'underscore');
+console.log(1);
+
+var npmbuild = process.argv[2];
+var walk    = require(path.join(npmbuild, 'walk'));
+var _       = require(path.join(npmbuild, 'underscore'));
+
 var files   = [];
 var strings = {};
-var log = process.argv[2] == '-v';
+var log = process.argv[3] == '-v';
 
 if (!fs.existsSync('server')) {
 	console.log('Creating ./server directory');
@@ -26,12 +31,14 @@ if (fs.existsSync('server/mfExtracts.js'))
 	eval(fs.readFileSync('server/mfExtracts.js').toString());
 
 if (log) {
+	/*
 	var smart = JSON.parse(
 		fs.readFileSync('./packages/messageformat/smart.json')
 	);
 	console.log('mf_extract, v' + smart.version);
+	*/
+	console.log('mf_extract, v' + VERSION);
 	console.log('Project root: ' + projRoot);
-
 }
 
 var walker  = walk.walk('.', {

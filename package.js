@@ -1,6 +1,6 @@
 Package.describe({
   name:    "gadicohen:messageformat",
-  version: "0.0.43",
+  version: "0.0.44",
   summary: "MessageFormat support, the Meteor way",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
@@ -55,6 +55,9 @@ Package.on_use(function (api) {
 		'lib/mfPkg/3rdparty/taboverride.js',
 		'lib/mfPkg/3rdparty/taboverride.jquery.js',
 	], 'client');
+
+	// Required so that the file will be packaged in package server
+	api.add_files('cli/mf_extract.js', 'server', { isAsset: true });
 
 	api.export(['mfPkg', 'mf'], ['client', 'server']);
 });

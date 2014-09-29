@@ -1,5 +1,13 @@
 ## vNEXT
 
+## v0.0.44
+
+* Support for mf_extract when package installed from 0.9 package server
+
+* Upgrade deps
+** gadicohen:inject-initial -> meteorhacks:inject-initial
+** gadicohen:headers@0.0.25 (which also has above namespace change)
+
 ## v0.0.43
 
 * Security fix, optimization (#64)

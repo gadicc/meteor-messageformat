@@ -1,6 +1,6 @@
 {
   "name": "meteor-messageformat",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "CLI tools for Meteor MessageFormat smart package",
   "main": "mf_extract.js",
   "dependencies": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/gadicohen/meteor-messageformat"
+    "url": "http://github.com/gadicc/meteor-messageformat"
   },
   "keywords": [
     "messageformat",
@@ -27,6 +27,6 @@
   "author": "Gadi Cohen",
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/gadicohen/meteor-messageformat/issues"
+    "url": "https://github.com/gadicc/meteor-messageformat/issues"
   }
 }
