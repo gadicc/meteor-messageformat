@@ -20,12 +20,15 @@ if (Meteor.isClient) {
 	var scrolls = {};
 
     Router.onBeforeAction(function() {
+        var path = this.route.path();
+
   		// remember our scroll position for this page
-    	scrolls[this.path] = $(document).scrollTop();
+    	scrolls[path] = $(document).scrollTop();
 
         var navbar = $('div.navbar:first-child');
         navbar.find('.active').removeClass('active');
-        navbar.find('a[href="' + this.path + '"]').parent().addClass('active');
+        navbar.find('a[href="' + path + '"]').parent().addClass('active');
+
         this.next();
     });
 

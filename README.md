@@ -2,6 +2,8 @@
 
 MessageFormat support, the Meteor way.
 
+For iron:router < 1.0.0, use messageformat v0.0.45.
+
 For Meteor < 0.8.0, use messageformat v0.0.26.
 
 Easy reactive use of complicated strings (gender, plural, etc) with insanely

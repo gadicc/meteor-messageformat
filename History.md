@@ -1,6 +1,6 @@
 ## vNEXT
 
-## v0.0.46
+## v0.0.47
 
 * Bump iron-router to 1.0.0, work with that release, and make it a weak dep
 
