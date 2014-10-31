@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.0.46
+
+* Bump iron-router to 1.0.0, work with that release, and make it a weak dep
+
 ## v0.0.44 / v0.0.45
 
 * Support for mf_extract when package installed from 0.9 package server

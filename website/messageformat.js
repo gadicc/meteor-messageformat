@@ -26,6 +26,7 @@ if (Meteor.isClient) {
         var navbar = $('div.navbar:first-child');
         navbar.find('.active').removeClass('active');
         navbar.find('a[href="' + this.path + '"]').parent().addClass('active');
+        this.next();
     });
 
     Router.onAfterAction(function() {

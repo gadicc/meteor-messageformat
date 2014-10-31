@@ -6,8 +6,12 @@ if (Meteor.isClient) {
       action: function() {
         this.render('docs');
         if (this.params.hash) {
-          var a = $('a[name="' + this.params.hash + '"]');
-          $('body').scrollTo(a.offset().top - 50, { duration: 300 });
+          var self = this;
+          // TODO, figure out best way to really do this
+          Meteor.setTimeout(function() {
+            var a = $('a[name="' + self.params.hash + '"]');
+            $('body').scrollTo(a.offset().top - 50, { duration: 300 });
+          }, 100);
         }
       }
     });
@@ -58,7 +62,7 @@ if (Meteor.isClient) {
     });
   }
   $(window).scroll(function() {
-  	if (Router.current().path != '/docs')
+  	if (Router.current().route.path() != '/docs')
   		return;
 
     var i, pos = $('body').scrollTop();

@@ -1,6 +1,6 @@
 Package.describe({
   name:    "gadicohen:messageformat",
-  version: "0.0.45",
+  version: "0.0.46",
   summary: "MessageFormat support, the Meteor way",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
@@ -17,20 +17,20 @@ Package.on_use(function (api) {
 			'mongo@1.0.4',
 			'gadicohen:headers@0.0.25',
 			'meteorhacks:inject-initial@1.0.2',
-			'iron:router@0.9.1'
 		], [
 			'client',
 			'server'
 		]);
+		api.use('iron:router@1.0.0', ['client', 'server'], { weak: true });
 	} else {
 		api.use([
 			'headers',
 			'inject-initial',
-			'iron-router'
 		], [
 			'client',
 			'server'
 		]);
+		api.use('iron-router', ['client', 'server'], { weak: true });
 	}
 
 	api.use(['underscore', 'templating', 'session', 'deps'], 'client');
