@@ -244,12 +244,12 @@ mfPkg.syncAll({
       "_id": "MSd3PhPfCq9XZsBzb"
     },
     "added_to_profile": {
+      "ctime": 1386802420724,
       "key": "added_to_profile",
       "lang": "he",
-      "text": "{NUM_ADDS, plural, offset:1\n    =0 {לא הוספת את זה לא פרופיל שלך}\n    =1 {הוספת את זה לפרופיל שלך}\n   one {הוספת את זה לפרופיל יחד עם עוד מישהו}\n other {הוספת את זה לפרופיל יחד עם עוד # אנשים}}.",
-      "ctime": 1386802420724,
-      "mtime": 1386802420724,
-      "revisionId": "mhpBD3esZuxNQLCHW",
+      "mtime": 1409695105526,
+      "revisionId": "D7RdqFMK6q9D7soyr",
+      "text": "{NUM_ADDS, plural, offset:1\n    =0 {לא הוספת את זה לפרופיל שלך}\n    =1 {הוספת את זה לפרופיל שלך}\n   one {הוספת את זה לפרופיל יחד עם עוד מישהו}\n other {הוספת את זה לפרופיל יחד עם עוד # אנשים}}.",
       "_id": "6rwHLDNmEk2XGpw48"
     },
     "select_gender": {
@@ -264,10 +264,10 @@ mfPkg.syncAll({
     "gender_plural": {
       "key": "gender_plural",
       "lang": "he",
-      "text": "{GENDER, select,\n         male {הוא מצא}\n       female {היא מצתה}\n        other {הם מצאו}\n   } {NUM_RESULTS, plural,\n           =0 {0 תוצאות}\n          one {תוצאה אחת}\n        other {# תוצאות}\n   } בתוך {NUM_CATS, plural,\n          one {קטגוריה אחד}\n        other {# קטגוריות}\n}.",
+      "text": "{GENDER, select,\n         male {הוא מצא}\n       female {היא מצאה}\n        other {הם מצאו}\n   } {NUM_RESULTS, plural,\n           =0 {0 תוצאות}\n          one {תוצאה אחת}\n        other {# תוצאות}\n   } בתוך {NUM_CATS, plural,\n          one {קטגוריה אחת}\n        other {# קטגוריות}\n}.",
       "ctime": 1386802617786,
-      "mtime": 1386802617786,
-      "revisionId": "5XpCWobM2ebpDRBfr",
+      "mtime": 1409695212276,
+      "revisionId": "5SQMfZLLSYhbtBvEG",
       "_id": "u5otJ7ZhyZq2uQS4x"
     }
   },
@@ -327,21 +327,21 @@ mfPkg.syncAll({
       "_id": "rFuNsSzRFuDb5o75s"
     },
     "i_am_str": {
+      "ctime": 1386479479815,
       "key": "i_am_str",
       "lang": "af",
+      "mtime": 1411663664011,
+      "revisionId": "r3fcGRwYBPT2cMHBA",
       "text": "Ek is 'n string.",
-      "ctime": 1386479479815,
-      "mtime": 1386479479815,
-      "revisionId": "QneBMqyKkHNTQNA7d",
       "_id": "8TffKKcYwR7xigCdZ"
     },
     "javascript": {
+      "ctime": 1386479509481,
       "key": "javascript",
       "lang": "af",
-      "text": "Resultaat",
-      "ctime": 1386479509481,
-      "mtime": 1386479509481,
-      "revisionId": "9icjaTXHXEJk6kEDF",
+      "mtime": 1411727314179,
+      "revisionId": "Qg76WAhtMBporPGTp",
+      "text": "JavaScript",
       "_id": "Tkyqpqnm36hEYrRMk"
     },
     "simple_string": {
@@ -354,14 +354,193 @@ mfPkg.syncAll({
       "_id": "JrdNAWEsKokMfHqbK"
     },
     "hello_name": {
+      "ctime": 1386479483279,
       "key": "hello_name",
       "lang": "af",
+      "mtime": 1405035114980,
+      "revisionId": "AejETtQ89tvdrp6cK",
       "text": "Hallo, {NAME}.",
-      "ctime": 1386479483279,
-      "mtime": 1386479483279,
-      "revisionId": "mMrmnDHDZM88WHato",
-      "fuzzy": true,
       "_id": "yhLZ6SsHwHNr35n3o"
+    },
+    "select_gender": {
+      "ctime": 1405034007857,
+      "key": "select_gender",
+      "lang": "af",
+      "mtime": 1411728376751,
+      "revisionId": "Sk4aj6yJQvHsLtKXo",
+      "text": "{GENDER, select,\n\t\t\t\tmale {Hy}\n\t\t\tfemale {Sy}\n\t\t\t other {Hulle}} hou van hierdie.",
+      "_id": "cbDt96jpCDmKaE4Qf"
+    },
+    "gender_plural": {
+      "ctime": 1405034151173,
+      "key": "gender_plural",
+      "lang": "af",
+      "mtime": 1411728681892,
+      "revisionId": "8Wuo9YaFboDxmnX6y",
+      "text": "{GENDER, select,\n\t          male {Hy}\n\t        female {Sy}\n\t         other {Hulle}\n\t    } het {NUM_RESULTS, plural,\n\t            =0 {geen resultaat}\n\t           one {een resultaat}\n\t         other {# resultate}\n\t    } in {NUM_CATS, plural,\n\t            =0 {geen kategorie}\n\t           one {een kategorie}\n\t         other {# kategorieë}\n\t    }.",
+      "_id": "KeEAeM4GJKqLAdenb"
+    },
+    "plural_extension": {
+      "ctime": 1404429515024,
+      "key": "plural_extension",
+      "lang": "af",
+      "mtime": 1416681911030,
+      "revisionId": "rwABMwoE2HbH8qYcR",
+      "text": "Pluriel Extension",
+      "_id": "4csrEwp2dJtgJcunn"
+    },
+    "string_gender_plural": {
+      "ctime": 1404429512345,
+      "key": "string_gender_plural",
+      "lang": "af",
+      "mtime": 1405035101737,
+      "revisionId": "J9NEQvXHqhKyXwWJZ",
+      "text": "Genres et pluriels",
+      "_id": "Sgm9EyP7HZCmBmCFK"
+    },
+    "mixing_it_up": {
+      "key": "mixing_it_up",
+      "lang": "af",
+      "text": "Vermenging dit",
+      "ctime": 1411727221055,
+      "mtime": 1411727221055,
+      "revisionId": "9vwoYWbXir3eNBL4N",
+      "_id": "ReZSWPZ4DAsfrdYEs"
+    },
+    "string_gender": {
+      "key": "string_gender",
+      "lang": "af",
+      "text": "String met 'n geslag\t",
+      "ctime": 1411727246763,
+      "mtime": 1411727246763,
+      "revisionId": "oFAtAeHuv25MEK8D6",
+      "_id": "QJ7S7dnabrBzkbnuK"
+    },
+    "string_plural": {
+      "key": "string_plural",
+      "lang": "af",
+      "text": "String met 'n meervoudige",
+      "ctime": 1411727262791,
+      "mtime": 1411727262791,
+      "revisionId": "qZ6PcXpuXezdBQxre",
+      "_id": "KRb3SsAM99auAFPYi"
+    },
+    "open_source": {
+      "key": "open_source",
+      "lang": "af",
+      "text": "Open Source",
+      "ctime": 1411727277310,
+      "mtime": 1411727277310,
+      "revisionId": "2XnBeaX87aWaY4zfi",
+      "_id": "c3dFNMfP2HPK5jNri"
+    },
+    "hello_name2": {
+      "key": "hello_name2",
+      "lang": "af",
+      "text": "Hallo, {NAME}.",
+      "ctime": 1411727298751,
+      "mtime": 1411727298751,
+      "revisionId": "xQQj6Hte8fPGeu7WZ",
+      "_id": "3YrMRHH7BqgJ9SfAd"
+    },
+    "result": {
+      "key": "result",
+      "lang": "af",
+      "text": "Resultaat",
+      "ctime": 1411727304535,
+      "mtime": 1411727304535,
+      "revisionId": "5WeovQiRDnXYvbkCp",
+      "_id": "2wf3sPhGjubikeWm3"
+    },
+    "template": {
+      "key": "template",
+      "lang": "af",
+      "text": "Sjabloon",
+      "ctime": 1411727336216,
+      "mtime": 1411727336216,
+      "revisionId": "TLAvr28jZNGBxybXm",
+      "_id": "pb33HbBdNDzjHMAMy"
+    },
+    "simple_variable": {
+      "key": "simple_variable",
+      "lang": "af",
+      "text": "String met 'n statiese veranderlike",
+      "ctime": 1411727364906,
+      "mtime": 1411727364906,
+      "revisionId": "E7xYAQymNWW4yKHof",
+      "_id": "5iyoqjJmwQfGtJkZt"
+    },
+    "test_key": {
+      "key": "test_key",
+      "lang": "af",
+      "text": "Voorbeeld mf () gebruik in 'n verklaarde funksie",
+      "ctime": 1411727429465,
+      "mtime": 1411727429465,
+      "revisionId": "krEj2m7HMRfGJcZZx",
+      "_id": "XHcfGmEmoYreRWvLz"
+    },
+    "test_key2": {
+      "key": "test_key2",
+      "lang": "af",
+      "text": "Voorbeeld mf () gebruik in 'n opgedra funksie",
+      "ctime": 1411727441047,
+      "mtime": 1411727441047,
+      "revisionId": "886hC9sMjpFcuyYn8",
+      "_id": "tM4SBjGBfH8WJc3Ri"
+    },
+    "test_key3": {
+      "key": "test_key3",
+      "lang": "af",
+      "text": "Voorbeeld mf () gebruik in 'n helper / anonieme funk",
+      "ctime": 1411727462766,
+      "mtime": 1411727462766,
+      "revisionId": "rvHbzpNHevQQSL46f",
+      "_id": "NNhGcCQFbnMQPe84p"
+    },
+    "there_are_widgets": {
+      "key": "there_are_widgets",
+      "lang": "af",
+      "text": "Daar {NUM, plural,\n\t\t     =0 {is geen widget}\n\t\t    one {is een widget}\n\t\t  other {is # widgets}\n\t\t}.",
+      "ctime": 1411727576428,
+      "mtime": 1411727576428,
+      "revisionId": "mpro6XQzoHG2qPYd9",
+      "_id": "bRpNthRaEcEojLGgG"
+    },
+    "added_to_profile": {
+      "key": "added_to_profile",
+      "lang": "af",
+      "text": "Jy {NUM_ADDS, plural, offset:1\n\t\t\t    =0 {het dit nie aan jou profiel voeg}\n\t\t\t    =1 {het dit aan jou profiel bygevoeg}\n\t\t\t   one {en een ander person het dit aan julle profiel bygevoeg}\n\t\t\t other {en # ander het dit aan hulle profiel bygevoeg}}.",
+      "ctime": 1411727795921,
+      "mtime": 1411727795921,
+      "revisionId": "4qsF7W9qZ3ruKtq3a",
+      "_id": "uJEHrsms7Lboes3PJ"
+    },
+    "plural_offset": {
+      "key": "plural_offset",
+      "lang": "af",
+      "text": "Meervoud Offset (\"en 'n ander\")",
+      "ctime": 1411727879468,
+      "mtime": 1411727879468,
+      "revisionId": "zHYa2Sht2kHY8oGce",
+      "_id": "kr9d29c5khpSX24MX"
+    },
+    "selectformat": {
+      "key": "selectformat",
+      "lang": "af",
+      "text": "KiesFormaat",
+      "ctime": 1411727896518,
+      "mtime": 1411727896518,
+      "revisionId": "pgiBpmqypS5v4otJQ",
+      "_id": "eY8iGNg9qeYmb2yAd"
+    },
+    "simple_helper": {
+      "ctime": 1411727374898,
+      "key": "simple_helper",
+      "lang": "af",
+      "mtime": 1416681902132,
+      "revisionId": "4qoKiqCh22boWq4k2",
+      "text": "String met 'n veranderlike van 'n helper funksiu",
+      "_id": "N2GnZ2R8G4u2jFtpp"
     }
   },
   "en": {
@@ -723,7 +902,7 @@ mfPkg.syncAll({
       "file": "./docs/docs.js",
       "line": 86,
       "func": "function()",
-      "_id": "XWFvcGmsJd44pSdG7"
+      "_id": "9f3duwC7wbLtQXdcF"
     }
   },
   "es": {
@@ -926,6 +1105,15 @@ mfPkg.syncAll({
       "mtime": 1389021468778,
       "revisionId": "L4u6rHceNaJDWGx6i",
       "_id": "SAnNjvYtEqEew3699"
+    },
+    "simple_variable": {
+      "ctime": 1411727928091,
+      "key": "simple_variable",
+      "lang": "pl",
+      "mtime": 1411727986841,
+      "revisionId": "Zej5wxmKBrRreqEFY",
+      "text": "Wybierz format",
+      "_id": "ZLKxYxRn4uGZS2F8e"
     }
   },
   "de": {
@@ -933,18 +1121,18 @@ mfPkg.syncAll({
       "ctime": 1389645644688,
       "key": "simple_variable",
       "lang": "de",
-      "mtime": 1394929440481,
-      "revisionId": "YLjBNjhFiheM8y7bc",
-      "text": "Zeichenkette mit einer statischen Variable",
+      "mtime": 1412635404817,
+      "revisionId": "ZjhPN3Wxr597k7eFf",
+      "text": "Zeichenkette mit einer statischen Variable af",
       "_id": "A58urGKRrBPMHi6hj"
     },
     "simple_helper": {
+      "ctime": 1389645678435,
       "key": "simple_helper",
       "lang": "de",
-      "text": "Zeichenkette mit einer Variable von einer Hilfs-Funktion",
-      "ctime": 1389645678435,
-      "mtime": 1389645678435,
-      "revisionId": "bvZeovd7bdRkGZ3en",
+      "mtime": 1421356511329,
+      "revisionId": "uFJPRXXDZi2adg2jE",
+      "text": "Zeichenkette mit einer Variable von einer Hilfs-Funktio",
       "_id": "BpMcb78MaT2dj6Bhm"
     },
     "plural_extension": {
@@ -957,21 +1145,21 @@ mfPkg.syncAll({
       "_id": "kQCsi4yGJT2cGabRd"
     },
     "string_gender_plural": {
+      "ctime": 1389645727652,
       "key": "string_gender_plural",
       "lang": "de",
-      "text": "Geschlecht und zwei Mehrzahlen",
-      "ctime": 1389645727652,
-      "mtime": 1389645727652,
-      "revisionId": "iNcKFyN5y2LqruJvp",
+      "mtime": 1405691461264,
+      "revisionId": "8jf76gDjXa4DxPPZ7",
+      "text": "Ein Geschlecht und zwei Mehrzahls.",
       "_id": "GbN3ffQ7LnKhPZnpp"
     },
     "i_am_str": {
       "ctime": 1389645739321,
       "key": "i_am_str",
       "lang": "de",
-      "mtime": 1394551177859,
-      "revisionId": "fp3nE3qoQyxfSx3fS",
-      "text": "Ich bin eine Zeichenkette.",
+      "mtime": 1403433019103,
+      "revisionId": "MiPumcLatzAbJbpmX",
+      "text": "Ich trage einen Sting-Tanga.",
       "_id": "xgYX8DzjDx4acYXmg"
     },
     "javascript": {
@@ -984,12 +1172,12 @@ mfPkg.syncAll({
       "_id": "c6LwP2YGJAnAgLnqo"
     },
     "menu_examples": {
+      "ctime": 1393177137339,
       "key": "menu_examples",
       "lang": "de",
+      "mtime": 1404592454290,
+      "revisionId": "wEQXABntkAPvgKyX4",
       "text": "Beispiele",
-      "ctime": 1393177137339,
-      "mtime": 1393177137339,
-      "revisionId": "W5YKJTDgreDtqzdYW",
       "_id": "EMmLqdiQW5daKZcvx"
     },
     "hello_name2": {
@@ -1482,23 +1670,266 @@ mfPkg.syncAll({
       "revisionId": "DYBe68m6ZcdAn92Aq",
       "_id": "53G9wu78ZTX8vTJmi"
     },
+    "test_key": {
+      "key": "test_key",
+      "lang": "fr",
+      "text": "Exemple de mf() utilisé dans une fonction déclarée",
+      "ctime": 1405200630735,
+      "mtime": 1405200630735,
+      "revisionId": "ow6TEffZKP5wx8vx9",
+      "_id": "brLEcveyMPtseJRDN"
+    },
+    "i_am_str": {
+      "ctime": 1404742534604,
+      "key": "i_am_str",
+      "lang": "fr",
+      "mtime": 1404743331688,
+      "revisionId": "D24tQ93MWrG6t2GHK",
+      "text": "Je suis une chaîne de caractères.",
+      "_id": "mSnqWiuTiSv6JbgKf"
+    },
+    "hello_name": {
+      "key": "hello_name",
+      "lang": "fr",
+      "text": "Bonjour {NAME}.",
+      "ctime": 1404743524713,
+      "mtime": 1404743524713,
+      "revisionId": "ZDbeXGvY35oSpXGCL",
+      "_id": "G3uRJQyRjJ92wFkXY"
+    },
+    "menu_trans": {
+      "key": "menu_trans",
+      "lang": "fr",
+      "text": "Traductions",
+      "ctime": 1404772390380,
+      "mtime": 1404772390380,
+      "revisionId": "wP5pyqusbQa7qKo9P",
+      "_id": "4g4tumdaMwG6hKLCh"
+    },
+    "template": {
+      "key": "template",
+      "lang": "fr",
+      "text": "Template",
+      "ctime": 1404772407924,
+      "mtime": 1404772407924,
+      "revisionId": "t7JuF2JWytCRjw2do",
+      "_id": "8nAeh7bB9iqTHWoQW"
+    },
     "menu_docs": {
+      "ctime": 1393442434467,
       "key": "menu_docs",
       "lang": "fr",
-      "text": "Docs",
-      "ctime": 1393442434467,
-      "mtime": 1393442434467,
-      "revisionId": "mfieSgJ8CanWGEYKg",
+      "mtime": 1404772420679,
+      "revisionId": "sDYfKcEHBjnA3MDXa",
+      "text": "Documentation",
       "_id": "HR6X2vPziCdCc7rcp"
     },
+    "menu_examples": {
+      "key": "menu_examples",
+      "lang": "fr",
+      "text": "Exemples",
+      "ctime": 1404772444282,
+      "mtime": 1404772444282,
+      "revisionId": "4eW7d5RnFTYjjzqGd",
+      "_id": "QhnMfmB4XozDWbC92"
+    },
+    "javascript": {
+      "key": "javascript",
+      "lang": "fr",
+      "text": "JavaScript",
+      "ctime": 1404772476124,
+      "mtime": 1404772476124,
+      "revisionId": "ksgQhkEQSw9WRBurY",
+      "_id": "J3r37eK46LL2KLG3C"
+    },
+    "result": {
+      "key": "result",
+      "lang": "fr",
+      "text": "Résultat",
+      "ctime": 1404772484545,
+      "mtime": 1404772484545,
+      "revisionId": "at75jyQBtjyvZ7vcg",
+      "_id": "DbfmvbQ9AcvtTmawk"
+    },
+    "hello_name2": {
+      "key": "hello_name2",
+      "lang": "fr",
+      "text": "Bonjour, {NAME}.",
+      "ctime": 1404772494366,
+      "mtime": 1404772494367,
+      "revisionId": "363LiAMaqJedZykGS",
+      "_id": "Efiw6mJZGS4oHnH6n"
+    },
+    "string_gender_plural": {
+      "key": "string_gender_plural",
+      "lang": "fr",
+      "text": "Genre et 2 pluriels",
+      "ctime": 1405200433951,
+      "mtime": 1405200433951,
+      "revisionId": "aN6qJN9GJ47ZcY9kM",
+      "_id": "BZRaePsQrrskBEeWN"
+    },
+    "open_source": {
+      "key": "open_source",
+      "lang": "fr",
+      "text": "Code libre",
+      "ctime": 1405200446363,
+      "mtime": 1405200446363,
+      "revisionId": "bLfs5Ym8T5Q26xZQ8",
+      "_id": "4sykF3SjKoe2XjYoS"
+    },
+    "plural_extension": {
+      "key": "plural_extension",
+      "lang": "fr",
+      "text": "Extension plurielle",
+      "ctime": 1405200460819,
+      "mtime": 1405200460819,
+      "revisionId": "e686wCepGtga6FjzF",
+      "_id": "QpqPoTP2KmYiHSKu8"
+    },
+    "simple_use": {
+      "key": "simple_use",
+      "lang": "fr",
+      "text": "Utilisation simple",
+      "ctime": 1405200485379,
+      "mtime": 1405200485379,
+      "revisionId": "uFPMteWeLjZJhvwQa",
+      "_id": "rswPsZEETk5FYvaev"
+    },
+    "examples_header": {
+      "key": "examples_header",
+      "lang": "fr",
+      "text": "Exemples de Meteor MessageFormat",
+      "ctime": 1405200505290,
+      "mtime": 1408369889732,
+      "revisionId": "osG8k76MgAfrTQgDa",
+      "_id": "Mp7wciFZHWfjEMsBt"
+    },
+    "simple_string": {
+      "ctime": 1405200524137,
+      "key": "simple_string",
+      "lang": "fr",
+      "mtime": 1408369895170,
+      "revisionId": "ZLCt8LTWvCzPiKkyD",
+      "text": "Traduction simple d'une chaîne de caractères",
+      "_id": "v4FfDL7ipYSgJiSjS"
+    },
+    "string_plural": {
+      "ctime": 1405200545936,
+      "key": "string_plural",
+      "lang": "fr",
+      "mtime": 1408369904915,
+      "revisionId": "PLMGmE7rMBKDwyWtg",
+      "text": "Chaîne de caractères avec un pluriel",
+      "_id": "5Yaux69qArSjT332m"
+    },
     "simple_variable": {
+      "ctime": 1393442443607,
       "key": "simple_variable",
       "lang": "fr",
-      "text": "String avec une variable statique",
-      "ctime": 1393442443607,
-      "mtime": 1393442443607,
-      "revisionId": "DW6qDNnjez2qDWgib",
+      "mtime": 1405200565044,
+      "revisionId": "WGnnKca6GpNAusiL6",
+      "text": "Chaîne de caractères avec une variable statique",
       "_id": "n4Twan2dvwysGRzms"
+    },
+    "test_key2": {
+      "key": "test_key2",
+      "lang": "fr",
+      "text": "Exemple de mf() utilisé dans une fonction assignée",
+      "ctime": 1405200644029,
+      "mtime": 1405200644029,
+      "revisionId": "M3FQREpkoyNatPznB",
+      "_id": "fsSpwAk7vLFToJGZH"
+    },
+    "test_key3": {
+      "key": "test_key3",
+      "lang": "fr",
+      "text": "Exemple de mf() utilisé dans une fonction d'aide ou anonyme",
+      "ctime": 1405200706238,
+      "mtime": 1405200706238,
+      "revisionId": "5gDhFGxG9vopgJQwY",
+      "_id": "i7Agwb3ZwiBXavN2P"
+    },
+    "mixing_it_up": {
+      "ctime": 1405200732309,
+      "key": "mixing_it_up",
+      "lang": "fr",
+      "mtime": 1408369953586,
+      "revisionId": "PoRdBQi3WJ5XAa53L",
+      "text": "On combine tout",
+      "_id": "kn2C8CMbH6Z58cnYS"
+    },
+    "string_gender": {
+      "ctime": 1405200747870,
+      "key": "string_gender",
+      "lang": "fr",
+      "mtime": 1408369940084,
+      "revisionId": "eacCzaeWcK9RkzN4t",
+      "text": "Chaîne de caractères avec un genre",
+      "_id": "mm6qi4PiR9agr7tkE"
+    },
+    "selectformat": {
+      "key": "selectformat",
+      "lang": "fr",
+      "text": "Sélection de format",
+      "ctime": 1405200757325,
+      "mtime": 1405200757325,
+      "revisionId": "5TcSdkWREwn3HE9sp",
+      "_id": "AtLfEen7ZnM242nAd"
+    },
+    "plural_offset": {
+      "key": "plural_offset",
+      "lang": "fr",
+      "text": "Pluriel incrémental (\"et un autre\")",
+      "ctime": 1405200782444,
+      "mtime": 1408369926826,
+      "revisionId": "t2GxiBiTSxpSQ5BoX",
+      "_id": "RMuqZGbJYvMDNkBTk"
+    },
+    "simple_helper": {
+      "ctime": 1405200477843,
+      "key": "simple_helper",
+      "lang": "fr",
+      "mtime": 1408369833331,
+      "revisionId": "3YREL4NNdqcdS5SbJ",
+      "text": "Chaîne de caractères avec une variable originaire d'une fonction d'aide",
+      "_id": "mK4Tn9YWLTarSB5fQ"
+    },
+    "there_are_widgets": {
+      "key": "there_are_widgets",
+      "lang": "fr",
+      "text": "Il {NUM, plural,\n\t\t     =0 {n'y a pas de widget}\n\t\t    one {y a un widget}\n\t\t  other {y a # widgets}\n\t\t}.",
+      "ctime": 1408370044546,
+      "mtime": 1408370044546,
+      "revisionId": "wxuwQGCh9WuyQwDAy",
+      "_id": "StFcEb2genHBdLTg6"
+    },
+    "added_to_profile": {
+      "key": "added_to_profile",
+      "lang": "fr",
+      "text": "{NUM_ADDS, plural, offset:1\n\t\t\t    =0 {Tu n'a pas ajouté ceci à ton profil}\n\t\t\t    =1 {Tu as ajouté ceci à ton profil}\n\t\t\t   one {Toi et une autre personne ont ajouté ceci à leur profil}\n\t\t\t other {Toi et # autres personnes ont ajouté ceci à leur profil}}.",
+      "ctime": 1408370149155,
+      "mtime": 1408370149155,
+      "revisionId": "rTgxDgnkvqLQC3QSj",
+      "_id": "ZDXPNjQRHgXvv9tse"
+    },
+    "select_gender": {
+      "key": "select_gender",
+      "lang": "fr",
+      "text": "{GENDER, select,\n\t\tmale {Il}\n\t\tfemale {Elle}\n\t\tother {Il/elle}} a aimé ceci.",
+      "ctime": 1408370196002,
+      "mtime": 1408370196002,
+      "revisionId": "7cZNEHGYSc2JEX7Ha",
+      "_id": "8tRipZAAgN2KY3KKA"
+    },
+    "gender_plural": {
+      "key": "gender_plural",
+      "lang": "fr",
+      "text": "{GENDER, select,\n\t          male {Il}\n\t        female {Elle}\n\t         other {Il ou elle}\n\t    } {NUM_RESULTS, plural,\n\t            =0 {n'a rien trouvé}\n\t           one {a trouvé 1 résultat}\n\t         other {a trouvé # résultats}\n\t    } dans {NUM_CATS, plural,\n\t           one {1 catégorie}\n\t         other {# catégories}\n\t    }.",
+      "ctime": 1408370285735,
+      "mtime": 1408370285735,
+      "revisionId": "n6kMJxJpngbaCDjpe",
+      "_id": "Y83Rk7CGhW399Ajdj"
     }
   },
   "ro_RO": {
@@ -1965,8 +2396,600 @@ mfPkg.syncAll({
       "revisionId": "cCpctrobdvJtsFZGH",
       "_id": "EAQ57NnyK5aHshJoa"
     }
+  },
+  "is_IS": {
+    "menu_home": {
+      "key": "menu_home",
+      "lang": "is_IS",
+      "text": "Heim",
+      "ctime": 1404471641696,
+      "mtime": 1404471641696,
+      "revisionId": "SsjicvLzD3T72eoAX",
+      "_id": "ms5HcZjZT6GAw9Ljp"
+    },
+    "menu_docs": {
+      "key": "menu_docs",
+      "lang": "is_IS",
+      "text": "Skjöl",
+      "ctime": 1404471646605,
+      "mtime": 1404471646605,
+      "revisionId": "akwR8LDt8KSYFYbMK",
+      "_id": "DiSyADmn3Sfvbkgqr"
+    },
+    "simple_variable": {
+      "key": "simple_variable",
+      "lang": "is_IS",
+      "text": "Strengur með fasta",
+      "ctime": 1404471679641,
+      "mtime": 1404471679641,
+      "revisionId": "JHoyFD4K2kBNaxjsX",
+      "_id": "to4HgpNx3xQg5JywL"
+    },
+    "simple_helper": {
+      "key": "simple_helper",
+      "lang": "is_IS",
+      "text": "Strengur með breytu úr hjálparaðgerð",
+      "ctime": 1404471690223,
+      "mtime": 1404471690223,
+      "revisionId": "yL9P7EaGW8sPHrCbv",
+      "_id": "236W2MRgoM2RD6YLx"
+    },
+    "plural_extension": {
+      "key": "plural_extension",
+      "lang": "is_IS",
+      "text": "Fleirtöluviðbætur",
+      "ctime": 1404471700544,
+      "mtime": 1404471700544,
+      "revisionId": "wFYtNJXhzrb8Qw3vM",
+      "_id": "fZtLYRoFn8makXRps"
+    },
+    "string_gender_plural": {
+      "key": "string_gender_plural",
+      "lang": "is_IS",
+      "text": "Kyn og fleirtala",
+      "ctime": 1404471715194,
+      "mtime": 1404471715194,
+      "revisionId": "KuySWFx6dtTsxXTLh",
+      "_id": "u5hqY7nrE4nnH3ArF"
+    },
+    "i_am_str": {
+      "key": "i_am_str",
+      "lang": "is_IS",
+      "text": "Ég er strengur.",
+      "ctime": 1404471724961,
+      "mtime": 1404471724961,
+      "revisionId": "iXzwCSBS5tp7X4bxJ",
+      "_id": "W3YKSqiW7Xrm39Le8"
+    },
+    "hello_name": {
+      "key": "hello_name",
+      "lang": "is_IS",
+      "text": "Halló, {NAME}.",
+      "ctime": 1404471743433,
+      "mtime": 1404471743433,
+      "revisionId": "awz9bttDBCqMyFvdY",
+      "_id": "kQRKkbqxDWKWoShRS"
+    },
+    "template": {
+      "key": "template",
+      "lang": "is_IS",
+      "text": "Sniðmát",
+      "ctime": 1404471747281,
+      "mtime": 1404471747281,
+      "revisionId": "bhsGFBuN3MLA3nNqA",
+      "_id": "fns3AZe9B83TKszDp"
+    },
+    "result": {
+      "key": "result",
+      "lang": "is_IS",
+      "text": "Niðurstaða",
+      "ctime": 1404471756185,
+      "mtime": 1404471756185,
+      "revisionId": "66zhMXiTGHBGBD6m6",
+      "_id": "kfHrb2sD4twFeGtkF"
+    },
+    "hello_name2": {
+      "key": "hello_name2",
+      "lang": "is_IS",
+      "text": "Halló, {NAME}.",
+      "ctime": 1404471772266,
+      "mtime": 1404471772266,
+      "revisionId": "CEZSttzwhFESu7fpq",
+      "_id": "iq6meNRmCfKXfNfvF"
+    },
+    "menu_examples": {
+      "key": "menu_examples",
+      "lang": "is_IS",
+      "text": "Sýnidæmi",
+      "ctime": 1404471776203,
+      "mtime": 1404471776203,
+      "revisionId": "4x6pz5QMZBFsK3eAe",
+      "_id": "PyYgnTtyBNw8GhdLi"
+    },
+    "menu_trans": {
+      "key": "menu_trans",
+      "lang": "is_IS",
+      "text": "Þýða",
+      "ctime": 1404471779340,
+      "mtime": 1404471779340,
+      "revisionId": "6fWGsbbmYbFdyu63P",
+      "_id": "2xNPpMeXjnxmaFgXK"
+    },
+    "open_source": {
+      "key": "open_source",
+      "lang": "is_IS",
+      "text": "Opinn hugbúnaður",
+      "ctime": 1404471785627,
+      "mtime": 1404471785627,
+      "revisionId": "6nzZYPdJuif8faDeJ",
+      "_id": "omnWrzSoKq26mqQbE"
+    },
+    "examples_header": {
+      "key": "examples_header",
+      "lang": "is_IS",
+      "text": "Meteor MessageFormat sýnidæmi",
+      "ctime": 1404471811884,
+      "mtime": 1404471811884,
+      "revisionId": "uQcYMPSBEzXJ8nJKb",
+      "_id": "o6SC6QTKT3EkhM6Rq"
+    },
+    "simple_use": {
+      "key": "simple_use",
+      "lang": "is_IS",
+      "text": "Einföld notkun",
+      "ctime": 1404471815718,
+      "mtime": 1404471815718,
+      "revisionId": "W6aB7fLnPyEKgbCTt",
+      "_id": "tJxKd87Q4KgcomELo"
+    },
+    "simple_string": {
+      "key": "simple_string",
+      "lang": "is_IS",
+      "text": "Einföld þýðing á streng",
+      "ctime": 1404471826004,
+      "mtime": 1404471826004,
+      "revisionId": "R75NGhHXCARSSCoHy",
+      "_id": "kj8xqJ5hZWQHbY5Bo"
+    },
+    "string_plural": {
+      "key": "string_plural",
+      "lang": "is_IS",
+      "text": "Strengur í fleirtölu",
+      "ctime": 1404471832356,
+      "mtime": 1404471832356,
+      "revisionId": "QgqsXHRG6mrCTXFpz",
+      "_id": "RuRTGsvmxWzWoJy8u"
+    },
+    "plural_offset": {
+      "key": "plural_offset",
+      "lang": "is_IS",
+      "text": "Fleirtölu frávik (\"og einn annar\")",
+      "ctime": 1404471853352,
+      "mtime": 1404471853352,
+      "revisionId": "T8ikwddsCgGhBXnMy",
+      "_id": "QF65SckHGNHgn4yrv"
+    },
+    "string_gender": {
+      "key": "string_gender",
+      "lang": "is_IS",
+      "text": "Strengur með kyni",
+      "ctime": 1404471865814,
+      "mtime": 1404471865814,
+      "revisionId": "FYPm7x2G37AqYWheQ",
+      "_id": "ZqvkKGu6z2oTb2uXb"
+    },
+    "mixing_it_up": {
+      "key": "mixing_it_up",
+      "lang": "is_IS",
+      "text": "Öllu blandað saman",
+      "ctime": 1404471880029,
+      "mtime": 1404471880029,
+      "revisionId": "tWqdq76rTGXEKy3XF",
+      "_id": "AkFvt8xrHMECMP2Gz"
+    },
+    "added_to_profile": {
+      "key": "added_to_profile",
+      "lang": "is_IS",
+      "text": "Þú {NUM_ADDS, plural, offset:1\n\t\t\t    =0 {bættir þessu ekki við stillingarnar þínar}\n\t\t\t    =1 {bættir þessu við stillingarnar þínar}\n\t\t\t    one {og einn annar bættuð þessu við stillingarnar ykkar}\n\t\t\t    other {og # aðrir bættuð þessu við stillingarnar ykkar}}.",
+      "ctime": 1404472112482,
+      "mtime": 1404472112482,
+      "revisionId": "Xw8PXtMqoBfpHKCiK",
+      "_id": "H6s5zutqbsrHcZLYF"
+    },
+    "there_are_widgets": {
+      "ctime": 1404471953244,
+      "key": "there_are_widgets",
+      "lang": "is_IS",
+      "mtime": 1404472139760,
+      "revisionId": "spKgGWMeHdscWe9zB",
+      "text": "Það {NUM, plural,\n\t\t     =0 {eru engin tæki}\n\t\t     one {er eitt tæki}\n\t\t     other {eru # tæki}\n\t\t     }.",
+      "_id": "M4sBZTjAKNc2eKyXM"
+    },
+    "select_gender": {
+      "key": "select_gender",
+      "lang": "is_IS",
+      "text": "{GENDER, select,\n\t\t\tmale {Honum}\n\t\t\tfemale {Henni}\n\t\t\t other {Þeim}} líkaði þetta.",
+      "ctime": 1404472181508,
+      "mtime": 1404472181508,
+      "revisionId": "3tWdzZGxsMyBjT8Lm",
+      "_id": "KKqrAEcWcPPxr3njw"
+    },
+    "gender_plural": {
+      "key": "gender_plural",
+      "lang": "is_IS",
+      "text": "{GENDER, select,\n\t          male {Hann fékk}\n\t        female {Hún fékk}\n\t         other {Þau fengu}\n\t    } {NUM_RESULTS, plural,\n\t            =0 {engar niðurstöður}\n\t           one {1 niðurstöðu}\n\t         other {# niðurstöður}\n\t    } í {NUM_CATS, plural,\n\t           one {1 flokki}\n\t         other {# flokkum}\n\t    }.",
+      "ctime": 1404472266078,
+      "mtime": 1404472266078,
+      "revisionId": "nPESS3D5rBWqGgiRo",
+      "_id": "wMtSZ9hs8KvaCDoXf"
+    },
+    "test_key3": {
+      "key": "test_key3",
+      "lang": "is_IS",
+      "text": "Sýnidæmi um notkun á mf() í hjálparaðgerð",
+      "ctime": 1404472728061,
+      "mtime": 1404472728061,
+      "revisionId": "9YFAqgNsxzdm9LTjZ",
+      "_id": "eAhWPHXcuzf8g7NQe"
+    },
+    "test_key2": {
+      "ctime": 1404472717803,
+      "key": "test_key2",
+      "lang": "is_IS",
+      "mtime": 1404472780245,
+      "revisionId": "MfeD8qPqAJ9HBw5eN",
+      "text": "Sýnidæmi um notkun á mf() í úthlutaðri aðgerð",
+      "_id": "NaABvXkzdt3vAg5LS"
+    },
+    "javascript": {
+      "key": "javascript",
+      "lang": "is_IS",
+      "text": "JavaScript",
+      "ctime": 1404472794959,
+      "mtime": 1404472794959,
+      "revisionId": "YrWkx4vK8QxxXbSZ8",
+      "_id": "W9fF3zuGedGhfW3Hw"
+    },
+    "selectformat": {
+      "key": "selectformat",
+      "lang": "is_IS",
+      "text": "SelectFormat",
+      "ctime": 1404472802783,
+      "mtime": 1404472802783,
+      "revisionId": "bSi7fymf3NCfFrGcS",
+      "_id": "8GD7fcpntzi5pk3Ws"
+    },
+    "test_key": {
+      "ctime": 1404472710057,
+      "key": "test_key",
+      "lang": "is_IS",
+      "mtime": 1404473043842,
+      "revisionId": "hahco8sxyzqSnkbbS",
+      "text": "Sýnidæmi um notkun á mf() í skilgreindri aðgerð",
+      "_id": "vYfpR6kmW6nZGJcT6"
+    }
+  },
+  "bg_BG": {
+    "menu_home": {
+      "key": "menu_home",
+      "lang": "bg_BG",
+      "text": "Начало",
+      "ctime": 1404807406258,
+      "mtime": 1404807406258,
+      "revisionId": "JLDDL7R7NkRrzCKsG",
+      "_id": "RQumEAPkSuaoG8uK9"
+    },
+    "menu_docs": {
+      "key": "menu_docs",
+      "lang": "bg_BG",
+      "text": "Документи",
+      "ctime": 1404807410744,
+      "mtime": 1404807410744,
+      "revisionId": "xchSuY2oQcjFyq3QW",
+      "_id": "omkn5kBao8AYbZNHc"
+    },
+    "simple_variable": {
+      "key": "simple_variable",
+      "lang": "bg_BG",
+      "text": "Стринг със статична променлива",
+      "ctime": 1404807427704,
+      "mtime": 1404807427704,
+      "revisionId": "H5iWQe4MSo3rBMkX8",
+      "_id": "w9TbMHaNacdtv7a8m"
+    },
+    "simple_helper": {
+      "key": "simple_helper",
+      "lang": "bg_BG",
+      "text": "Стринг със променлива от помощна функция",
+      "ctime": 1404807460808,
+      "mtime": 1404807460808,
+      "revisionId": "K9MTDzYXnius7cvF2",
+      "_id": "WJxj4aKj4cFR9wMru"
+    }
+  },
+  "toto": {
+    "menu_home": {
+      "key": "menu_home",
+      "lang": "toto",
+      "text": "toto",
+      "ctime": 1405033421382,
+      "mtime": 1405033421382,
+      "revisionId": "wfWkPDoEaCu6W7Ex5",
+      "_id": "jmW5QahdxnzA7ZhbL"
+    },
+    "gender_plural": {
+      "ctime": 1408446190427,
+      "key": "gender_plural",
+      "lang": "toto",
+      "mtime": 1408446222988,
+      "revisionId": "BM8G4LzC44WnWPak7",
+      "text": " ",
+      "_id": "8c64cPiQdviBci2rh"
+    }
+  },
+  "ru": {
+    "menu_home": {
+      "key": "menu_home",
+      "lang": "ru",
+      "text": "Главная",
+      "ctime": 1407150846674,
+      "mtime": 1407150846674,
+      "revisionId": "DiBMRWExmii9oqCKj",
+      "_id": "K4QCmzLrTEh6pzP4Q"
+    },
+    "menu_docs": {
+      "key": "menu_docs",
+      "lang": "ru",
+      "text": "Документация\n",
+      "ctime": 1416827594376,
+      "mtime": 1416827594376,
+      "revisionId": "PA5fdPscCiNrW5dkK",
+      "_id": "Lj4BwWwhfRiCs37pD"
+    },
+    "hello_name2": {
+      "key": "hello_name2",
+      "lang": "ru",
+      "text": "Привет, {NAME}.",
+      "ctime": 1416827901203,
+      "mtime": 1416827901203,
+      "revisionId": "EwGYJafp2rMudXLgX",
+      "_id": "MDWp3fnMDgmu3A9W2"
+    },
+    "menu_examples": {
+      "key": "menu_examples",
+      "lang": "ru",
+      "text": "Примеры",
+      "ctime": 1416827907063,
+      "mtime": 1416827907063,
+      "revisionId": "BaTEMmLPcZ57qXfPr",
+      "_id": "wC94FFHAqmpfKJjKM"
+    },
+    "menu_trans": {
+      "key": "menu_trans",
+      "lang": "ru",
+      "text": "Перевод",
+      "ctime": 1416827935158,
+      "mtime": 1416827935158,
+      "revisionId": "fm48zrvEt3gWYKHbj",
+      "_id": "QFvHymPSx4rgCDHdu"
+    }
+  },
+  "ja": {
+    "menu_home": {
+      "key": "menu_home",
+      "lang": "ja",
+      "text": "ホーム",
+      "ctime": 1409612207700,
+      "mtime": 1409612207700,
+      "revisionId": "GCeKboWWPNhXEt8fJ",
+      "_id": "WrrdmPbPjYbQsLPTS"
+    },
+    "menu_docs": {
+      "key": "menu_docs",
+      "lang": "ja",
+      "text": "ドキュメント",
+      "ctime": 1409612215138,
+      "mtime": 1409612215138,
+      "revisionId": "nyoS5Mg2sz7cwZ5NP",
+      "_id": "jmPRfyYuHKBDNke8F"
+    },
+    "hello_name": {
+      "key": "hello_name",
+      "lang": "ja",
+      "text": "こんにちは{NAME}。",
+      "ctime": 1409612247170,
+      "mtime": 1409612247170,
+      "revisionId": "Y9YvBQieBTGbZPd2z",
+      "_id": "WJvrccXAAWHH7Lx5s"
+    },
+    "template": {
+      "key": "template",
+      "lang": "ja",
+      "text": "テンプレート",
+      "ctime": 1409612252360,
+      "mtime": 1409612252360,
+      "revisionId": "eLB9sxWg8Z7ZKBGgB",
+      "_id": "qhq683QW6uWouFuRT"
+    },
+    "menu_examples": {
+      "key": "menu_examples",
+      "lang": "ja",
+      "text": "例",
+      "ctime": 1409612261071,
+      "mtime": 1409612261071,
+      "revisionId": "M3PmjN59DDwAuME84",
+      "_id": "CXvhhZtPzCzFE6CxY"
+    },
+    "menu_trans": {
+      "key": "menu_trans",
+      "lang": "ja",
+      "text": "翻訳",
+      "ctime": 1409612265666,
+      "mtime": 1409612265666,
+      "revisionId": "u4Kh4GqwjEzWxhrW2",
+      "_id": "KbR7Jds73CiG3jvzS"
+    },
+    "open_source": {
+      "key": "open_source",
+      "lang": "ja",
+      "text": "オープンソース",
+      "ctime": 1409612270204,
+      "mtime": 1409612270204,
+      "revisionId": "CvCYWKTveZJafnhTE",
+      "_id": "GuJgWFonppxaKrJgg"
+    },
+    "i_am_str": {
+      "key": "i_am_str",
+      "lang": "ja",
+      "text": "私がstringです",
+      "ctime": 1411584079079,
+      "mtime": 1411584079079,
+      "revisionId": "WbYKZ5MjzgoAPoxHH",
+      "_id": "NPqefvE75hGoBvK8e"
+    }
+  },
+  "xx": {
+    "menu_home": {
+      "key": "menu_home",
+      "lang": "xx",
+      "text": "Domu",
+      "ctime": 1412709293752,
+      "mtime": 1412709293752,
+      "revisionId": "yuWRfegsRFxjcbhPw",
+      "_id": "WC8qAnj9DsN4Yfd3k"
+    },
+    "menu_docs": {
+      "key": "menu_docs",
+      "lang": "xx",
+      "text": "Dokumentz",
+      "ctime": 1412709297326,
+      "mtime": 1412709297326,
+      "revisionId": "ZFLAoFBhaoGMNw9PY",
+      "_id": "r9WFAkCvfsXDgEe4y"
+    },
+    "simple_variable": {
+      "key": "simple_variable",
+      "lang": "xx",
+      "text": "sdad",
+      "ctime": 1412709299581,
+      "mtime": 1412709299581,
+      "revisionId": "cjhi7wgDybEwxKFN6",
+      "_id": "Q7LFofSAazAgyH2hS"
+    },
+    "simple_helper": {
+      "key": "simple_helper",
+      "lang": "xx",
+      "text": "dsa",
+      "ctime": 1412709301254,
+      "mtime": 1412709301254,
+      "revisionId": "ekpD7sJa4LLvWuuiP",
+      "_id": "qy3QQtpevvjRmWc6A"
+    }
+  },
+  "no": {
+    "menu_home": {
+      "key": "menu_home",
+      "lang": "no",
+      "text": "Hjem",
+      "ctime": 1413289022109,
+      "mtime": 1413289022109,
+      "revisionId": "jtFCDsWcPiJ5ttggJ",
+      "_id": "wHXNPqjLhsvhCpZo2"
+    },
+    "menu_docs": {
+      "key": "menu_docs",
+      "lang": "no",
+      "text": "Dokumenter",
+      "ctime": 1413289030634,
+      "mtime": 1413289030634,
+      "revisionId": "KfX8TptogrCX7DdpY",
+      "_id": "nLDk4cgN5mWM6uSbQ"
+    },
+    "simple_variable": {
+      "key": "simple_variable",
+      "lang": "no",
+      "text": "Streng med statisk variabel",
+      "ctime": 1413289057425,
+      "mtime": 1413289057425,
+      "revisionId": "agkoKzKxvQbrSEMmP",
+      "_id": "uRdthDHtKvD7Bnc2g"
+    },
+    "simple_helper": {
+      "key": "simple_helper",
+      "lang": "no",
+      "text": "Streng med variabel fra hjelpefunksjon",
+      "ctime": 1413289071013,
+      "mtime": 1413289071013,
+      "revisionId": "b2cE76hWPStNBPKpd",
+      "_id": "hPJAjgWcLaj3xiPkp"
+    },
+    "plural_extension": {
+      "ctime": 1413289098276,
+      "key": "plural_extension",
+      "lang": "no",
+      "mtime": 1413289104815,
+      "revisionId": "AhHBSi7qxxpFfJEg5",
+      "text": "Flertallsutvidelse",
+      "_id": "PNHF6eLYufNXqWS4m"
+    },
+    "string_gender_plural": {
+      "key": "string_gender_plural",
+      "lang": "no",
+      "text": "Kjønn og 2 flertall",
+      "ctime": 1413289114428,
+      "mtime": 1413289114428,
+      "revisionId": "YnnZtT83jQRbZ7yxH",
+      "_id": "MeDGnSZ4mzz7tP9SM"
+    },
+    "i_am_str": {
+      "key": "i_am_str",
+      "lang": "no",
+      "text": "Jeg er en streng.",
+      "ctime": 1413289120366,
+      "mtime": 1413289120366,
+      "revisionId": "QwBWtETvigDGXsvkL",
+      "_id": "zqWR2iGQ3Xw2wrkZf"
+    },
+    "hello_name": {
+      "key": "hello_name",
+      "lang": "no",
+      "text": "Hei, {NAME}.",
+      "ctime": 1413289127138,
+      "mtime": 1413289127138,
+      "revisionId": "Z5Fz2u6XsJXuAx6cq",
+      "_id": "52gpRLpuo2herJjXk"
+    }
+  },
+  "cz": {
+    "menu_home": {
+      "key": "menu_home",
+      "lang": "cz",
+      "text": "Domov",
+      "ctime": 1421689453172,
+      "mtime": 1421689453172,
+      "revisionId": "iir7tfenwRN4FHuzN",
+      "_id": "Qw9AePHeFEwCvuD4Z"
+    },
+    "menu_docs": {
+      "key": "menu_docs",
+      "lang": "cz",
+      "text": "Dokumenty",
+      "ctime": 1421689463091,
+      "mtime": 1421689463091,
+      "revisionId": "jJ6RWfLWrx37No4A9",
+      "_id": "BZRuXxvksixejEacT"
+    },
+    "select_gender": {
+      "key": "select_gender",
+      "lang": "cz",
+      "text": "dafuq",
+      "ctime": 1421691076276,
+      "mtime": 1421691076276,
+      "revisionId": "LJubbzGSEuzu6eyhq",
+      "_id": "pWRHCtFhETKBEZaM5"
+    }
   }
 }, {
-  "exportedAt": 1398266768105,
-  "updatedAt": 1397903728444
+  "exportedAt": 1424339984413,
+  "updatedAt": 1421691076276
 });
