@@ -1,8 +1,0 @@
-{
-  "packages": {
-    "messageformat": {
-      "path": ".."
-    },
-    "iron-router": {}
-  }
-}
