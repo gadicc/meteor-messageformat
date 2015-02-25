@@ -27,9 +27,8 @@ mfPkg = {
         enabled: true
     },
 
-    mfStrings: typeof Mongo !== 'undefined' ? new Mongo.Collection('mfStrings') : new Meteor.Collection('mfStrings'),
-    mfRevisions: typeof Mongo !== 'undefined' ? new Mongo.Collection('mfRevisions') : new Meteor.Collection('mfRevisions'),
-    mfMeta: typeof Mongo !== 'undefined' ? new Mongo.Collection('mfMeta') : new Meteor.Collection('mfMeta'),
+    mfStrings: new Mongo.Collection('mfStrings'),
+    mfMeta: new Mongo.Collection('mfMeta'),
 
     init: function(native, options) {
         this.native = native;
@@ -68,33 +67,11 @@ mfPkg = {
                     delete mfPkg.compiled[doc.lang][doc.key];
             }
         });
-    },
-
-    webUI: {
-        allowFuncs: [ function() { return !!Meteor.userId(); } ],
-        denyFuncs: [],
-        allow: function(func) { this.allowFuncs.push(func); },
-        deny: function(func) { this.denyFuncs.push(func); },
-        allowed: function() {
-            var self = this, args = arguments;
-            return _.some(mfPkg.webUI.allowFuncs, function(func) {
-                return func.apply(self, args);
-            });
-        },
-        denied: function() {
-            var self = this, args = arguments;
-            return _.some(mfPkg.webUI.denyFuncs, function(func) {
-                return func.apply(self, args);
-            });
-        }
     }
-}
+};
 
-mfPkg.mfStrings.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});
-mfPkg.mfStrings.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
-mfPkg.mfRevisions.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});
-mfPkg.mfRevisions.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
 mfPkg.mfMeta.deny(function() { return true; });
+
 
 mf = function(key, params, message, locale) {
     if (!locale && Meteor.isClient)

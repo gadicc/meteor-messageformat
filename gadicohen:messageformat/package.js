@@ -1,6 +1,6 @@
 Package.describe({
   name:    "gadicohen:messageformat",
-  version: "0.0.48",
+  version: "0.1.0-preview.1",
   summary: "MessageFormat support, the Meteor way",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
@@ -11,30 +11,19 @@ Npm.depends({
 });
 
 Package.on_use(function (api) {
-	if (api.versionsFrom) {
-		api.versionsFrom("METEOR@0.9.0");
-		api.use([
-			'mongo@1.0.4',
-			'gadicohen:headers@0.0.25',
-			'meteorhacks:inject-initial@1.0.2',
-		], [
-			'client',
-			'server'
-		]);
-		api.use('iron:router@1.0.0', ['client', 'server'], { weak: true });
-	} else {
-		api.use([
-			'headers',
-			'inject-initial',
-		], [
-			'client',
-			'server'
-		]);
-		api.use('iron-router', ['client', 'server'], { weak: true });
-	}
+	api.versionsFrom("METEOR@1.0.1");
+	api.use([
+		'mongo@1.0.4',
+		'gadicohen:headers@0.0.25',
+		'meteorhacks:inject-initial@1.0.2',
+	], [
+		'client',
+		'server'
+	]);
+	api.use('iron:router@1.0.0', ['client', 'server'], { weak: true });
 
-	api.use(['underscore', 'templating', 'session', 'deps'], 'client');
-	api.use(['ui', 'spacebars', 'htmljs'], 'client');
+	api.use(['underscore', 'templating', 'session', 'tracker'], 'client');
+	//api.use(['ui', 'spacebars', 'htmljs'], 'client');
 
 
 	// common adds
@@ -49,11 +38,8 @@ Package.on_use(function (api) {
 
 	// client
 	api.add_files([
-		'lib/mfPkg/messageformat.html',
-		'lib/mfPkg/messageformat-client.js',
-		'lib/mfPkg/messageformat.css',
-		'lib/mfPkg/3rdparty/taboverride.js',
-		'lib/mfPkg/3rdparty/taboverride.jquery.js',
+    'lib/mfPkg/messageformat.html',
+		'lib/mfPkg/messageformat-client.js'
 	], 'client');
 
 	// Required so that the file will be packaged in package server
