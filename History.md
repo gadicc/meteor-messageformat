@@ -1,5 +1,11 @@
 ## vNEXT
 
+## v0.0.48
+
+* Work around /translate/mfAll.js not loading correctly with iron-router (#81)
+* mf_extract_wrapper.js@0.0.7 -- fixes some path issues (#77)
+* Prevent a moment warning (#79; thanks @maxnowack)
+
 ## v0.0.47
 
 * Bump iron-router to 1.0.0, work with that release, and make it a weak dep

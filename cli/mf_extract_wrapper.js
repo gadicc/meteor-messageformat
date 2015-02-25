@@ -18,8 +18,11 @@ var possibleNames = ['messageformat', 'gadicohen:messageformat',
 
 var cliPath = null;
 var npmBuild = null;
+var dirName;
+var name;
+var versions;
 
-for (var name, i=0; i < possibleNames.length; i++) {
+for (name, i=0; i < possibleNames.length; i++) {
 	name = possibleNames[i];
 	if (fs.existsSync(path.join(projRoot, 'packages', name))) {
 		cliPath = path.join(projRoot, 'packages', name, 'cli', 'mf_extract.js');
@@ -29,7 +32,7 @@ for (var name, i=0; i < possibleNames.length; i++) {
 }
 
 if (!cliPath) {
-	var versions = loadVersions(projRoot);
+	versions = loadVersions(projRoot);
 
 	if (!versions) {
 		// In Meteor < 0.9, if it's not in package directory, it's not installed
@@ -38,13 +41,21 @@ if (!cliPath) {
 		process.exit(1);
 	}
 
-	for (var name, i=0; i < possibleNames.length; i++) {
+	for (name, i=0; i < possibleNames.length; i++) {
 		name = possibleNames[i];
+    dirName = name.replace(/:/, '_');
 		if (versions[name]) {
-			cliPath = path.join(process.env.HOME, '.meteor', 'packages', name,
+      // only first dirname???
+			cliPath = path.join(process.env.HOME, '.meteor', 'packages', dirName,
 				versions[name], 'os', 'packages', name, 'cli', 'mf_extract.js');
-			npmBuild = path.join(process.env.HOME, '.meteor', 'packages', name,
-				versions[name], 'npm', 'node_modules');
+      npmBuild = path.join(process.env.HOME, '.meteor', 'packages', dirName,
+        versions[name], 'npm', 'node_modules');
+
+      // not used that i know of but seems like a safe bet
+      if (!fs.existsSync(cliPath)) {
+        cliPath = path.join(process.env.HOME, '.meteor', 'packages', dirName,
+          versions[name], 'os', 'packages', dirName, 'cli', 'mf_extract.js');
+      }
 			break;
 		}
 	}
