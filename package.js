@@ -1,6 +1,6 @@
 Package.describe({
   name:    "gadicohen:messageformat",
-  version: "0.0.48",
+  version: "0.0.49",
   summary: "MessageFormat support, the Meteor way",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
@@ -15,7 +15,7 @@ Package.on_use(function (api) {
 		api.versionsFrom("METEOR@0.9.0");
 		api.use([
 			'mongo@1.0.4',
-			'gadicohen:headers@0.0.25',
+			'gadicohen:headers@0.0.27',
 			'meteorhacks:inject-initial@1.0.2',
 		], [
 			'client',
