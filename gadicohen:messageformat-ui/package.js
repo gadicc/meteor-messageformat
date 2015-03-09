@@ -5,18 +5,18 @@ Package.describe({
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
 
-Package.on_use(function (api) {
+Package.onUse(function (api) {
   api.versionsFrom("METEOR@1.0.1");
   api.use(['templating', 'underscore'], 'client');
   api.use('iron:router@1.0.0', ['client', 'server']);
   api.use('mongo');
-  api.use('gadicohen:messageformat@0.1.0-preview.1');
+  api.use('gadicohen:messageformat@2.0.0-preview.1');
 
-  api.add_files('lib/common.js');
-  api.add_files('lib/server.js', 'server');
+  api.addFiles('lib/common.js');
+  api.addFiles('lib/server.js', 'server');
 
   // client
-  api.add_files([
+  api.addFiles([
     'lib/ui.html',
     'lib/ui.css',
     'lib/client.js',
@@ -25,3 +25,10 @@ Package.on_use(function (api) {
   ], 'client');
 });
 
+Package.onTest(function(api) {
+  api.use('tinytest');
+  api.use('gadicohen:messageformat-ui');
+
+  api.addFiles('tests/tests-client.js', 'client');
+  api.addFiles('tests/tests-server.js', 'server');
+});

@@ -10,7 +10,7 @@ Npm.depends({
   "underscore": "1.6.0"
 });
 
-Package.on_use(function (api) {
+Package.onUse(function (api) {
 	api.versionsFrom("METEOR@1.0.1");
 	api.use([
 		'mongo@1.0.4',
@@ -27,24 +27,31 @@ Package.on_use(function (api) {
 
 
 	// common adds
-	api.add_files('lib/messageformat.js/messageformat.js', ['client', 'server']);
-	api.add_files([
+	api.addFiles('lib/messageformat.js/messageformat.js', ['client', 'server']);
+	api.addFiles([
 		'lib/mfPkg/messageformat.js',
 		'lib/mfPkg/locale-all.js'
 	], ['client', 'server']);
 
 	// server
-	api.add_files('lib/mfPkg/messageformat-server.js', 'server');
+	api.addFiles('lib/mfPkg/messageformat-server.js', 'server');
 
 	// client
-	api.add_files([
+	api.addFiles([
     'lib/mfPkg/messageformat.html',
 		'lib/mfPkg/messageformat-client.js'
 	], 'client');
 
 	// Required so that the file will be packaged in package server
-	api.add_files('cli/mf_extract.js', 'server', { isAsset: true });
+	api.addFiles('cli/mf_extract.js', 'server', { isAsset: true });
 
 	api.export(['mfPkg', 'mf'], ['client', 'server']);
 });
 
+Package.onTest(function(api) {
+  api.use('tinytest');
+  api.use('gadicohen:messageformat');
+
+  api.addFiles('tests/tests-client.js', 'client');
+  api.addFiles('tests/tests-server.js', 'server');
+});
