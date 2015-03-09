@@ -1,9 +1,7 @@
 language: node_js
 node_js:
   - "0.10"
-env:
-	WORKING_DIR="./website"
+env: WORKING_DIR="./website"
 before_install:
   - "curl -L http://git.io/ejPSng | /bin/sh"
 
-	
