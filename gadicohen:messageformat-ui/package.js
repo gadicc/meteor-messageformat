@@ -1,6 +1,6 @@
 Package.describe({
   name:    "gadicohen:messageformat-ui",
-  version: "0.1.0-preview.1",
+  version: "2.0.0-preview.1",
   summary: "messageformat: translation UI",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
