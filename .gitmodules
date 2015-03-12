@@ -1,3 +1,4 @@
 [submodule "gadicohen:messageformat/lib/messageformat.js"]
 	path = gadicohen:messageformat/lib/messageformat.js
 	url = https://github.com/SlexAxton/messageformat.js
+	master = v2
