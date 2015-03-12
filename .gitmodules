@@ -1,0 +1,3 @@
+[submodule "lib/messageformat.js"]
+	path = lib/messageformat.js
+	url = https://github.com/SlexAxton/messageformat.js.git
