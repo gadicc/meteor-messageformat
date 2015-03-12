@@ -1,0 +1,19 @@
+<head>
+  <title>offline-poc</title>
+</head>
+
+<template name="home">
+  <h1>{{mf 'welcome' 'Welcome to Meteor!'}}</h1>
+
+  {{> hello}}
+
+  {{> loginButtons}}
+  <a href="/translate">Translate</a>
+  <button class="setLocale {{isCurrentLocaleClass 'en'}}" data-value="en">Session.set('locale', 'en')</button>
+  <button class="setLocale {{isCurrentLocaleClass 'he'}}" data-value="he">Session.set('locale', 'he')</button>
+</template>
+
+<template name="hello">
+  <button>{{mf 'click_me' 'Click Me'}}</button>
+  <p>You've pressed the button {{counter}} times.</p>
+</template>

@@ -1,0 +1,5 @@
+/* CSS declarations go here */
+
+.setLocale.active {
+  border: 2px solid black;
+}
