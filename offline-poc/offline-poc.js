@@ -47,7 +47,9 @@ mfPkg.init('en', {
 Router.route('/', 'home');
 
 if (Meteor.isClient) {
-  Session.setDefault('locale', amplify.store('locale') || mfPkg.native);
+  var storedLocale = amplify.store('locale');
+  if (storedLocale)
+    Session.set('locale', storedLocale);
 
   Tracker.autorun(function() {
       amplify.store('locale', Session.get('locale'));
