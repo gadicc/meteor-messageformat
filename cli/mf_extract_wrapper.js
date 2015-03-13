@@ -27,6 +27,8 @@ for (name, i=0; i < possibleNames.length; i++) {
 	if (fs.existsSync(path.join(projRoot, 'packages', name))) {
 		cliPath = path.join(projRoot, 'packages', name, 'cli', 'mf_extract.js');
 		npmBuild = path.join(projRoot, 'packages', name, '.build', 'npm', 'node_modules');
+    if (!fs.existsSync(npmBuild))
+      npmBuild = path.join(projRoot, 'packages', name, '.npm', 'package', 'node_modules');
 		break;
 	}
 }

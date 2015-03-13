@@ -204,11 +204,12 @@ function processJS(file, data) {
 	var result, re;
 
 	// function blah(), blah = function(), helper('moo', function() {...
-	// mf('test_key', params, 'test_text')
+	// mf('test_key', params, 'test_text'), mf('test_key', 'test_text')
 
-	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
+	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,?\s*(['"])(.*?)\3,?.*?\)/g;
 	while (result = re.exec(data)) {
 		var key = result[2], text = result[4], attributes = attrDict(result[5]);
+    if (!text && _.isString(result[3])) text = result[3];
 		var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
 			.exec(data.substring(0, result.index));
 		var line = data.substring(0, result.index).split('\n').length;

@@ -1,6 +1,6 @@
 {
   "name": "meteor-messageformat",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "CLI tools for Meteor MessageFormat smart package",
   "main": "mf_extract.js",
   "dependencies": {

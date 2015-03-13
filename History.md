@@ -1,5 +1,17 @@
 ## vNEXT
 
+## v0.0.50
+
+* mf_extract_wrapper.js (npm meteor-messageformat package) v0.0.8:
+  Work with one more possibility for *local* packages in latest Meteor.
+
+* mf_extract, allow mf(key, text) and not just mf(key, params, text)
+  since our API has supported that now for a while.
+
+## v0.0.49
+
+* bump gadicohen:headers to latest version (#86)
+
 ## v0.0.48
 
 * Work around /translate/mfAll.js not loading correctly with iron-router (#81)
