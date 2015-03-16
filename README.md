@@ -45,6 +45,14 @@ Once installed, you can start adding the MessageFormat helper to templates:
 
 In short, you'll get to use the `{{mf}}` helper. 
 
+Initializing translation strings
+-------------------------------
+After you have added several translation strings to your templates, you will need to extract those strings for translation. To do so:
+
+1. make sure your Meteor app is running (by typing `meteor` in the project directory)
+2. open another console tab and type `mf_extract`
+3. navigate to *localhost:300/translate* to see the translation UI
+
 Advanced Usage
 --------------
 Much more complex strings are possible, and are useful even if your
