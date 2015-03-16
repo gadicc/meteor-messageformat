@@ -6,6 +6,8 @@ For iron:router < 1.0.0, use messageformat v0.0.45.
 
 For Meteor < 0.8.0, use messageformat v0.0.26.
 
+Description
+-----------
 Easy reactive use of complicated strings (gender, plural, etc) with insanely
 easy translation into other languages (through a web UI).
 
@@ -13,13 +15,39 @@ For full info, docs and examples, see the
 [Meteor MessageFormat home page](http://messageformat.meteor.com/)
 (or install/clone the smart package and run `mrt` in its `website` directory).
 
-In short, you'll get to use the `{{mf}}` helper.  Simple example:
+Installation
+------------
+To install, simply run the following command in your project folder:
 
-```html
+```
+meteor add gadicc:messageformat
+```
+
+You will then need to add an initialization setting in your project. E.g. in `lib/config.js` add the following:
+
+```
+mfPkg.init('en');
+```
+Replace **'en'** with the native language of your project, if appropriate.
+
+Usage
+----
+Once installed, you can start adding the MessageFormat helper to templates:
+
+```
+<p>This string is translatable</p>
+```
+
+...becomes ...
+```
 <p>{{mf 'trans_string' 'This string is translatable'}}</p>
 ```
 
-but much more complex strings are possible, and are useful even if your
+In short, you'll get to use the `{{mf}}` helper. 
+
+Advanced Usage
+--------------
+Much more complex strings are possible, and are useful even if your
 website is only available in one language, e.g.:
 
 ```html
