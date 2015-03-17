@@ -42,6 +42,7 @@ Once installed, you can start adding the MessageFormat helper to templates:
 ```
 <p>{{mf 'trans_string' 'This string is translatable'}}</p>
 ```
+*Note:* Each translation string must have a unique key. In the above example, `trans_string` is the key.
 
 In short, you'll get to use the `{{mf}}` helper. 
 
