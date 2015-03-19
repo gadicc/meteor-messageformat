@@ -1,4 +1,9 @@
-[submodule "gadicohen:messageformat/lib/messageformat.js"]
-	path = gadicohen:messageformat/lib/messageformat.js
+[submodule "msgfmt:core/lib/messageformat.js"]
+	path = msgfmt:core/lib/messageformat.js
 	url = https://github.com/SlexAxton/messageformat.js
 	master = v2
+[submodule "lib/messageformat.js"]
+	path = lib/messageformat.js
+	url = https://github.com/SlexAxton/messageformat.js
+	master = v0
+

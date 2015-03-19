@@ -12,6 +12,6 @@ accounts-facebook
 iron:router
 mrt:sp-marked
 mizzao:bootstrap-3
-gadicohen:messageformat
 gadicohen:syntaxhighlighter
-gadicohen:messageformat-ui
+msgfmt:core
+msgfmt:ui

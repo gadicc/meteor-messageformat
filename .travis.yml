@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "0.10"
-env: WORKING_DIR="./website" PACKAGES="gadicohen:messageformat;gadicohen:messageformat-ui"
+env: WORKING_DIR="./website" PACKAGES="msgfmt:core;msgfmt:ui"
 before_install:
   - "curl -L http://git.io/ejPSng | /bin/sh"
 

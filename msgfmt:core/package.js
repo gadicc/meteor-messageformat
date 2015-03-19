@@ -1,8 +1,8 @@
 Package.describe({
-  name:    "gadicohen:messageformat",
+  name:    "msgfmt:core",
   version: "2.0.0-preview.1",
   summary: "MessageFormat support, the Meteor way",
-  git:      "https://github.com/gadicc/meteor-messageformat.git",
+  git:     "https://github.com/gadicc/meteor-messageformat.git",
 });
 
 Npm.depends({
@@ -50,7 +50,7 @@ Package.onUse(function (api) {
 
 Package.onTest(function(api) {
   api.use('tinytest');
-  api.use('gadicohen:messageformat');
+  api.use('msgfmt:core');
 
   api.addFiles('tests/tests-client.js', 'client');
   api.addFiles('tests/tests-server.js', 'server');

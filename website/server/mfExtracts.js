@@ -247,7 +247,7 @@ mfPkg.addNative(
     "key": "test_key",
     "text": "Example mf() use in a declared function",
     "file": "./docs/docs.js",
-    "line": 90,
+    "line": 89,
     "func": "function testFunc(arg1)",
     "ctime": 1395931103550,
     "mtime": 1395931103550
@@ -256,7 +256,7 @@ mfPkg.addNative(
     "key": "test_key2",
     "text": "Example mf() use in an assigned function",
     "file": "./docs/docs.js",
-    "line": 94,
+    "line": 93,
     "func": "function(arg1)",
     "ctime": 1395931103550,
     "mtime": 1395931103550
@@ -265,7 +265,7 @@ mfPkg.addNative(
     "key": "test_key3",
     "text": "Example mf() use in a helper / anonymous func",
     "file": "./docs/docs.js",
-    "line": 99,
+    "line": 98,
     "func": "function()",
     "ctime": 1395931103550,
     "mtime": 1395931103550
@@ -299,6 +299,6 @@ mfPkg.addNative(
   }
 }, 
 {
-  "extractedAt": 1405269387853,
+  "extractedAt": 1426234485489,
   "updatedAt": 1405268014853
 });
