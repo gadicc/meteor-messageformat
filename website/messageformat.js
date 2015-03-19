@@ -1,6 +1,8 @@
 // console.log(mf('menu_home', null, 'Home_1st'));
 // console.log(mf('menu_home', null, 'Home'));
 
+Logger.setLevel('msgfmt', 'trace');
+
 mfPkg.init('en', {
 	sendPolicy: 'all'
 });

@@ -12,19 +12,26 @@ Npm.depends({
 
 Package.onUse(function (api) {
 	api.versionsFrom("METEOR@1.0.1");
+
+  // common deps
 	api.use([
 		'mongo@1.0.4',
 		'gadicohen:headers@0.0.27',
 		'meteorhacks:inject-initial@1.0.2',
-	], [
-		'client',
-		'server'
-	]);
-	api.use('iron:router@1.0.0', ['client', 'server'], { weak: true });
+    'jag:pince@0.0.6'
+	], [ 'client', 'server' ]);
 
-	api.use(['underscore', 'templating', 'session', 'tracker'], 'client');
-	//api.use(['ui', 'spacebars', 'htmljs'], 'client');
+  // client deps
+	api.use([
+    // core MDG packages
+    'templating', 'session', 'tracker', 'reactive-var',
+    // core 3rd party packages
+    'underscore', 'amplify', 'jquery'
+  ], 'client');
+  //api.use(['ui', 'spacebars', 'htmljs'], 'client');
 
+  // server deps
+  api.use(['webapp'], 'server');
 
 	// common adds
 	api.addFiles('lib/messageformat.js/messageformat.js', ['client', 'server']);
@@ -45,7 +52,7 @@ Package.onUse(function (api) {
 	// Required so that the file will be packaged in package server
 	api.addFiles('cli/mf_extract.js', 'server', { isAsset: true });
 
-	api.export(['mfPkg', 'mf'], ['client', 'server']);
+	api.export(['mfPkg', 'mf', 'msgfmt'], ['client', 'server']);
 });
 
 Package.onTest(function(api) {

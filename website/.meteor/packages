@@ -15,3 +15,5 @@ mizzao:bootstrap-3
 gadicohen:syntaxhighlighter
 msgfmt:core
 msgfmt:ui
+
+appcache

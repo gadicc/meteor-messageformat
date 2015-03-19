@@ -168,7 +168,7 @@ Meteor.methods({
 				continue;
 			strings[lang] = {};
 			for (key in mfPkg.strings[lang])
-				strings[lang][key] = mfPkg.strings[lang][key].text;
+				strings[lang][key] = mfPkg.strings[lang][key].text.replace(/\s+/g, ' ');
 		}
 		return {
 			strings: strings,
@@ -208,9 +208,46 @@ Meteor.publish('mfStrings', function(lang, after, fullInfo) {
 Meteor.methods({
 	'mfPkg.langList': function() {
 		return _.keys(mfPkg.strings);
-	}
+	},
+  'msgfmt:setLocale': function(locale) {
+    this.connection.locale = locale;
+  }
 });
 
-Inject.obj('meteor-langList', function() {
-	return _.keys(mfPkg.strings);
+// TODO, cache/optimize
+Inject.obj('msgfmt:locales', function() {
+  var out = {};
+  for (var lang in mfPkg.meta)
+    out[lang] = mfPkg.meta[lang].updatedAt;
+	return out;
+});
+
+function localeCollectionToDictionary(locale) {
+  var key, out = {};
+
+  if (locale === 'all') {
+    for (locale in mfPkg.strings) {
+      out[locale] = {};
+      for (key in mfPkg.strings[locale])
+        out[locale][key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');    
+    }
+  } else {
+    for (key in mfPkg.strings[locale])
+      out[key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');    
+  }
+  return out;
+}
+
+// TODO, caching, compression
+// return functoins when security policy doesn't allow new function
+// allow fromDate?
+WebApp.connectHandlers.use(function(req, res, next) {
+  if (req.url.substr(0, 15) === '/msgfmt/locale/') {
+    var locale = req.url.substr(15);
+    res.setHeader("Content-Type", "application/json");
+    res.writeHead(200);
+    res.end(JSON.stringify(localeCollectionToDictionary(locale)));
+    return;
+  }
+  next();
 });

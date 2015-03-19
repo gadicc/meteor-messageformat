@@ -10,10 +10,12 @@ if (Meteor.isClient) {
   });
 
 
-  Template.examples.getName = function() {
-    var lang = Session.get('lang');
-    return lang == 'he' ? 'גדי' : 'Gadi';
-  }
+  Template.examples.helpers({
+    getName: function() {
+      var lang = Session.get('locale');
+      return lang == 'he' ? 'גדי' : 'Gadi';
+    }
+  });
 
   function myTrim(text, indent) {
     text = text.replace(/^\n*/, '').replace(/\t/g, '  ');
@@ -67,17 +69,17 @@ if (Meteor.isClient) {
   }
   */
 
-  Session.setDefault('lang', 'en');
   Template.langButtons.events({
     'click button': function(event) {
-      var lang = $(event.target).val();
-      Session.set('lang', lang);
-      Session.set('locale', lang);
+      var locale = $(event.target).val();
+      mfPkg.setLocale(locale);
     }
   });
-  Template.langButtons.isLang = function(lang) {
-    return Session.equals('lang', lang);
-  }
+  Template.langButtons.helpers({
+    isLocale: function(locale) {
+      return Session.equals('locale', locale);
+    }
+  });
 
   Session.setDefault('NUM', 1);
   Template.numButtons.events({
@@ -85,19 +87,23 @@ if (Meteor.isClient) {
       Session.set('NUM', $(event.target).val());
     }
   });
-  Template.numButtons.isNum = function(num) {
-    // Session.equals doesn't work well with 0
-    return Session.get('NUM') == num;
-    /*
-    console.log(Session.get('NUM'), num);
-    console.log(Session.get('NUM') == num);
-    console.log(Session.equals('NUM', num));
-    return Session.equals('NUM', num);
-    */
-  }
-  Template.examples.getNum = function() {
-    return Session.get('NUM');
-  }
+  Template.numButtons.helpers({
+    isNum: function(num) {
+      // Session.equals doesn't work well with 0
+      return Session.get('NUM') == num;
+      /*
+      console.log(Session.get('NUM'), num);
+      console.log(Session.get('NUM') == num);
+      console.log(Session.equals('NUM', num));
+      return Session.equals('NUM', num);
+      */
+    }
+  });
+  Template.examples.helpers({
+    getNum: function() {
+      return Session.get('NUM');
+    }
+  });
 
   Session.setDefault('NUM2', 1);
   Template.numButtons2.events({
@@ -105,20 +111,23 @@ if (Meteor.isClient) {
       Session.set('NUM2', $(event.target).val());
     }
   });
-  Template.numButtons2.isNum = function(num) {
-    // Session.equals doesn't work well with 0
-    return Session.get('NUM2') == num;
-    /*
-    console.log(Session.get('NUM'), num);
-    console.log(Session.get('NUM') == num);
-    console.log(Session.equals('NUM', num));
-    return Session.equals('NUM', num);
-    */
-  }
-  Template.examples.getNum2 = function() {
-    return Session.get('NUM2');
-  }
-
+  Template.numButtons2.helpers({
+    isNum: function(num) {
+      // Session.equals doesn't work well with 0
+      return Session.get('NUM2') == num;
+      /*
+      console.log(Session.get('NUM'), num);
+      console.log(Session.get('NUM') == num);
+      console.log(Session.equals('NUM', num));
+      return Session.equals('NUM', num);
+      */
+    }
+  });
+  Template.examples.helpers({
+    getNum2: function() {
+      return Session.get('NUM2');
+    }
+  });
 
   Session.setDefault('GENDER', 'male');
   Template.genderButtons.events({
@@ -126,19 +135,14 @@ if (Meteor.isClient) {
       Session.set('GENDER', $(event.target).val());
     }
   });
-  Template.genderButtons.isGender = function(gender) {
-    return Session.equals('GENDER', gender);
-  }
-  Template.examples.getGender = function() {
-    return Session.get('GENDER');
-  }
-
-  function setBodyDir() {
-    // There will ultimately be a better way to do this in the final package
-    var lang = Session.get('lang');
-    $('body').attr('dir', lang == 'he' ? 'rtl' : 'ltr');    
-  }
-  Deps.autorun(setBodyDir);
-  Meteor.startup(setBodyDir);
-
+  Template.genderButtons.helpers({
+    isGender: function(gender) {
+      return Session.equals('GENDER', gender);
+    }
+  });
+  Template.examples.helpers({
+    getGender: function() {
+      return Session.get('GENDER');
+    }
+  });
 }

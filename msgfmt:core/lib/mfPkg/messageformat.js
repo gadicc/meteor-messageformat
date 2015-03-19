@@ -12,8 +12,7 @@
  *
  */
 
-
-mfPkg = {
+mfPkg = msgfmt = {
     native: 'en',   // Fine to use reserved words for IdentifierNames (vs Identifiers)
     objects: {},
     compiled: {},
@@ -27,6 +26,8 @@ mfPkg = {
         enabled: true
     },
 
+    setBodyDir: true,
+
     mfStrings: new Mongo.Collection('mfStrings'),
     mfMeta: new Mongo.Collection('mfMeta'),
 
@@ -37,6 +38,11 @@ mfPkg = {
             this.serverInit(native, options);
         else
             this.clientInit(native, options);
+    },
+
+    rtlLangs: [ 'ar', 'dv', 'fa', 'ha', 'he', 'iw', 'ji', 'ps', 'ur', 'yi' ],
+    dirFromLang: function(lang) {
+      return msgfmt.rtlLangs.indexOf(lang) === -1 ? 'ltr' : 'rtl';
     },
 
     /*
@@ -74,8 +80,14 @@ mfPkg.mfMeta.deny(function() { return true; });
 
 
 mf = function(key, params, message, locale) {
-    if (!locale && Meteor.isClient)
+    if (!locale) {
+      if (Meteor.isClient) {
         locale = Session.get('locale');
+      } else {
+        var currentInvocation = DDP._CurrentInvocation.get();
+        locale = currentInvocation.connection.locale;
+      }
+    }    
     if (!locale)
         locale = mfPkg.native;
     if (_.isString(params)) {
@@ -116,27 +128,3 @@ mf = function(key, params, message, locale) {
     
     return cmessage;
 }
-
-
-// needs to be on client and server for routing to work properly
-if (Package['iron:router'])
-Package['iron:router'].Router.map(function() {
-    this.route('mfAll', {
-        path: '/translate/mfAll.js',
-        where: 'server',
-        action: function() {
-            var out, meta = { exportedAt: new Date().getTime(), updatedAt: 0 };
-            for (lang in mfPkg.strings)
-                for (key in mfPkg.strings[lang])
-                    if (mfPkg.strings[lang][key].mtime > meta.updatedAt)
-                        meta.updatedAt = mfPkg.strings[lang][key].mtime;
-
-            out = 'mfPkg.syncAll('
-                + JSON.stringify(mfPkg.strings, null, 2)
-                + ', ' + JSON.stringify(meta, null, 2) + ');';
-            //this.response.writeHead(200, {'Content-Type': 'application/javascript'});
-            this.response.writeHead(200, {'Content-Disposition': 'attachment; filename=mfAll.js'});
-            this.response.end(out, 'utf8');
-        }
-    });
-});
