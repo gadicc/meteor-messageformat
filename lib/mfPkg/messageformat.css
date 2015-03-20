@@ -24,7 +24,7 @@ div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 	border-left: 1px solid black; border-bottom: 1px solid black;
 	position: relative; /* makes jquery scroll stuff easier */
 }
-#mfTransPreview table { width: 500%; table-layout:fixed; border-collapse:separate; background: white; }
+#mfTransPreview table { width: 100%; table-layout:fixed; border-collapse:separate; background: white; }
 #mfTransPreview table thead tr { background: #ede9e3; }
 #mfTransPreview table thead th { width: 50%; padding: 4px 8px 4px 8px; }
 #mfTransPreview table thead th:first-child {

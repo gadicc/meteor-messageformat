@@ -1,5 +1,15 @@
 ## vNEXT
 
+## v0.0.52 (.51 had a publish error)
+
+* Docs: remove mrt and reference `gadicohen:messageformat` instead.
+  Add basic installation and usage instructions to the README.
+  Thanks @brylie.
+
+* Fix errant CSS in the translation UI which caused the table header
+  to exceed the page boundaries and translations to now show up in
+  the summary view.
+
 ## v0.0.50
 
 * mf_extract_wrapper.js (npm meteor-messageformat package) v0.0.8:

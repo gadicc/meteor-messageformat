@@ -20,7 +20,7 @@ Installation
 To install, simply run the following command in your project folder:
 
 ```
-meteor add gadicc:messageformat
+meteor add gadicohen:messageformat
 ```
 
 You will then need to add an initialization setting in your project. E.g. in `lib/config.js` add the following:
@@ -28,7 +28,9 @@ You will then need to add an initialization setting in your project. E.g. in `li
 ```
 mfPkg.init('en');
 ```
-Replace **'en'** with the native language of your project, if appropriate.
+Replace **'en'** with the native language of your project, if appropriate.  You
+can also pass a second argument with options; for more details see the online
+docs.
 
 Usage
 ----
@@ -50,8 +52,9 @@ Extracting translation strings
 ------------------
 After you have added several translation strings to your templates, you will need to extract those strings for translation. To do so:
 
-1. In the project directory, type `mf_extract`
-2. navigate to *localhost:300/translate* to see the translation UI
+1. `sudo npm install -g meteor-messageformat` (once)
+1. To update strings, in your project directory, type `mf_extract`
+1. To see the tralsnation UI, navigate to *localhost:3000/translate*
 
 Advanced Usage
 --------------
