@@ -6,8 +6,8 @@ For iron:router < 1.0.0, use messageformat v0.0.45.
 
 For Meteor < 0.8.0, use messageformat v0.0.26.
 
-Description
------------
+## Description
+
 Easy reactive use of complicated strings (gender, plural, etc) with insanely
 easy translation into other languages (through a web UI).
 
@@ -15,53 +15,65 @@ For full info, docs and examples, see the
 [Meteor MessageFormat home page](http://messageformat.meteor.com/)
 (or install/clone the smart package and run `mrt` in its `website` directory).
 
-Installation
-------------
+## Installation
+
 To install, simply run the following command in your project folder:
 
-```
-meteor add gadicohen:messageformat
+```bash
+$ meteor add gadicohen:messageformat
 ```
 
 You will then need to add an initialization setting in your project. E.g. in `lib/config.js` add the following:
 
-```
+```js
 mfPkg.init('en');
 ```
 Replace **'en'** with the native language of your project, if appropriate.  You
 can also pass a second argument with options; for more details see the online
 docs.
 
-Usage
-----
+## Usage
+
 Once installed, you can start adding the MessageFormat helper to templates:
 
-```
+```handlebars
 <p>This string is translatable</p>
 ```
 
 ...becomes ...
-```
+
+```handlebars
 <p>{{mf 'trans_string' 'This string is translatable'}}</p>
 ```
-*Note:* Each translation string must have a unique key. In the above example, `trans_string` is the key.
 
-In short, you'll get to use the `{{mf}}` helper. 
+*Note:* Each translation string must have a unique key. In the above example,
+`trans_string` is the key.
 
-Extracting translation strings
-------------------
-After you have added several translation strings to your templates, you will need to extract those strings for translation. To do so:
+In short, you'll get to use the `{{mf}}` helper.  See more advanced examples
+below and particularly the online docs for many more examples and more
+complete explanations.
+
+### Extracting translation strings
+
+After you have added several translation strings to your templates, you will
+need to extract those strings for translation.
+
+*Once off*:
 
 1. `sudo npm install -g meteor-messageformat` (once)
-1. To update strings, in your project directory, type `mf_extract`
-1. To see the tralsnation UI, navigate to *localhost:3000/translate*
+1. Make sure you've run `meteor` in your project dir at least once.
 
-Advanced Usage
---------------
+*To update*:
+
+1. In your project directory, type `mf_extract` (that's an underscore)
+1. To see the tralsnation UI, navigate to http:/localhost:3000/translate
+
+### Advanced Usage
+
 Much more complex strings are possible, and are useful even if your
 website is only available in one language, e.g.:
 
-```html
+```handlebars
 {{#mf KEY='gender_plural' GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2}}
 {GENDER, select,
        male {He}
