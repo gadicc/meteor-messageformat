@@ -48,9 +48,6 @@ Package.onUse(function (api) {
 		'lib/mfPkg/messageformat-client.js'
 	], 'client');
 
-	// Required so that the file will be packaged in package server
-	api.addFiles('cli/mf_extract.js', 'server', { isAsset: true });
-
 	api.export(['mfPkg', 'mf', 'msgfmt'], ['client', 'server']);
 });
 

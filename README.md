@@ -1,3 +1,5 @@
+# meteor-messageformat (v2)
+
 ## Differences from v0
 
 * The main package is now `msgfmt:core`.

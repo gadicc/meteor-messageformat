@@ -7,7 +7,7 @@ var fs   = Npm.require('fs');
 var path = Npm.require('path');
 var walk = Npm.require('walk');
 
-var ecol = new Meteor.Collection('mfExtracts');
+var efiles = new Meteor.Collection('mfExtractFiles');
 
 var toDict = function(array) {
   var out = {};
@@ -18,16 +18,15 @@ var toDict = function(array) {
   return out;
 }
 
-var strings = {};
 var checkForUpdates = function() {
   log.debug('Checking for changed files...');
 
   var startTime = Date.now();
   var lastTime = startTime;
 
-  var oldFilesInfo = toDict(ecol.find().fetch());
+  var oldFilesInfo = toDict(efiles.find().fetch());
 
-  log.trace('Retrieved old file info from database (in a fiber) in ' +
+  log.debug('Retrieved old file info from database (in a fiber) in ' +
     (Date.now() - lastTime) + 'ms');
   lastTime = Date.now();
  
@@ -66,44 +65,110 @@ var checkForUpdates = function() {
   });
 
   walker.on('end', Meteor.bindEnvironment(function() {
-    var id;
+    var id, key, name;
 
-    log.trace('Finished walking files (non-fiber async) in ' +
+    log.debug('Finished walking files (non-fiber async) in ' +
       (Date.now() - lastTime) + 'ms');
     lastTime = Date.now();
 
-    strings = {};
-
-    for (var name in changedFiles) {
-      var file = changedFiles[name];
-      var content = fs.readFileSync(file.fromCwd, 'utf8');
-      handlers[path.extname(name).substr(1)](name, content, file.mtime);
+    if (!Object.keys(changedFiles).length) {
+      log.debug("No changed files, nothing to do");
+      return;
     }
 
-    log.trace('Finished processing ' +
+    var newStrings = {};
+    var oldStrings = {};
+    var nativeStrings = mfPkg.strings[mfPkg.native];
+
+    for (name in changedFiles) {
+      var file = changedFiles[name];
+      var content = fs.readFileSync(file.fromCwd, 'utf8');
+      handlers[path.extname(name).substr(1)](name, content, file.mtime, newStrings);
+    }
+
+    // Only compare oldStrings from the files we're looking at
+    for (key in nativeStrings) {
+      if (upserts[nativeStrings[key].file] || oldFilesInfo[nativeStrings[key].file])
+        oldStrings[key] = nativeStrings[key];
+    }
+
+    log.debug('Finished processing ' +
       Object.keys(changedFiles).length + ' file(s) (blocking) in ' +
       (Date.now() - lastTime) + 'ms');
     lastTime = Date.now();
 
-    console.log(strings);
+    var changeCount = 0, newCount = 0, removeCount = 0;
+    for (key in newStrings) {
+      if (oldStrings[key]) {
+        if (newStrings[key].text === oldStrings[key].text) {
+          if (oldStrings[key].removed) {
+            // Basically a new key
+            newCount++;
+            newStrings[key].ctime = newStrings[key].mtime;
+          } else {
+            // No change
+            delete newStrings[key];
+          }
+        } else {
+          changeCount++;
+        }
+        delete oldStrings[key];
+      } else {
+        newCount++;
+        newStrings[key].ctime = newStrings[key].mtime;
+      }
+    }
+
+    // if a key existed before but not anymore, mark as removed
+    for (key in oldStrings) {
+      log.trace('Marking "' + key + '" as removed.');
+      newStrings[key] = oldStrings[key];
+      newStrings[key].removed = true;
+      newStrings[key].mtime = Date.now();
+      removeCount++;
+    }
+
+    log.debug('Finished comparing strings in ' +
+      (Date.now() - lastTime) + 'ms');
+    lastTime = Date.now();
+
+    if (newCount || changeCount || removeCount)
+      log.info(newCount + ' string(s) added, ' +
+        changeCount + ' changed, and ' +
+        removeCount + ' marked as removed.');
+    else
+      log.debug('0 string(s) added, 0 changed, and 0 marked as removed.');
+
+    // console.log(newStrings);
+
+    var max = _.max(newStrings, function(s) { return s.mtime; }).mtime;
+    mfPkg.addNative(newStrings, {
+      extractedAt: Date.now(),
+      updatedAt: max
+    });
+
+    log.debug('Finished mfPkg.addNative in ' + (Date.now() - lastTime) + 'ms');
+    lastTime = Date.now();
 
     // Update changed files
     for (id in upserts)
-      ecol.upsert(id, { $set: upserts[id] });
+      efiles.upsert(id, { $set: upserts[id] });
 
     // Remove files that no longer exist
     for (id in oldFilesInfo)
-      ecol.remove(id);
+      efiles.remove(id);
 
-    log.trace('Finished updating database (in a fiber) in ' +
+    log.debug('Finished updating database (in a fiber) in ' +
       (Date.now() - lastTime) + 'ms');
     lastTime = Date.now();
 
     // Report Back
     log.debug(Object.keys(upserts).length + ' file(s) changed and ' +
-      Object.keys(oldFilesInfo).length + ' file(s) removed');
-    log.trace('Changed files: ' + _.keys(upserts).join(', '));
-    log.trace('Removed files: ' + _.keys(oldFilesInfo).join(', '));
+      Object.keys(oldFilesInfo).length + ' file(s) removed.');
+    if (Object.keys(upserts).length)
+      log.debug('Changed files: ' + _.keys(upserts).join(', '));
+    if (Object.keys(oldFilesInfo).length)
+      log.debug('Removed files: ' + _.keys(oldFilesInfo).join(', '));
   }));
 }
 
@@ -129,7 +194,7 @@ function attrDict(string) {
 }
 
 var lastFile = null;
-function logKey(file, key, text, file, line) {
+function logKey(file, key, text, file, line, strings) {
   if (strings[key] && strings[key].text != text)
     log.warn('{ ' + key + ': "' + text + '" } in '
       + file + ':' + line + ' replaces DUP_KEY\n         { '
@@ -141,17 +206,17 @@ function logKey(file, key, text, file, line) {
 
   if (file != lastFile) {
     lastFile = file;
-    log.trace('\n' + file);
+    log.trace(file);
   }
 
-  log.trace(key + ': "' + text.replace(/\s+/g, ' ') + '"');
+  log.trace('* ' + key + ': "' + text.replace(/\s+/g, ' ') + '"');
 }
 
 /* handlers */
 
 var handlers = {};
 
-handlers.html = function(file, data, mtime) {
+handlers.html = function(file, data, mtime, strings) {
   // XXX TODO, escaped quotes
   var result, re;
 
@@ -162,7 +227,7 @@ handlers.html = function(file, data, mtime) {
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line);
+    logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -180,7 +245,7 @@ handlers.html = function(file, data, mtime) {
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
       .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line);
+    logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -192,7 +257,7 @@ handlers.html = function(file, data, mtime) {
   }
 };
 
-handlers.jade = function(file, data, mtime) {
+handlers.jade = function(file, data, mtime, strings) {
   // XXX TODO, escaped quotes
   var result, re;
 
@@ -203,7 +268,7 @@ handlers.jade = function(file, data, mtime) {
     var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])(.*?)\1\s*\)[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line);
+    logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -221,7 +286,7 @@ handlers.jade = function(file, data, mtime) {
     var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])([^\1]+?)\1\s*\)[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line);
+    logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -235,7 +300,7 @@ handlers.jade = function(file, data, mtime) {
   // block helpers?
 };
 
-handlers.js = function(file, data, mtime) {
+handlers.js = function(file, data, mtime, strings) {
   // XXX TODO, escaped quotes
   var result, re;
 
@@ -249,7 +314,7 @@ handlers.js = function(file, data, mtime) {
     var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
       .exec(data.substring(0, result.index));
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line);
+    logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -261,32 +326,32 @@ handlers.js = function(file, data, mtime) {
   }
 };
 
-handlers.coffee = function(file, data, mtime) {
-    // XXX TODO, escaped quotes
-    var result, re;
+handlers.coffee = function(file, data, mtime, strings) {
+  // XXX TODO, escaped quotes
+  var result, re;
 
-    // function blah(), blah = function(), helper('moo', function() {...
-    // mf('test_key', params, 'test_text')
+  // function blah(), blah = function(), helper('moo', function() {...
+  // mf('test_key', params, 'test_text')
 
-    re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
-    while (result = re.exec(data)) {
-        var key = result[2], text = result[4], attributes = attrDict(result[5]);
+  re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
+  while (result = re.exec(data)) {
+    var key = result[2], text = result[4], attributes = attrDict(result[5]);
 
-        var func = 'unknown'
-        var func_re = /(^|\n+)(.*[-=][>])/g
-        while(func_re_result = func_re.exec(data.substring(0, result.index))) {
-            func = func_re_result[2].replace(/^\s+|\s+$/g, '');
-        }
-
-        var line = data.substring(0, result.index).split('\n').length;
-        logKey(file, key, text, file, line);
-        strings[key] = {
-            key: key,
-            text: text,
-            file: file,
-            line: line,
-            func: func,
-            mtime: mtime
-        };
+    var func = 'unknown'
+    var func_re = /(^|\n+)(.*[-=][>])/g
+    while(func_re_result = func_re.exec(data.substring(0, result.index))) {
+        func = func_re_result[2].replace(/^\s+|\s+$/g, '');
     }
+
+    var line = data.substring(0, result.index).split('\n').length;
+    logKey(file, key, text, file, line, strings);
+    strings[key] = {
+      key: key,
+      text: text,
+      file: file,
+      line: line,
+      func: func,
+      mtime: mtime
+    };
+  }
 };
