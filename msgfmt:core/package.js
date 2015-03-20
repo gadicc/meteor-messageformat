@@ -5,11 +5,6 @@ Package.describe({
   git:     "https://github.com/gadicc/meteor-messageformat.git",
 });
 
-Npm.depends({
-  "walk": "2.3.1",
-  "underscore": "1.6.0"
-});
-
 Package.onUse(function (api) {
 	api.versionsFrom("METEOR@1.0.1");
 
@@ -26,8 +21,12 @@ Package.onUse(function (api) {
     // core MDG packages
     'templating', 'session', 'tracker', 'reactive-var',
     // core 3rd party packages
-    'underscore', 'amplify', 'jquery'
+    'underscore', 'jquery'
   ], 'client');
+
+  // MDG maintained non-core
+  api.use('amplify@1.0.0', 'client');
+
   //api.use(['ui', 'spacebars', 'htmljs'], 'client');
 
   // server deps

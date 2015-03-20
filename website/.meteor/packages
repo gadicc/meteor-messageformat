@@ -13,7 +13,9 @@ iron:router
 mrt:sp-marked
 mizzao:bootstrap-3
 gadicohen:syntaxhighlighter
+
 msgfmt:core
 msgfmt:ui
+msgfmt:extract
 
-appcache
+#appcache

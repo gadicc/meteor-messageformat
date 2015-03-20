@@ -7,7 +7,6 @@ accounts-password@1.0.6
 accounts-ui@1.1.4
 accounts-ui-unstyled@1.1.6
 amplify@1.0.0
-appcache@1.0.3
 application-configuration@1.0.4
 autoupdate@1.1.5
 base64@1.0.2
@@ -60,6 +59,7 @@ mobile-status-bar@1.0.2
 mongo@1.0.11
 mrt:sp-marked@0.0.2
 msgfmt:core@2.0.0-preview.1
+msgfmt:extract@2.0.0-preview.1
 msgfmt:ui@2.0.0-preview.1
 npm-bcrypt@0.7.7
 oauth@1.1.3

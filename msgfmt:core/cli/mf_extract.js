@@ -2,8 +2,6 @@
 
 var VERSION = '0.0.6';  // Keep in sync with cli/package.json
 
-var fs 		= require('fs')
-var path	= require('path');
 var projRoot = process.cwd();
 
 var npmbuild = process.argv[2];
@@ -11,7 +9,6 @@ var walk    = require(path.join(npmbuild, 'walk'));
 var _       = require(path.join(npmbuild, 'underscore'));
 
 var files   = [];
-var strings = {};
 var log = process.argv[3] == '-v';
 
 if (!fs.existsSync('server')) {
@@ -91,166 +88,6 @@ walker.on('end', function() {
 
     serverStrings(strings);
 });
-
-function attrDict(string) {
-	var result, out = {}, re = /(\w+)=(['"])(.*?)\2/g;
-	while (result=re.exec(string)) {
-		out[ result[1] ] = result[3];
-	}
-	return out;
-}
-
-var lastFile = null;
-function logKey(file, key, text, file, line) {
-	if (strings[key] && strings[key].text != text)
-		console.log('Warning, { ' + key + ': "' + text + '" } in '
-			+ file + ':' + line + ' replaces DUP_KEY\n         { '
-			+ key + ': "' + strings[key].text + '" } in '
-			+ strings[key].file + ':' + strings[key].line);
-
-	if (!log)
-		return;
-
-	if (file != lastFile) {
-		lastFile = file;
-		console.log('\n' + file);
-	}
-
-	console.log(key + ': "' + text.replace(/\s+/g, ' ') + '"');
-}
-
-function processHtml(file, data) {
-	// XXX TODO, escaped quotes
-	var result, re;
-
-	// {{mf "key" 'text' attr1=val1 attr2=val2 etc}}
-	re = /{{[\s]?mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
-	while (result = re.exec(data)) {
-		var key = result[2], text = result[4], attributes = attrDict(result[5]);
-		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
-				.exec(data.substring(0, result.index)); // TODO, optimize
-		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
-		strings[key] = {
-			key: key,
-			text: text,
-			file: file,
-			line: line,
-			template: tpl ? tpl[2] : 'unknown'
-		};
-	}
-
-	// {{#mf KEY="key" attr2=val2 etc}}text{{/mf}}
-	re = /{{[\s]?#mf (.*?)}}\s*([^]*?)\s*{{\/mf}}/g;
-	while (result = re.exec(data)) {
-		var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
-		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
-			.exec(data.substring(0, result.index)); // TODO, optimize
-		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
-		strings[key] = {
-			key: key,
-			text: text,
-			file: file,
-			line: line,
-			template: tpl ? tpl[2] : 'unknown'
-		};
-	}
-}
-
-function processJade(file, data) {
-	// XXX TODO, escaped quotes
-	var result, re;
-
-	// #{mf 'home_hello_word' 'Hello World!'}
-	re = /{{[\s]*mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
-	while (result = re.exec(data)) {
-		var key = result[2], text = result[4], attributes = attrDict(result[5]);
-		var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])(.*?)\1\s*\)[\s\S]*?$/
-				.exec(data.substring(0, result.index)); // TODO, optimize
-		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
-		strings[key] = {
-			key: key,
-			text: text,
-			file: file,
-			line: line,
-			template: tpl ? tpl[2] : 'unknown'
-		};
-	}
-
-	// {{mf 'home_hello_word' 'Hello World!'}}
-	re = /\#{[\s]*mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}/g;
-	while (result = re.exec(data)) {
-		var key = result[2], text = result[4], attributes = attrDict(result[5]);
-		var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])([^\1]+?)\1\s*\)[\s\S]*?$/
-				.exec(data.substring(0, result.index)); // TODO, optimize
-		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
-		strings[key] = {
-			key: key,
-			text: text,
-			file: file,
-			line: line,
-			template: tpl ? tpl[2] : 'unknown'
-		};
-	}
-
-	// block helpers?
-}
-
-function processJS(file, data) {
-	// XXX TODO, escaped quotes
-	var result, re;
-
-	// function blah(), blah = function(), helper('moo', function() {...
-	// mf('test_key', params, 'test_text')
-
-	re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
-	while (result = re.exec(data)) {
-		var key = result[2], text = result[4], attributes = attrDict(result[5]);
-		var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
-			.exec(data.substring(0, result.index));
-		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
-		strings[key] = {
-			key: key,
-			text: text,
-			file: file,
-			line: line,
-			func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
-		};
-	}
-}
-
-function processCoffee(file, data) {
-    // XXX TODO, escaped quotes
-    var result, re;
-
-    // function blah(), blah = function(), helper('moo', function() {...
-    // mf('test_key', params, 'test_text')
-
-    re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,\s*(['"])(.*?)\3,?.*?\)/g;
-    while (result = re.exec(data)) {
-        var key = result[2], text = result[4], attributes = attrDict(result[5]);
-
-        var func = 'unknown'
-        var func_re = /(^|\n+)(.*[-=][>])/g
-        while(func_re_result = func_re.exec(data.substring(0, result.index))) {
-            func = func_re_result[2].replace(/^\s+|\s+$/g, '');
-        }
-
-        var line = data.substring(0, result.index).split('\n').length;
-        logKey(file, key, text, file, line);
-        strings[key] = {
-            key: key,
-            text: text,
-            file: file,
-            line: line,
-            func: func
-        };
-    }
-}
 
 function serverStrings(strings) {
 	var meta = { extractedAt: new Date().getTime() };
