@@ -19,3 +19,5 @@ msgfmt:ui
 msgfmt:extract
 
 #appcache
+
+browser-policy

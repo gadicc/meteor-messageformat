@@ -222,8 +222,10 @@ Inject.obj('msgfmt:locales', function() {
 	return out;
 });
 
-function localeCollectionToDictionary(locale) {
+function localeStringsToDictionary(res, locale) {
   var key, out = {};
+  res.setHeader("Content-Type", "application/json");
+  res.writeHead(200);
 
   if (locale === 'all') {
     for (locale in mfPkg.strings) {
@@ -235,7 +237,60 @@ function localeCollectionToDictionary(locale) {
     for (key in mfPkg.strings[locale])
       out[key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');    
   }
-  return out;
+  res.end(JSON.stringify(out));
+}
+
+/*
+ * TODO
+ * - optimize / cache on server
+ * - client side caching (for online, disallowInline)
+ * - manifest (for offline/cappcache, disallowInline)
+ */
+function localeStringsCompiled(res, locale) {
+  var key, out = '_.extend(msgfmt.compiled, {';
+  res.setHeader("Content-Type", "application/javascript");
+  res.writeHead(200);
+
+  if (locale === 'all') {
+    for (locale in mfPkg.compiled) {
+      out += '"'+locale+'":{';
+      for (key in mfPkg.compiled[locale])
+        out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
+      out = out.substr(0, out.length-1) + '}';
+    }
+  } else {
+    for (key in mfPkg.compiled[locale])
+      out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
+      out = out.substr(0, out.length-1);
+  }
+  out += '});';
+  res.end(out);
+}
+
+var csp, sendCompiled = false, localeFunction = localeStringsToDictionary;
+if (Package['browser-policy']) {
+  // Only sure about this after all app server code has run
+  Meteor.startup(function() {
+    var locale, key, mf;
+    csp = BrowserPolicy.content._constructCsp();
+    sendCompiled = !csp.match(/'unsafe-eval'/);
+
+    if (sendCompiled) {
+      localeFunction = localeStringsCompiled;
+
+      // XXX TODO need to keep up-to-date
+      for (locale in msgfmt.strings) {
+        mf = mf = mfPkg.objects[locale];
+        if (!mf) {
+            mf = mfPkg.objects[locale] = new MessageFormat(locale);
+            mfPkg.compiled[locale] = {};
+        }
+
+        for (key in msgfmt.strings[locale])
+          msgfmt.compiled[locale][key] = mf.compile(msgfmt.strings[locale][key].text);
+      }
+    }
+  });
 }
 
 // TODO, caching, compression
@@ -244,9 +299,7 @@ function localeCollectionToDictionary(locale) {
 WebApp.connectHandlers.use(function(req, res, next) {
   if (req.url.substr(0, 15) === '/msgfmt/locale/') {
     var locale = req.url.substr(15);
-    res.setHeader("Content-Type", "application/json");
-    res.writeHead(200);
-    res.end(JSON.stringify(localeCollectionToDictionary(locale)));
+    localeFunction(res, locale);
     return;
   }
   next();

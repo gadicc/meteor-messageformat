@@ -47,4 +47,10 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
+    if (Package['browser-policy'])
+      if (1)
+        BrowserPolicy.content.disallowEval();
+      else
+        BrowserPolicy.content.allowEval();
+
 }

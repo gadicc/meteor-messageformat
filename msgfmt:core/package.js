@@ -24,6 +24,8 @@ Package.onUse(function (api) {
     'underscore', 'jquery'
   ], 'client');
 
+  api.use('browser-policy', 'server', { weak: true });
+
   // MDG maintained non-core
   api.use('amplify@1.0.0', 'client');
 
