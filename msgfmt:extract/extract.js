@@ -7,7 +7,7 @@ var fs   = Npm.require('fs');
 var path = Npm.require('path');
 var walk = Npm.require('walk');
 
-var efiles = new Meteor.Collection('mfExtractFiles');
+var efiles = mfPkg.mfExtractFiles = new Meteor.Collection('mfExtractFiles');
 
 var toDict = function(array) {
   var out = {};

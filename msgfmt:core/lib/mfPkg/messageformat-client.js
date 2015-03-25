@@ -1,4 +1,13 @@
 /*
+ * tmp stuff that should be set via new settings method
+ */
+mfPkg.useLocalStorage = false;
+
+// sendAllOnInitialHTML? could be faster to just send everything everytime
+// rather than waiting to reach msgfmt client code and init ajax.
+// also need to always send a script then.
+
+/*
  * Reactive vars and reactive shortcut getters that the project uses
  */
 msgfmt._locale = new ReactiveVar();
@@ -48,7 +57,7 @@ Template.mf.helpers({
 });
 
 mfPkg.sendPolicy = 'current';
-mfPkg.strings = amplify.store('mfStrings') || {};
+mfPkg.strings = mfPkg.useLocalStorage ? amplify.store('mfStrings') || {} : {};
 mfPkg.mfStringsSub = Meteor.subscribe('mfStrings', 'notReady');
 
 // For stuff that runs before clientInit, e.g. want correct log level
@@ -80,13 +89,16 @@ mfPkg.clientInit = function(native, options) {
   for (key in queuedLogs)
     while (queuedLogs[key].length)
       log.debug.apply(log, _.union(['[Q]'], queuedLogs[key].shift()));
+
+  log.debug('clientInit, ' + (Date.now() - times.loading) +
+    'ms after script loading');
 }
 
 /*
  * Fetch lang data from server, more efficiently than through a
  * collection publish (which we only use when editing translations)
  */
-mfPkg.lastSync = amplify.store('mfLastSync') || {};
+mfPkg.lastSync = mfPkg.useLocalStorage ? amplify.store('mfLastSync') || {} : {};
 mfPkg.langsLoading = false;
 
 mfPkg.loadLangs = function(reqLang, callback) {
@@ -102,8 +114,10 @@ mfPkg.loadLangs = function(reqLang, callback) {
 		}
 
 		mfPkg.lastSync[reqLang || 'all'] = data.lastSync;
-    amplify.store('mflastSync', mfPkg.lastSync);
-    amplify.store('mfStrings', mfPkg.strings);
+    if (mfPkg.useLocalStorage) {
+      amplify.store('mfLastSync', mfPkg.lastSync);
+      amplify.store('mfStrings', mfPkg.strings);
+    }
 
 		if (callback)
 			callback(data);
@@ -136,6 +150,82 @@ mfPkg.updated = function() {
 	return null;
 }
 
+var times = {};
+times.loading = Date.now();
+
+Meteor.startup(function() {
+  times.meteorStartup = Date.now();
+  log.debug('Meteor.startup(), ' +
+    (times.meteorStartup - times.loading) + 'ms after script loading');
+});
+
+function fetchLocale(locale) {
+  var url;
+
+  if (mfPkg.lastSync[locale] &&
+      mfPkg.lastSync[locale] === mfPkg.timestamps[locale] &&
+      mfPkg.lastSync._sendCompiled === mfPkg.sendCompiled) {
+    log.debug('fetchLocale request for "' + locale + '", ' +
+      'have latest already, aborting');
+    return;
+  }
+
+  url = '/msgfmt/locale/' + locale + '/' + (mfPkg.lastSync[locale] || 0);
+  log.debug('fetchLocale request for "' + locale + '", url: ' + url);
+
+  if (!times.fetchLocaleStart)
+    times.fetchLocaleStart = Date.now();
+
+  function logAndUpdateLastSync(data) {
+    if (locale === 'all')
+      _.each(_.keys(data), function(locale) {
+        mfPkg.lastSync[locale] = data[locale]._updatedAt;
+        if (data[locale]._updatedAt > mfPkg.lastSync.all)
+          mfPkg.lastSync.all = data[locale]._updatedAt;
+      });
+    else
+      mfPkg.lastSync[locale] = data._updatedAt;
+    mfPkg.lastSync._sendCompiled = sendCompiled;
+
+    if (mfPkg.useLocalStorage)
+      amplify.store('mfLastSync', mfPkg.lastSync);
+
+    if (!times.fetchLocaleEnd) {
+      times.fetchLocaleEnd = Date.now();
+      var str = 'fetchLocale arrived; ' + (times.fetchLocaleEnd -
+        times.fetchLocaleStart) + 'ms after request;';
+      if (times.meteorStartup)
+        str += ' ' + (times.fetchLocaleEnd -
+          times.meteorStartup) + 'ms after Meteor.startup();';
+      str += ' ' + (times.fetchLocaleEnd -
+          times.loading) + 'ms after script loading';
+      log.debug(str);
+    }
+  }
+
+  if (mfPkg.sendCompiled) {
+    /*
+    $.getScript(url, function(data) {
+      logAndUpdateLastSync(mfPkg.compiled);
+    }).fail(function() {
+      log.error('Could not retrieve COMPILED', this, arguments);
+    });;
+    */
+    var s = document.createElement('script');
+    s.setAttribute('type', 'text/javascript');
+    s.setAttribute('src', url);
+    document.head.appendChild(s);
+  } else {
+    $.getJSON(url, function(data) {
+      var target = locale === 'all' ? mfPkg.strings : mfPkg.strings[locale];
+      _.extend(target, data);
+      logAndUpdateLastSync(data);
+    }).fail(function() {
+      log.error('Could not retrieve JSON', this, arguments);
+    });
+  }
+};
+
 /*
  * ~~Simple placeholder for now~~.  Future improvements detailed in
  * https://github.com/gadicc/meteor-messageformat/issues/38
@@ -144,11 +234,12 @@ mfPkg.setLocale = function(locale, dontStore) {
   var lang, dir;
 
   log.trace('setLocale', locale, dontStore);
+
   // Used for Session.set('locale') backcompat.
   mfPkg.sessionLocale = locale;
 
   // At the end of this file, we'll restore this value on load if it exists
-  if (!dontStore)
+  if (!dontStore && mfPkg.useLocalStorage)
     amplify.store('mfLocale', locale);
 
   // TODO, get best correct match e.g. en_US.utf8 could pick "en"
@@ -172,16 +263,23 @@ mfPkg.setLocale = function(locale, dontStore) {
    */
   Meteor.call('msgfmt:setLocale', locale);
 
+  /*
   if (mfPkg.sendPolicy !== 'all') {
     // If we requested the lang previously, or requesting native lang,
     // don't retrieve the strings [again], just update the subscription
     if (mfPkg.strings[locale] || (!mfPkg.sendNative && locale == mfPkg.native))
       updateSubs();
-    else
-      mfPkg.loadLangs(locale, updateSubs);
+    else {
+      //mfPkg.loadLangs(locale, updateSubs);
+      $.getScript('/')
+    }
   }
+  */
 
-  // if momentjs is used on the client, we reactively change the locale on moment globally
+  if (mfPkg.sendPolicy !== 'all')
+    fetchLocale(locale);
+
+  // if momentjs is used on the client, change the locale on moment globally
   if(typeof moment === 'function')
     moment.locale(locale);
 
@@ -189,24 +287,6 @@ mfPkg.setLocale = function(locale, dontStore) {
   msgfmt._locale.set(locale);
   log.debug('locale set to ' + locale);
   return locale;
-}
-
-/*
- * On user connect, honor their language preferences if no Session var
- * already set.  headers.ready() is run immediately unless appcache is
- * being used.  langList is available instantly unless appcache is
- * being used, and then we have to fetch it ourselves
- */
-var setLocaleFromHeader = function(langList) {
-    var lang;
-    var acceptLangs = headers.get('accept-language').split(',');
-    for (var i=0; i < acceptLangs.length; i++) {
-        lang = acceptLangs[i].split(';')[0].trim();
-        if (_.contains(langList, lang)) {
-            mfPkg.setLocale(lang);
-            return;
-        }
-    }	
 }
 
 /*
@@ -225,7 +305,10 @@ function updateSubs() {
 			mfPkg.lastSync[locale], false);
 }
 
-mfPkg.timestamps = Injected.obj('msgfmt:locales');
+var injected = Injected.obj('msgfmt');
+mfPkg.timestamps = injected && injected.locales;
+mfPkg.sendCompiled = injected.sendCompiled;
+
 if (mfPkg.timestamps) {
   (function() {
     var key, max = 0;
@@ -244,39 +327,22 @@ if (mfPkg.timestamps) {
  * On load, we can re set the locale to the last user supplied value.
  * Note, the use of Session here is intentional, to survive hot code pushes
  */
-var storedLocale = amplify.store('mfLocale') || Session.get('locale');
-if (storedLocale) {
-  log.debug('Found stored locale "' + storedLocale + '"');
-  mfPkg.setLocale(storedLocale, true /* dontStore */);
-}
-
-/*
- * If during load, we already know the desired locale, we can load it
- * in parallel rather than waiting for init, subs, etc.
- */
-if (storedLocale) {
-
-}
-
-/*
- * Otherwise, make a best guess using the user's headers
- */
-if (!storedLocale)
-  headers.ready(function() {
-    if (!msgfmt.locale() && headers.get('accept-language')) {
-
-      if (mfPkg.locales)
-        setLocaleFromHeader(mfPkg.locales);
-      else
-        Meteor.call('mfPkg.langList', function(error, langList) {
-          if (error)
-            console.log('messageformat: error retrieving language list',
-              error);
-
-          setLocaleFromHeader(langList);
-        });
-    }
+var locale = mfPkg.useLocalStorage && amplify.store('mfLocale');
+if (locale) {
+  log.debug('Found stored locale "' + locale + '"');
+  mfPkg.setLocale(locale, true /* dontStore */);  
+} else if (locale = Session.get('locale')) {
+  log.debug('Found session locale "' + locale + '"');
+  mfPkg.setLocale(locale);
+} else if (locale = injected.headerLocale) {
+  log.debug('Setting locale from header: ' + locale);
+  mfPkg.setLocale(locale);  
+} else {
+  // Only available in main app code, so we have to load a little later
+  Meteor.startup(function() {
+    mfPkg.setLocale(msgfmt.native);
   });
+}
 
 Tracker.autorun(function() {
   if (mfPkg.ready() && !mfPkg.updatedCurrent) {

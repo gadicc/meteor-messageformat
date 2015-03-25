@@ -6,6 +6,17 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	});
 	mfPkg.meta[lang].extractedAt = meta.extractedAt;
 	mfPkg.meta[lang].updatedAt = meta.updatedAt;
+  if (mfPkg.meta.all) {
+    if (meta.updatedAt > mfPkg.meta.all.updatedAt) {
+      mfPkg.meta.all.updatedAt = meta.updatedAt;
+      mfPkg.mfMeta.update('all', { $set: {
+        updatedAt: meta.updatedAt
+      }});
+    }
+  } else {
+    mfPkg.meta.all = { updatedAt: meta.updatedAt };
+    mfPkg.mfMeta.insert({ _id: 'all', updatedAt: meta.updatedAt });
+  }
   mfPkg.mfMeta.upsert(lang, { $set: {
     extractedAt: meta.extractedAt,  // could, purposefully, be undefined
     updatedAt: meta.updatedAt
@@ -248,13 +259,15 @@ var headerLocale = function(acceptLangs) {
  * + last update time for all locales
  */
 var msgfmtClientData = function(req) {
-  var out = { locales: {} };
+  var out = {
+    headerLocale: headerLocale(req.headers['accept-language']),
+    sendCompiled: sendCompiled,
+    locales: {}
+  };
 
   var locales = out.locales;
   for (var lang in mfPkg.meta)
     locales[lang] = mfPkg.meta[lang].updatedAt;
-
-  out.headerLocale = headerLocale(req.headers['accept-language']);
 
   return out;
 }
@@ -267,7 +280,7 @@ WebApp.connectHandlers.use(function(req, res, next) {
 
 // TODO, cache/optimize
 
-function localeStringsToDictionary(res, locale) {
+function localeStringsToDictionary(res, locale, mtime, flags) {
   var key, out = {};
   res.setHeader("Content-Type", "application/json");
   res.writeHead(200);
@@ -276,11 +289,15 @@ function localeStringsToDictionary(res, locale) {
     for (locale in mfPkg.strings) {
       out[locale] = {};
       for (key in mfPkg.strings[locale])
-        out[locale][key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');    
+        if (mfPkg.strings[locale][key].mtime > mtime)
+          out[locale][key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');
+      out[locale]._updatedAt = mfPkg.meta[locale].updatedAt;
     }
   } else {
     for (key in mfPkg.strings[locale])
-      out[key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');    
+      if (mfPkg.strings[locale][key].mtime > mtime)
+        out[key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');
+    out._updatedAt = mfPkg.meta[locale].updatedAt;
   }
   res.end(JSON.stringify(out));
 }
@@ -291,24 +308,32 @@ function localeStringsToDictionary(res, locale) {
  * - client side caching (for online, disallowInline)
  * - manifest (for offline/cappcache, disallowInline)
  */
-function localeStringsCompiled(res, locale) {
-  var key, out = '_.extend(msgfmt.compiled, {';
+function localeStringsCompiled(res, locale, mtime, flags) {
+  var key, out;
   res.setHeader("Content-Type", "application/javascript");
   res.writeHead(200);
 
+  // TODO lastUpdatedAt
+
   if (locale === 'all') {
+    out = 'mfCompiled = {';
     for (locale in mfPkg.compiled) {
       out += '"'+locale+'":{';
       for (key in mfPkg.compiled[locale])
-        out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
-      out = out.substr(0, out.length-1) + '}';
+        if (mfPkg.strings[locale][key].mtime > mtime)
+          out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
+      out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + '},';
     }
+    out = out.substr(0, out.length-1) + "};\n" +
+      "if (mfPkg.compileLoaded) mfPkg.compiledLoaded();\n";
   } else {
+    out = 'mfCompiled = {';
     for (key in mfPkg.compiled[locale])
-      out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
-      out = out.substr(0, out.length-1);
+      if (mfPkg.strings[locale][key].mtime > mtime)
+        out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
+    out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + '};\n' +
+      "if (mfPkg.compileLoaded) mfPkg.compiledLoaded();\n";
   }
-  out += '});';
   res.end(out);
 }
 
@@ -343,8 +368,11 @@ if (Package['browser-policy']) {
 // allow fromDate?
 WebApp.connectHandlers.use(function(req, res, next) {
   if (req.url.substr(0, 15) === '/msgfmt/locale/') {
-    var locale = req.url.substr(15);
-    localeFunction(res, locale);
+    var rest = req.url.substr(15).split('/');
+    var locale = rest[0];
+    var mtime = rest[1] || 0;
+    var flags = rest.slice(2);
+    localeFunction(res, locale, mtime, flags);
     return;
   }
   next();

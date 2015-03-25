@@ -11,7 +11,6 @@ Package.onUse(function (api) {
   // common deps
 	api.use([
 		'mongo@1.0.4',
-		'gadicohen:headers@0.0.27',
 		'meteorhacks:inject-initial@1.0.2',
     'jag:pince@0.0.6'
 	], [ 'client', 'server' ]);

@@ -105,6 +105,10 @@ mf = function(key, params, message, locale) {
 
     var cmessage = mfPkg.compiled[locale][key];
     if (!cmessage) {
+        // Client can't do inline eval and compiled hasn't arrived yet
+        if (mfPkg.sendCompiled)
+            return message;
+
         // try find key in 1) locale, 2) native, 3) as an argument, 4) just show the key name
         if (mfPkg.strings[locale] && mfPkg.strings[locale][key])
             message = mfPkg.strings[locale][key];
