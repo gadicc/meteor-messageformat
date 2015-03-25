@@ -6,6 +6,10 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	});
 	mfPkg.meta[lang].extractedAt = meta.extractedAt;
 	mfPkg.meta[lang].updatedAt = meta.updatedAt;
+  mfPkg.mfMeta.upsert(lang, { $set: {
+    extractedAt: meta.extractedAt,  // could, purposefully, be undefined
+    updatedAt: meta.updatedAt
+  }});
 
 	/*
 	 * See if any of our extracted strings are newer than their copy in
@@ -120,8 +124,8 @@ mfPkg.addNative = function(strings, meta) {
 
 		this.langUpdate(mfPkg.native, strings, meta, lastSync);
 
-		this['syncExtracts'] = meta.updatedAt;
-		this.mfMeta.upsert('syncExtracts', {$set: {mtime: this['syncExtracts'] } });
+		msgfmt['syncExtracts'] = meta.updatedAt;
+		msgfmt.mfMeta.upsert('syncExtracts', {$set: {mtime: msgfmt['syncExtracts'] } });
 
 	    this.observeFrom(meta.updatedAt, 'native');
 	}
@@ -151,6 +155,14 @@ mfPkg.serverInit = function(native, options) {
         this.addNative(this.nativeQueue.strings, this.nativeQueue.meta);
         delete this.nativeQueue;
     }
+
+    var meta = mfPkg.mfMeta.find().fetch();
+    if (meta.syncTrans) delete meta.syncTrans;
+    if (meta.syncExtracts) delete meta.synExtracts;
+    _.each(meta, function(m) {
+      mfPkg.meta[m._id] = m;
+      delete mfPkg.meta[m._id]._id;
+    });
 
     // If addTrans() was never called, observe full translation database
     if (!mfPkg.syncTrans)
@@ -214,13 +226,46 @@ Meteor.methods({
   }
 });
 
-// TODO, cache/optimize
-Inject.obj('msgfmt:locales', function() {
-  var out = {};
+/*
+ * Given an 'accept-language' header, return the best match from our
+ * available locales
+ */
+var headerLocale = function(acceptLangs) {
+  acceptLangs = acceptLangs.split(',');
+  for (var i=0; i < acceptLangs.length; i++) {
+    locale = acceptLangs[i].split(';')[0].trim();
+    if (mfPkg.strings[locale]) {
+      return locale;
+    }
+  }
+  return false;
+}
+
+/*
+ * Data injected into initial HTML and served to client, includes
+ *
+ * + best locale match for accept-language header
+ * + last update time for all locales
+ */
+var msgfmtClientData = function(req) {
+  var out = { locales: {} };
+
+  var locales = out.locales;
   for (var lang in mfPkg.meta)
-    out[lang] = mfPkg.meta[lang].updatedAt;
-	return out;
+    locales[lang] = mfPkg.meta[lang].updatedAt;
+
+  out.headerLocale = headerLocale(req.headers['accept-language']);
+
+  return out;
+}
+
+WebApp.connectHandlers.use(function(req, res, next) {
+  if (Inject.appUrl(req.url))
+    Inject.obj('msgfmt', msgfmtClientData(req), res);
+  next();
 });
+
+// TODO, cache/optimize
 
 function localeStringsToDictionary(res, locale) {
   var key, out = {};

@@ -141,11 +141,13 @@ var checkForUpdates = function() {
 
     // console.log(newStrings);
 
-    var max = _.max(newStrings, function(s) { return s.mtime; }).mtime;
-    mfPkg.addNative(newStrings, {
-      extractedAt: Date.now(),
-      updatedAt: max
-    });
+    if (Object.keys(newStrings).length) {
+      var max = _.max(newStrings, function(s) { return s.mtime; }).mtime;
+      mfPkg.addNative(newStrings, {
+        extractedAt: Date.now(),
+        updatedAt: max.getTime()
+      });
+    }
 
     log.debug('Finished mfPkg.addNative in ' + (Date.now() - lastTime) + 'ms');
     lastTime = Date.now();
