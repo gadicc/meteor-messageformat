@@ -100,7 +100,7 @@ mf = function(key, params, message, locale) {
     if (!mf) {
         mf = mfPkg.objects[locale] = new MessageFormat(locale);
         if (!mfPkg.strings[locale]) mfPkg.strings[locale] = {};
-        mfPkg.compiled[locale] = {};
+        if (!mfPkg.compiled[locale]) mfPkg.compiled[locale] = {};
     }
 
     var cmessage = mfPkg.compiled[locale][key];

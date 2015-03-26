@@ -72,12 +72,12 @@ if (Meteor.isClient) {
   Template.langButtons.events({
     'click button': function(event) {
       var locale = $(event.target).val();
-      mfPkg.setLocale(locale);
+      msgfmt.setLocale(locale);
     }
   });
   Template.langButtons.helpers({
     isLocale: function(locale) {
-      return Session.equals('locale', locale);
+      return msgfmt.locale(locale);
     }
   });
 

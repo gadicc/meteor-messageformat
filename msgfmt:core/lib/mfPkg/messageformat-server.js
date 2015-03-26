@@ -299,40 +299,40 @@ function localeStringsToDictionary(res, locale, mtime, flags) {
         out[key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');
     out._updatedAt = mfPkg.meta[locale].updatedAt;
   }
-  res.end(JSON.stringify(out));
+  out._request = locale + '/' + mtime;
+  res.end('Package["msgfmt:core"].msgfmt.fromServer(' +
+    JSON.stringify(out) + ');');
 }
 
 /*
  * TODO
- * - optimize / cache on server
+ * - optimize / cache on server (use redis if available)
  * - client side caching (for online, disallowInline)
  * - manifest (for offline/cappcache, disallowInline)
  */
 function localeStringsCompiled(res, locale, mtime, flags) {
-  var key, out;
+  var key, out = 'Package["msgfmt:core"].msgfmt.fromServer({';
   res.setHeader("Content-Type", "application/javascript");
   res.writeHead(200);
 
   // TODO lastUpdatedAt
 
   if (locale === 'all') {
-    out = 'mfCompiled = {';
     for (locale in mfPkg.compiled) {
       out += '"'+locale+'":{';
       for (key in mfPkg.compiled[locale])
         if (mfPkg.strings[locale][key].mtime > mtime)
           out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
-      out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + '},';
+      out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + ',';
     }
-    out = out.substr(0, out.length-1) + "};\n" +
-      "if (mfPkg.compileLoaded) mfPkg.compiledLoaded();\n";
+    out = out.substr(0, out.length-1) +
+      '},_request:"' + locale + '/' + mtime + '"});';
   } else {
-    out = 'mfCompiled = {';
     for (key in mfPkg.compiled[locale])
       if (mfPkg.strings[locale][key].mtime > mtime)
         out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
-    out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + '};\n' +
-      "if (mfPkg.compileLoaded) mfPkg.compiledLoaded();\n";
+    out += '_updatedAt:' + mfPkg.meta[locale].updatedAt +
+        ',_request:"' + locale + '/' + mtime + '"});';
   }
   res.end(out);
 }

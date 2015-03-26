@@ -381,9 +381,9 @@
 </template>
 
 <template name="langButtons">
-	<button class="{{#if isLocale 'en'}}selected{{/if}}" value="en">Session.set('lang', 'en');</button>
-	<button class="{{#if isLocale 'tr'}}selected{{/if}}" value="tr">Session.set('lang', 'tr');</button>
-	<button class="{{#if isLocale 'he'}}selected{{/if}}" value="he">Session.set('lang', 'he');</button>
+	<button class="{{#if isLocale 'en'}}selected{{/if}}" value="en">msgfmt.setLocale('en');</button>
+	<button class="{{#if isLocale 'tr'}}selected{{/if}}" value="tr">msgfmt.setLocale('tr');</button>
+	<button class="{{#if isLocale 'he'}}selected{{/if}}" value="he">msgfmt.setLocale('he');</button>
 </template>
 
 <template name="numButtons">

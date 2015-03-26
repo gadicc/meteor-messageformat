@@ -19,6 +19,21 @@ mfPkg.webUI = {
   }
 };
 
+var lastUpdatedAt = function(userId, doc, fields) {
+  // TODO client too
+  if (Meteor.isServer) {
+    var locale = doc.lang;
+    if (!mfPkg.meta[locale])
+      mfPkg.meta[locale] = {};
+    mfPkg.meta[locale].updatedAt = fields && fields.mtime || doc.mtime;
+    mfPkg.meta.all.updatedAt = mfPkg.meta[locale].updatedAt;
+    mfPkg.mfMeta.upsert(locale, { $set: { updatedAt: mfPkg.meta[locale].updatedAt }});
+    mfPkg.mfMeta.update('all', { $set: { updatedAt: mfPkg.meta[locale].updatedAt }});
+  }
+}
+
+mfPkg.mfStrings.deny({ insert: lastUpdatedAt, update: lastUpdatedAt });
+
 mfPkg.mfStrings.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});
 mfPkg.mfStrings.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
 mfPkg.mfRevisions.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});

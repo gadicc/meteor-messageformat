@@ -49,6 +49,8 @@ Package.onUse(function (api) {
 		'lib/mfPkg/messageformat-client.js'
 	], 'client');
 
+  // TODO, on cordova, need to bundle all languages
+
 	api.export(['mfPkg', 'mf', 'msgfmt'], ['client', 'server']);
 });
 
