@@ -1,3 +1,6 @@
+// server only, but used on the client in msgfmt:ui
+mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
+
 // Load each string and update the database if necessary
 mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	_.each(['strings', 'compiled', 'meta'], function(key) {
@@ -161,19 +164,19 @@ mfPkg.syncAll = function(strings, meta) {
     this.observeFrom(meta.updatedAt, 'trans');
 }
 
+var meta = mfPkg.mfMeta.find().fetch();
+if (meta.syncTrans) delete meta.syncTrans;
+if (meta.syncExtracts) delete meta.synExtracts;
+_.each(meta, function(m) {
+  mfPkg.meta[m._id] = m;
+  delete mfPkg.meta[m._id]._id;
+});
+
 mfPkg.serverInit = function(native, options) {
     if (this.nativeQueue) {
         this.addNative(this.nativeQueue.strings, this.nativeQueue.meta);
         delete this.nativeQueue;
     }
-
-    var meta = mfPkg.mfMeta.find().fetch();
-    if (meta.syncTrans) delete meta.syncTrans;
-    if (meta.syncExtracts) delete meta.synExtracts;
-    _.each(meta, function(m) {
-      mfPkg.meta[m._id] = m;
-      delete mfPkg.meta[m._id]._id;
-    });
 
     // If addTrans() was never called, observe full translation database
     if (!mfPkg.syncTrans)
@@ -260,10 +263,12 @@ var headerLocale = function(acceptLangs) {
  */
 var msgfmtClientData = function(req) {
   var out = {
-    headerLocale: headerLocale(req.headers['accept-language']),
     sendCompiled: sendCompiled,
     locales: {}
   };
+
+  if (req.headers['accept-language'])
+    out.headerLocale = headerLocale(req.headers['accept-language']);
 
   var locales = out.locales;
   for (var lang in mfPkg.meta)
@@ -293,7 +298,7 @@ function localeStringsToDictionary(res, locale, mtime, flags) {
           out[locale][key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');
       out[locale]._updatedAt = mfPkg.meta[locale].updatedAt;
     }
-  } else {
+  } else if (mfPkg.strings[locale]) {
     for (key in mfPkg.strings[locale])
       if (mfPkg.strings[locale][key].mtime > mtime)
         out[key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');
@@ -325,25 +330,28 @@ function localeStringsCompiled(res, locale, mtime, flags) {
           out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
       out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + ',';
     }
-    out = out.substr(0, out.length-1) +
-      '},_request:"' + locale + '/' + mtime + '"});';
-  } else {
+    if (Object.keys(mfPkg.compiled).length)
+      out = out.substr(0, out.length-1) + '},';
+  } else if (mfPkg.compiled[locale]) {
     for (key in mfPkg.compiled[locale])
       if (mfPkg.strings[locale][key].mtime > mtime)
         out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
-    out += '_updatedAt:' + mfPkg.meta[locale].updatedAt +
-        ',_request:"' + locale + '/' + mtime + '"});';
+    out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + ',';
   }
+  out += '_request:"' + locale + '/' + mtime + '"});';
   res.end(out);
 }
 
-var csp, sendCompiled = false, localeFunction = localeStringsToDictionary;
-if (Package['browser-policy']) {
-  // Only sure about this after all app server code has run
-  Meteor.startup(function() {
-    var locale, key, mf;
-    csp = BrowserPolicy.content._constructCsp();
-    sendCompiled = !csp.match(/'unsafe-eval'/);
+// Only sure about this after all app server code has run
+var sendCompiled = false, localeFunction = localeStringsToDictionary;
+mfPkg._sendCompiledCheck = function() {
+  if (Package['browser-policy-common']) {
+    var locale, key, mf, csp;
+    var BrowserPolicy = Package['browser-policy-common'].BrowserPolicy;
+    //csp = BrowserPolicy.content._constructCsp();
+    //sendCompiled = !csp.match(/'unsafe-eval'/);
+    sendCompiled = !BrowserPolicy.content
+      ._keywordAllowed("script-src", "'unsafe-eval'");
 
     if (sendCompiled) {
       localeFunction = localeStringsCompiled;
@@ -359,9 +367,11 @@ if (Package['browser-policy']) {
         for (key in msgfmt.strings[locale])
           msgfmt.compiled[locale][key] = mf.compile(msgfmt.strings[locale][key].text);
       }
-    }
-  });
-}
+    } else
+      localeFunction = localeStringsToDictionary;
+  }
+};
+Meteor.startup(mfPkg._sendCompiledCheck);
 
 // TODO, caching, compression
 // return functoins when security policy doesn't allow new function

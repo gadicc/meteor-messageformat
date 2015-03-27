@@ -24,5 +24,5 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use('tinytest');
   api.use('msgfmt:extract');
-  api.addFiles('extract-tests.js');
+  //api.addFiles('extract-tests.js');
 });

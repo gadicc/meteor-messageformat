@@ -10,6 +10,7 @@ Package.onUse(function (api) {
 
   // common deps
 	api.use([
+    'underscore',
 		'mongo@1.0.4',
 		'meteorhacks:inject-initial@1.0.2',
     'jag:pince@0.0.6'
@@ -20,10 +21,10 @@ Package.onUse(function (api) {
     // core MDG packages
     'templating', 'session', 'tracker', 'reactive-var',
     // core 3rd party packages
-    'underscore', 'jquery'
+    'jquery'
   ], 'client');
 
-  api.use('browser-policy', 'server', { weak: true });
+  // api.use('browser-policy', 'server', { /* weak: true */ });
 
   // MDG maintained non-core
   api.use('amplify@1.0.0', 'client');
@@ -57,6 +58,9 @@ Package.onUse(function (api) {
 Package.onTest(function(api) {
   api.use('tinytest');
   api.use('msgfmt:core');
+  api.use('underscore');
+  api.use('http', 'server');
+  api.use('browser-policy', 'server');
 
   api.addFiles('tests/tests-client.js', 'client');
   api.addFiles('tests/tests-server.js', 'server');

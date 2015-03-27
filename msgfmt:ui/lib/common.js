@@ -1,5 +1,3 @@
-mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
-
 mfPkg.webUI = {
   allowFuncs: [ function() { return !!Meteor.userId(); } ],
   denyFuncs: [],
@@ -36,8 +34,10 @@ mfPkg.mfStrings.deny({ insert: lastUpdatedAt, update: lastUpdatedAt });
 
 mfPkg.mfStrings.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});
 mfPkg.mfStrings.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
-mfPkg.mfRevisions.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});
-mfPkg.mfRevisions.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
+if (Meteor.isServer) {
+  mfPkg.mfRevisions.allow({insert:mfPkg.webUI.allowed, update:mfPkg.webUI.allowed, remove:mfPkg.webUI.allowed});
+  mfPkg.mfRevisions.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
+}
 
 // needs to be on client and server for routing to work properly
 if (Package['iron:router'])

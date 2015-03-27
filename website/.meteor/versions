@@ -7,12 +7,17 @@ accounts-password@1.1.0
 accounts-ui@1.1.5
 accounts-ui-unstyled@1.1.7
 amplify@1.0.0
+appcache@1.0.4
 autoupdate@1.2.0
 base64@1.0.3
 binary-heap@1.0.3
 blaze@2.1.0
 blaze-tools@1.0.3
 boilerplate-generator@1.0.3
+browser-policy@1.0.4
+browser-policy-common@1.0.3
+browser-policy-content@1.0.4
+browser-policy-framing@1.0.4
 callback-hook@1.0.3
 check@1.0.5
 coffeescript@1.0.6

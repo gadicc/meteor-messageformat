@@ -1,5 +1,8 @@
 // TODO, if we add a new lang, need to update mfPkg.timestamps
 
+// Setup in msgfmt:core on server, only used on the client in msgfmt:ui
+mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
+
 /*
  * Finds the name of the first route using the given template
  */
