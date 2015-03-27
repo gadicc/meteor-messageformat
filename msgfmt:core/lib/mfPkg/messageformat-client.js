@@ -100,7 +100,6 @@ mfPkg.clientInit = function(native, options) {
  * Fetch lang data from server, more efficiently than through a
  * collection publish (which we only use when editing translations)
  */
-mfPkg.lastSync = mfPkg.useLocalStorage ? amplify.store('mfLastSync') || {} : {};
 
 mfPkg.loadLangs = function(reqLang) {
   if (mfPkg.sendCompiled)
@@ -404,6 +403,11 @@ var injected = Injected.obj('msgfmt');
 mfPkg.timestamps = injected && injected.locales;
 mfPkg.sendCompiled = injected.sendCompiled;
 
+if (mfPkg.sendCompiled && mfPkg.useLocalStorage) {
+  log.debug('disallowInlineEval detected, setting useLocalStorage to false');
+  mfPkg.useLocalStorage = false;
+}
+
 if (mfPkg.timestamps) {
   (function() {
     var key, max = 0;
@@ -416,6 +420,8 @@ if (mfPkg.timestamps) {
     mfPkg.timestamps.all = max;
   })();
 }
+
+mfPkg.lastSync = mfPkg.useLocalStorage ? amplify.store('mfLastSync') || {} : {};
 
 var $body;
 if (msgfmt.setBodyDir) {

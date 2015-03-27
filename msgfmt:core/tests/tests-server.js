@@ -1,3 +1,17 @@
+/*
+ * Code supporting client-side and hybrid tests
+ */
+
+Meteor.methods({
+  getConnectionLocale: function() {
+    return this.connection.locale;
+  }
+});
+
+/*
+ * Server side tests - helpers
+ */
+
 function getInjected(content) {
   var match = /<script id='msgfmt' type='application\/ejson'>(.*)<\/script>/
     .exec(content);
@@ -18,6 +32,10 @@ function serverFetch() {
   } else
     throw new Error("Invalid response from /msgfmt/locale/all/0", resp.content);
 }
+
+/*
+ * Server side tests - partials
+ */
 
 function disallowUnsafeEvalTest(empty, test) {
   BrowserPolicy.content.disallowEval();
@@ -55,8 +73,19 @@ function allowUnsafeEvalTest(empty, test) {
   test.equal(typeof fetched.en.test, 'string');
 }
 
-Tinytest.add('msgfmt:core - allowUnsafeEval - empty db', _.partial(allowUnsafeEvalTest, true));
-Tinytest.add('msgfmt:core - disallowUnsafeEval - empty db', _.partial(disallowUnsafeEvalTest, true));
+/*
+ * Server side tests - no strings / empty database
+ */
+
+Tinytest.add('msgfmt:core - allowUnsafeEval - empty db',
+  _.partial(allowUnsafeEvalTest, true /* empty */));
+
+Tinytest.add('msgfmt:core - disallowUnsafeEval - empty db',
+  _.partial(disallowUnsafeEvalTest, true /* empty */));
+
+/*
+ * Server side tests - addNative
+ */
 
 mfPkg.addNative({
     test: {
@@ -74,7 +103,21 @@ mfPkg.addNative({
     updatedAt: Date.now()
   }
 );
+
+// Potentially we should also test initting first
 mfPkg.init('en');
 
-Tinytest.add('msgfmt:core - allowUnsafeEval - non-empty db', _.partial(allowUnsafeEvalTest, false));
-Tinytest.add('msgfmt:core - disallowUnsafeEval - non-empty db', _.partial(disallowUnsafeEvalTest, false));
+Tinytest.add('msgfmt:core - mf() - get native / no translation', function(test) {
+  test.equal(mf('test', null, null, 'he'), 'Test Text');
+  test.equal(mf('test', null, null, 'en'), 'Test Text');
+});
+
+/*
+ * Server side tests - non-empty database
+ */
+
+Tinytest.add('msgfmt:core - allowUnsafeEval - non-empty db',
+  _.partial(allowUnsafeEvalTest, false /* empty */));
+
+Tinytest.add('msgfmt:core - disallowUnsafeEval - non-empty db',
+  _.partial(disallowUnsafeEvalTest, false /* empty */));

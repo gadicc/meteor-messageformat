@@ -79,7 +79,6 @@ mfPkg = msgfmt = {
 
 mfPkg.mfMeta.deny(function() { return true; });
 
-
 mf = function(key, params, message, locale) {
     if (!locale) {
       if (Meteor.isClient) {
@@ -89,7 +88,7 @@ mf = function(key, params, message, locale) {
         locale = currentInvocation.connection.locale;
       }
     }    
-    if (!locale)
+    if (!locale || (!mfPkg.strings[locale] && !mfPkg.compiled[locale]))
         locale = mfPkg.native;
     if (_.isString(params)) {
         message = params;
