@@ -329,10 +329,9 @@ function localeStringsCompiled(res, locale, mtime, flags) {
       for (key in mfPkg.compiled[locale])
         if (mfPkg.strings[locale][key].mtime > mtime)
           out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
-      out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + ',';
+      out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + '},';
     }
-    if (Object.keys(mfPkg.compiled).length)
-      out = out.substr(0, out.length-1) + '},';
+    locale = 'all';
   } else if (mfPkg.compiled[locale]) {
     for (key in mfPkg.compiled[locale])
       if (mfPkg.strings[locale][key].mtime > mtime)

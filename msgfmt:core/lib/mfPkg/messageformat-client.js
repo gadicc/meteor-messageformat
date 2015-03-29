@@ -3,7 +3,7 @@
  */
 mfPkg.useLocalStorage = true;
 mfPkg.waitOnLoaded = false;
-//mfPkg.sendPolicy = 'current';
+mfPkg.sendPolicy = 'current';
 mfPkg.sendPolicy = 'all';
 
 // sendAllOnInitialHTML? could be faster to just send everything everytime
@@ -178,7 +178,7 @@ Meteor.startup(function() {
     (times.meteorStartup - times.loading) + 'ms after script loading');
 });
 
-mfPkg.initialFetches = [];
+mfPkg._initialFetches = [];
 function fetchLocale(locale) {
   var url, unique;
 
@@ -219,7 +219,7 @@ function fetchLocale(locale) {
   s.setAttribute('type', 'text/javascript');
   s.setAttribute('src', url);
   // First load (only) should be block layout
-  if (mfPkg.initialFetches.length > 0)
+  if (mfPkg._initialFetches.length > 0)
     s.setAttribute('async', 'async');
   document.head.appendChild(s);
   //document.head.insertBefore(s, document.head.children[0]);
@@ -230,8 +230,12 @@ function fetchLocale(locale) {
  * settings)
  */
 function localeReady(locale, dontStore) {
-  if (!locale)
+  if (!locale) {
     locale = mfPkg._loadingLocale;
+    mfPkg._loadingLocale = false;
+  } else if (dontStore) {    
+    mfPkg._loadingLocale = false;
+  }
 
   // Used for Session.set('locale') backcompat.
   mfPkg.sessionLocale = locale;
@@ -323,10 +327,10 @@ mfPkg.setLocale = function(locale, dontStore) {
   // don't forget, offline, appcache, disallow inline, etc
 
   //if (mfPkg.sendPolicy !== 'all')
-  if (mfPkg.initialFetches.length === 0) {
+  if (mfPkg._initialFetches.length === 0) {
     // First load is always via HTTP, 
     fetchLocale(locale);
-  } else if (!_.contains(mfPkg.initialFetches, locale)
+  } else if (!_.contains(mfPkg._initialFetches, locale)
       && mfPkg.sendPolicy !== 'all') {
     if (mfPkg.sendCompiled)
       fetchLocale(locale);
@@ -334,8 +338,10 @@ mfPkg.setLocale = function(locale, dontStore) {
       mfPkg.loadLangs(locale);
   } else {
     // TODO, subs etc
-//    if (mfPkg.waitOnLoaded)
-//      localeReady(locale, true /* dontStore */);    
+
+    // Nothing to load, just set locale.  Mark as ready if we didn't before.
+    if (mfPkg.waitOnLoaded)
+      localeReady(locale, true /* dontStore */);
   }
 
   return locale;
@@ -393,11 +399,11 @@ msgfmt.fromServer = function(data) {
 
   if (locale === 'all') {
     locale = msgfmt._loadingLocale;
-    if (!_.contains(mfPkg.initialFetches, 'all'))
-      mfPkg.initialFetches.push('all');
+    if (!_.contains(mfPkg._initialFetches, 'all'))
+      mfPkg._initialFetches.push('all');
   } else {
-    if (!_.contains(mfPkg.initialFetches, locale))
-      mfPkg.initialFetches.push(locale);
+    if (!_.contains(mfPkg._initialFetches, locale))
+      mfPkg._initialFetches.push(locale);
   }
 
   localeReady(locale);

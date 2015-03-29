@@ -19,25 +19,31 @@ function getInjected(content) {
     return JSON.parse(match[1]);
 }
 
-function serverFetch() {
-  var resp = HTTP.get(Meteor.absoluteUrl() + 'msgfmt/locale/all/0');
+function serverFetch(locale) {
+  var url = 'msgfmt/locale/' + locale + '/0';
+  var resp = HTTP.get(Meteor.absoluteUrl() + url);
   var match = /Package\["msgfmt:core"\]\.msgfmt\.fromServer\(([\s\S]*)\);/
     .exec(resp.content);
 
   // Note, it's not tue JSON, key names aren't quoted
   if (match) {
     var out;
-    eval("out = " + match[1] + ";");
+    try {
+      eval("out = " + match[1] + ";");
+    } catch (err) {
+     console.log(resp.content);
+     throw err;
+    }
     return out;
   } else
-    throw new Error("Invalid response from /msgfmt/locale/all/0", resp.content);
+    throw new Error("Invalid response from /" + url, resp.content);
 }
 
 /*
  * Server side tests - partials
  */
 
-function disallowUnsafeEvalTest(empty, test) {
+function disallowUnsafeEvalTest(empty, locale, test) {
   BrowserPolicy.content.disallowEval();
   msgfmt._sendCompiledCheck();
 
@@ -46,16 +52,19 @@ function disallowUnsafeEvalTest(empty, test) {
   var injected = getInjected(resp.content);
   test.isTrue(injected.sendCompiled);
 
-  var fetched = serverFetch();
+  var fetched = serverFetch(locale);
   test.isTrue(fetched && fetched._request);
 
   if (empty)
     return;
 
-  test.equal(typeof fetched.en.test, 'function');
+  if (locale === 'all')
+    test.equal(typeof fetched.en.test, 'function');
+  else
+    test.equal(typeof fetched.test, 'function');
 }
 
-function allowUnsafeEvalTest(empty, test) {
+function allowUnsafeEvalTest(empty, locale, test) {
   BrowserPolicy.content.allowEval();
   msgfmt._sendCompiledCheck();
 
@@ -64,34 +73,44 @@ function allowUnsafeEvalTest(empty, test) {
   var injected = getInjected(resp.content);
   test.isFalse(injected.sendCompiled);
 
-  var fetched = serverFetch();
+  var fetched = serverFetch(locale);
   test.isTrue(fetched && fetched._request);
 
   if (empty)
     return;
 
-  test.equal(typeof fetched.en.test, 'string');
+  if (locale === 'all')
+    test.equal(typeof fetched.en.test, 'string');
+  else
+    test.equal(typeof fetched.test, 'string');
 }
 
 /*
  * Server side tests - no strings / empty database
  */
 
-Tinytest.add('msgfmt:core - allowUnsafeEval - empty db',
-  _.partial(allowUnsafeEvalTest, true /* empty */));
+Tinytest.add('msgfmt:core - allowUnsafeEval - empty db (en)',
+  _.partial(allowUnsafeEvalTest, true /* empty */, 'en'));
 
-Tinytest.add('msgfmt:core - disallowUnsafeEval - empty db',
-  _.partial(disallowUnsafeEvalTest, true /* empty */));
+Tinytest.add('msgfmt:core - disallowUnsafeEval - empty db (en)',
+  _.partial(disallowUnsafeEvalTest, true /* empty */, 'en'));
+
+Tinytest.add('msgfmt:core - allowUnsafeEval - empty db (all)',
+  _.partial(allowUnsafeEvalTest, true /* empty */, 'all'));
+
+Tinytest.add('msgfmt:core - disallowUnsafeEval - empty db (all)',
+  _.partial(disallowUnsafeEvalTest, true /* empty */, 'all'));
 
 /*
  * Server side tests - addNative
  */
 
-mfPkg.addNative({
+mfPkg.addNative(
+  {
     test: {
       key: 'test',
       lang: mfPkg.native,
-      text: 'Test Text',
+      text: 'Test - Native',
       ctime: Date.now(),
       mtime: Date.now(),
       file: '()/test-server.js',
@@ -108,16 +127,37 @@ mfPkg.addNative({
 mfPkg.init('en');
 
 Tinytest.add('msgfmt:core - mf() - get native / no translation', function(test) {
-  test.equal(mf('test', null, null, 'he'), 'Test Text');
-  test.equal(mf('test', null, null, 'en'), 'Test Text');
+  test.equal(mf('test', null, null, 'non_existing'), 'Test - Native');
+  test.equal(mf('test', null, null, 'en'), 'Test - Native');
 });
 
 /*
- * Server side tests - non-empty database
+ * Server side tests - non-empty database (but native only)
  */
 
-Tinytest.add('msgfmt:core - allowUnsafeEval - non-empty db',
-  _.partial(allowUnsafeEvalTest, false /* empty */));
+Tinytest.add('msgfmt:core - allowUnsafeEval - non-empty db (en)',
+  _.partial(allowUnsafeEvalTest, false /* empty */, 'en'));
 
-Tinytest.add('msgfmt:core - disallowUnsafeEval - non-empty db',
-  _.partial(disallowUnsafeEvalTest, false /* empty */));
+Tinytest.add('msgfmt:core - disallowUnsafeEval - non-empty db (en)',
+  _.partial(disallowUnsafeEvalTest, false /* empty */, 'en'));
+
+Tinytest.add('msgfmt:core - allowUnsafeEval - non-empty db (all)',
+  _.partial(allowUnsafeEvalTest, false /* empty */, 'all'));
+
+Tinytest.add('msgfmt:core - disallowUnsafeEval - non-empty db (all)',
+  _.partial(disallowUnsafeEvalTest, false /* empty */, 'all'));
+
+/*
+ * Server side tests - non-empty database (with translations)
+ */
+
+mfPkg.langUpdate('he', {
+  test: {
+    key: 'test',
+    lang: 'he',
+    text: 'Test - Hebrew',
+    ctime: Date.now(),
+    mtime: Date.now(),
+    revisionId: '53QJvmhNea3Wyt2gG'
+  }
+}, { updatedAt: Date.now() }, Date.now()-1);
