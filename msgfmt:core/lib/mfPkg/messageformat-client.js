@@ -2,8 +2,9 @@
  * tmp stuff that should be set via new settings method
  */
 mfPkg.useLocalStorage = true;
-mfPkg.waitOnLoaded = true;
-mfPkg.sendPolicy = 'current';
+mfPkg.waitOnLoaded = false;
+//mfPkg.sendPolicy = 'current';
+mfPkg.sendPolicy = 'all';
 
 // sendAllOnInitialHTML? could be faster to just send everything everytime
 // rather than waiting to reach msgfmt client code and init ajax.
@@ -230,7 +231,7 @@ function fetchLocale(locale) {
  */
 function localeReady(locale, dontStore) {
   if (!locale)
-    locale = mfPkg._loading.curValue;
+    locale = mfPkg._loadingLocale;
 
   // Used for Session.set('locale') backcompat.
   mfPkg.sessionLocale = locale;
@@ -288,14 +289,12 @@ function localeReady(locale, dontStore) {
 mfPkg.setLocale = function(locale, dontStore) {
   var lang, dir;
 
-  // TODO, get best correct match e.g. en_US.utf8 could pick "en"
-
   // for now
   if (!mfPkg.timestamps[locale])
     locale = mfPkg.native;
 
   // This locale changing is already pending
-  if (mfPkg.waitOnLoaded && msgfmt._loading.curValue === locale)
+  if (msgfmt._loadingLocale === locale)
     return log.debug('setLocale (already loading)', locale, dontStore);
 
   // If there's no actual change, stop here (nonreactive get)
@@ -303,6 +302,8 @@ mfPkg.setLocale = function(locale, dontStore) {
     return log.trace('setLocale (dupe)', locale, dontStore);
   else
     log.debug('setLocale', locale, dontStore);
+
+  msgfmt._loadingLocale = locale;
 
   /*
    * So that server-side mf() calls know which locale to use
@@ -325,15 +326,16 @@ mfPkg.setLocale = function(locale, dontStore) {
   if (mfPkg.initialFetches.length === 0) {
     // First load is always via HTTP, 
     fetchLocale(locale);
-  } else if (!_.contains(mfPkg.initialFetches, locale)) {
+  } else if (!_.contains(mfPkg.initialFetches, locale)
+      && mfPkg.sendPolicy !== 'all') {
     if (mfPkg.sendCompiled)
       fetchLocale(locale);
     else
       mfPkg.loadLangs(locale);
   } else {
     // TODO, subs etc
-    if (mfPkg.waitOnLoaded)
-      localeReady(locale, true /* dontStore */);    
+//    if (mfPkg.waitOnLoaded)
+//      localeReady(locale, true /* dontStore */);    
   }
 
   return locale;
@@ -365,6 +367,9 @@ msgfmt.fromServer = function(data) {
   delete times.fetches[data._request];
   delete data._request;
 
+  if (!mfPkg.lastSync.all)
+    mfPkg.lastSync.all = 0;
+
   if (locale === 'all')
     _.each(_.keys(data), function(locale) {
       mfPkg.lastSync[locale] = data[locale]._updatedAt;
@@ -383,10 +388,11 @@ msgfmt.fromServer = function(data) {
       target[locale] = {};
     target = target[locale];
   }
-  _.extend(target, data);
+
+  jQuery.extend(true /* deep */, target, data);
 
   if (locale === 'all') {
-    locale = msgfmt._loading.curValue;
+    locale = msgfmt._loadingLocale;
     if (!_.contains(mfPkg.initialFetches, 'all'))
       mfPkg.initialFetches.push('all');
   } else {
@@ -396,6 +402,13 @@ msgfmt.fromServer = function(data) {
 
   localeReady(locale);
 };
+
+mfPkg.resetStorage = function() {
+  _.each(['mfLastSync', 'mfLocale', 'mfStrings'], function(what) {
+    amplify.store(what, null);
+  });
+  window.location += '';
+}
 
 /* code below involves loading the actual module at long time */
 

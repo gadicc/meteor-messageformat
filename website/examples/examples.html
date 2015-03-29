@@ -110,7 +110,7 @@
 					<td>
 						{{#sh_highlight lang='js'}}
 							Template.main.getName = function() {
-								var lang = Session.get("lang");
+								var lang = msgfmt.lang(); // reactive
 								return lang == "he" ? "גדי" : "Gadi";
 							}
 						{{/sh_highlight}}

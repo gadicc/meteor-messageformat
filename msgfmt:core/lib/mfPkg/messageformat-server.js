@@ -141,7 +141,7 @@ mfPkg.addNative = function(strings, meta) {
 		msgfmt['syncExtracts'] = meta.updatedAt;
 		msgfmt.mfMeta.upsert('syncExtracts', {$set: {mtime: msgfmt['syncExtracts'] } });
 
-	    this.observeFrom(meta.updatedAt, 'native');
+    this.observeFrom(meta.updatedAt, 'native');
 	}
 }
 
@@ -298,6 +298,7 @@ function localeStringsToDictionary(res, locale, mtime, flags) {
           out[locale][key] = mfPkg.strings[locale][key].text.replace(/\s+/g, ' ');
       out[locale]._updatedAt = mfPkg.meta[locale].updatedAt;
     }
+    locale = 'all';
   } else if (mfPkg.strings[locale]) {
     for (key in mfPkg.strings[locale])
       if (mfPkg.strings[locale][key].mtime > mtime)
