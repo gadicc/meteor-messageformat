@@ -1,8 +1,8 @@
 Package.describe({
   name: 'msgfmt:extract',
-  version: '2.0.0-preview.1',
-  summary: '',
-  git: '',
+  version: '2.0.0-preview.2',
+  summary: 'Extracts native / translatable strings from your app',
+  git: 'https://github.com/gadicc/meteor-messageformat.git',
   documentation: 'README.md',
   debugOnly: true
 });
@@ -15,7 +15,7 @@ Npm.depends({
 Package.onUse(function(api) {
   //api.versionsFrom('1.0.4.1');
 
-  api.use('msgfmt:core@2.0.0-preview.1');
+  api.use('msgfmt:core@2.0.0-preview.2');
   api.use('jag:pince@0.0.6', 'client');
 
   api.addFiles('extract.js', 'server');

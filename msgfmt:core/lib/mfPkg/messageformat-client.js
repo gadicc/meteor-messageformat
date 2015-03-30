@@ -1,9 +1,10 @@
 /*
  * tmp stuff that should be set via new settings method
  */
+mfPkg.native = 'en';
 mfPkg.useLocalStorage = true;
-mfPkg.waitOnLoaded = false;
-mfPkg.sendPolicy = 'current';
+mfPkg.waitOnLoaded = true;
+// mfPkg.sendPolicy = 'current';
 mfPkg.sendPolicy = 'all';
 
 // sendAllOnInitialHTML? could be faster to just send everything everytime

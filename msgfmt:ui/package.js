@@ -1,6 +1,6 @@
 Package.describe({
   name:    "msgfmt:ui",
-  version: "2.0.0-preview.1",
+  version: "2.0.0-preview.2",
   summary: "messageformat: translation UI",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
@@ -10,7 +10,7 @@ Package.onUse(function (api) {
   api.use(['templating', 'underscore'], 'client');
   api.use('iron:router@1.0.0', ['client', 'server']);
   api.use('mongo');
-  api.use('msgfmt:core@2.0.0-preview.1');
+  api.use('msgfmt:core@2.0.0-preview.2');
 
   api.addFiles('lib/common.js');
   api.addFiles('lib/server.js', 'server');
