@@ -39,12 +39,14 @@ your page's `body` tag (which you can leverage with appropriate CSS rules).
 * Backup your database!  (Particularly your mf* collections)
 * Save your most recent `mfAll.js` translations
 * Delete the mf* collections, e.g. `meteor shell` and then:
-  &gt; msgfmt.mfStrings.remove({});
-  337
-  &gt; msgfmt.mfMeta.remove({});
-  23
-  &gt; msgfmt.mfRevisions.remove({});
-  707
+```
+> msgfmt.mfStrings.remove({});
+337
+> msgfmt.mfMeta.remove({});
+23
+> msgfmt.mfRevisions.remove({});
+707
+```
 * Stop meteor.  Remove gadicohen:messageformat, add
   * msgfmt:core
   * msgfmt:ui
