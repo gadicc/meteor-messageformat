@@ -9,7 +9,8 @@
 * `mf_extract` is no more.  Install `msgfmt:extract` and forget about it,
 everything is automatic.
 
-* The main package namespace is now `msgfmt` and not `mfPkg`.
+* The main package namespace is now `msgfmt` and not `mfPkg`.  However,
+`mfPkg` still exists as an alias so no need to change existing code.
 
 * Use `msgfmt.setLocale(locale)` to set the locale.
 
