@@ -236,6 +236,7 @@ Meteor.methods({
 		return _.keys(mfPkg.strings);
 	},
   'msgfmt:setLocale': function(locale) {
+    check(locale, String);
     this.connection.locale = locale;
   }
 });
