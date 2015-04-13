@@ -486,3 +486,16 @@ Tracker.autorun(function() {
   if (sessionLocale !== mfPkg.sessionLocale)
     mfPkg.setLocale(sessionLocale);
 });
+
+if (msgfmt.storeUserLocale) {
+  Meteor.startup(function() {
+    Meteor.subscribe('userLocale');
+    Tracker.autorun(function() {
+      var user = Meteor.user();
+      if (user && user.locale && user.locale !== msgfmt._locale.curValue) {
+        log.debug('Got new locale "' + user.locale + '" from Meteor.user()');
+        msgfmt.setLocale(user.locale);
+      }
+    });
+  });
+}

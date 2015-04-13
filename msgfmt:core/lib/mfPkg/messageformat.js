@@ -28,6 +28,7 @@ mfPkg = msgfmt = {
 
     setBodyDir: true,
     updateOnTouch: false,
+    storeUserLocale: true,
 
     mfStrings: new Mongo.Collection('mfStrings'),
     mfMeta: new Mongo.Collection('mfMeta'),

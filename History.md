@@ -1,6 +1,11 @@
 ## vNEXT (v2.0.0)
 
+* Use `msgfmt.setLocale(locale)` to set the locale.  If locale does not
+  exist, we fallback to the lang only (no regional) and then native, e.g.
+  en_US -> en -> native.
+
 * Split off the translation UI into a separate package (#29)
+
 * Server now keeps track of connection locales (#83) thanks @lucazulian
 
 * localStorage is now used to cache: strings and lastUpdatedAt times for
@@ -9,6 +14,8 @@
 * msgfmt.locale(), msgfmt.lang(), msgfmt.dir() reactive getters
 
 * msgfmt.setBodyDir = true (default) will set <body> direction
+
+
 
 TODO
 

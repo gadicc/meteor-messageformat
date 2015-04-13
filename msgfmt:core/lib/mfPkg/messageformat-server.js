@@ -231,6 +231,13 @@ Meteor.publish('mfStrings', function(lang, after, fullInfo) {
   return mfPkg.mfStrings.find(query, options);
 });
 
+Meteor.publish('userLocale', function() {
+  if (this.userId)
+    return Meteor.users.find(this.userId, { fields: { locale: 1 } });
+  else
+    return null;
+});
+
 Meteor.methods({
 	'mfPkg.langList': function() {
 		return _.keys(mfPkg.strings);
@@ -238,6 +245,8 @@ Meteor.methods({
   'msgfmt:setLocale': function(locale) {
     check(locale, String);
     this.connection.locale = locale;
+    if (this.userId && msgfmt.storeUserLocale)
+      Meteor.users.update(this.userId, { $set : { locale: locale } });
   }
 });
 

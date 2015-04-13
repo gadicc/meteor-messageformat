@@ -20,6 +20,17 @@ The most common configuration involves:
 $ meteor add msgfmt:core msgfmt:extract msgfmt:ui
 ```
 
+In your common code (for client + server), add:
+
+```js
+msgfmt.init('en');
+```
+
+where `en` should be your "native" language, i.e. the language all your
+strings are in before any translation occurs.  You can supply an optional
+second argument with a key-value dictionary of configuration values, see
+the [docs](http://messageformat.meteor.com/docs) for more.
+
 Setup your strings like this:
 
 ```handlebars
