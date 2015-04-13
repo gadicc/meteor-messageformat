@@ -1,15 +1,15 @@
 /*
- * tmp stuff that should be set via new settings method
+ * Settings that are required during load and should be injected into initialHtml
  */
 mfPkg.native = 'en';
 mfPkg.useLocalStorage = true;
-mfPkg.waitOnLoaded = true;
 // mfPkg.sendPolicy = 'current';
 mfPkg.sendPolicy = 'all';
 
-// sendAllOnInitialHTML? could be faster to just send everything everytime
-// rather than waiting to reach msgfmt client code and init ajax.
-// also need to always send a script then.
+/*
+ * Other settings which can be passed on client startup
+ */
+mfPkg.waitOnLoaded = true;
 
 /*
  * Reactive vars and reactive shortcut getters that the project uses
@@ -294,9 +294,14 @@ function localeReady(locale, dontStore) {
 mfPkg.setLocale = function(locale, dontStore) {
   var lang, dir;
 
-  // for now
-  if (!mfPkg.timestamps[locale])
-    locale = mfPkg.native;
+  // If "en_US" doesn't exist, fallback to "en" and then native
+  // Not really that useful since user usually picks lang from a list
+  // and headerLocale() does this anyway with it's own logic.
+  if (!mfPkg.timestamps[locale]) {
+    locale = locale.split('_')[0];
+    if (!mfPkg.timestamps[locale])
+      locale = mfPkg.native;
+  }
 
   // This locale changing is already pending
   if (msgfmt._loadingLocale === locale)
@@ -422,6 +427,8 @@ mfPkg.resetStorage = function() {
 var injected = Injected.obj('msgfmt');
 mfPkg.timestamps = injected && injected.locales;
 mfPkg.sendCompiled = injected.sendCompiled;
+mfPkg.native = injected.native;
+mfPkg.sendPolicy = injected.sendPolicy;
 
 if (mfPkg.sendCompiled && mfPkg.useLocalStorage) {
   log.debug('disallowInlineEval detected, setting useLocalStorage to false');
@@ -441,6 +448,10 @@ if (mfPkg.timestamps) {
   })();
 }
 
+// don't need this anymore?
+//if (!msgfmt.strings[msgfmt.native])
+//  msgfmt.strings[msgfmt.native] = {};
+
 mfPkg.lastSync = mfPkg.useLocalStorage ? amplify.store('mfLastSync') || {} : {};
 
 var $body;
@@ -452,7 +463,7 @@ if (msgfmt.setBodyDir) {
 
 /*
  * When mfPkg.setLocale(locale) is called, we store that value with amplify.
- * On load, we can re set the locale to the last user supplied value.
+ * On load, we can re-set the locale to the last user supplied value.
  * Note, the use of Session here is intentional, to survive hot code pushes
  */
 var locale = mfPkg.useLocalStorage && amplify.store('mfLocale');
@@ -466,10 +477,7 @@ if (locale) {
   log.debug('Setting locale from header: ' + locale);
   mfPkg.setLocale(locale);  
 } else {
-  // Only available in main app code, so we have to load a little later
-  Meteor.startup(function() {
-    mfPkg.setLocale(msgfmt.native);
-  });
+  mfPkg.setLocale(msgfmt.native);
 }
 
 // backcompat with v0, auto call setLocale() on Session.set('locale')

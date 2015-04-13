@@ -1,6 +1,63 @@
-# meteor-messageformat (v2)
+# meteor-messageformat (v2) [![Build Status](https://api.travis-ci.org/gadicc/meteor-messageformat.svg?branch=v2)](https://travis-ci.org/gadicc/meteor-messageformat)
 
-## Differences from v0
+MessageFormat i18n support, the Meteor way.
+
+Easy reactive use of complicated strings (gender, plural, etc) with insanely
+easy translation into other languages (through a web UI).
+
+For full info, docs and examples, see the
+[Meteor MessageFormat home page](http://messageformat.meteor.com/)
+(or install/clone the smart package and run `meteor` in its `website` directory).
+
+**THIS IS AN IN-DEVELOPMENT RELEASE.  YOU SHOULD NOT BE USING IT UNLESS YOU KNOW
+WHAT YOU'RE DOING.  SEE THE VERY END OF THIS DOCUMENT FOR SOME MORE HELP**.
+
+## Quick Start
+
+The most common configuration involves:
+
+```bash
+$ meteor add msgfmt:core msgfmt:extract msgfmt:ui
+```
+
+Setup your strings like this:
+
+```handlebars
+<h1>{{mf 'heading_welcome' 'Welcome to my Site'}}</h1>
+<p>{{mf 'welcome_name' 'Welcome, {NAME}' NAME=getUserName}}</p>
+```
+
+For more complicated examples, see the
+[examples page](http://messageformat.meteor.com/examples).
+For more information about different options, see the
+[docs](http://messageformat.meteor.com/docs).
+
+To translate your strings, go to `/translate` in your app, available by default
+to any registered user.  See the [docs](http://messageformat.meteor.com/docs)
+about custom security policies.
+
+## More info
+
+### Debug logging
+
+`Logger.setLevel('msgfmt', 'trace');`
+
+### Reactivity
+
+* `msgfmt.locale()` is a reactive dependency on the current locale.  When
+calling `setLocale()`, the value might only change when language data is
+ready, depending on the value of `msgfmt.waitOnLoaded`.
+
+* `msgfmt.lang()` is a reactive dependency on the current language.  This
+is only the language component of the locale, not the dialect / cultural /
+regional settings.  e.g. locale `en_US` has a lang of `en`.
+
+* `msgfmt.dir()` is a reactive dependency on the writing direction of the
+current language, either `ltr` or `rtl`.  By default,
+`msgfmt.setBodyDir = true` and we'll change set the `dir` attribute on
+your page's `body` tag (which you can leverage with appropriate CSS rules).
+
+### Differences from v0
 
 * The main package is now `msgfmt:core`.
 
@@ -20,26 +77,11 @@ true`.  On subsequent visits, only new/changed strings are downloaded.
 
 * Offline support is now official.
 
-## Reactivity
-
-* `msgfmt.locale()` is a reactive dependency on the current locale.  When
-calling `setLocale()`, the value might only change when language data is
-ready, depending on the value of `msgfmt.waitOnLoaded`.
-
-* `msgfmt.lang()` is a reactive dependency on the current language.  This
-is only the language component of the locale, not the dialect / cultural /
-regional settings.  e.g. locale `en_US` has a lang of `en`.
-
-* `msgfmt.dir()` is a reactive dependency on the writing direction of the
-current language, either `ltr` or `rtl`.  By default,
-`msgfmt.setBodyDir = true` and we'll change set the `dir` attribute on
-your page's `body` tag (which you can leverage with appropriate CSS rules).
-
-## Pre release usage
+### Pre release usage
 
 * Backup your database!  (Particularly your mf* collections)
 * Save your most recent `mfAll.js` translations
-* Delete the mf* collections, e.g. `meteor shell` and then:
+* Delete mfExtract.js and the mf* collections, e.g. `meteor shell` and then:
 ```
 > msgfmt.mfStrings.remove({});
 337
@@ -53,7 +95,3 @@ your page's `body` tag (which you can leverage with appropriate CSS rules).
   * msgfmt:ui
   * msgfmt:extract
 * Run Meteor and check that everything is working.
-
-## Debug logging
-
-`Logger.setLevel('msgfmt', 'trace');`

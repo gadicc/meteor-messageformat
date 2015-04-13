@@ -259,13 +259,17 @@ var headerLocale = function(acceptLangs) {
 /*
  * Data injected into initial HTML and served to client, includes
  *
- * + best locale match for accept-language header
- * + last update time for all locales
+ * + the native language (from server, to be available earlier on client)
+ * + any other configuration settings we need early on the client
+ * + last update time for all locales (and hence, list of of available locales)
+ * + best locale match for accept-language header (if it exists)
  */
 var msgfmtClientData = function(req) {
   var out = {
+    native: mfPkg.native,
+    locales: {},
     sendCompiled: sendCompiled,
-    locales: {}
+    sendPolicy: mfPkg.sendPolicy
   };
 
   if (req.headers['accept-language'])

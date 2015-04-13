@@ -1,6 +1,6 @@
 # meteor-messageformat [![Build Status](https://api.travis-ci.org/gadicc/meteor-messageformat.svg?branch=v2)](https://travis-ci.org/gadicc/meteor-messageformat)
 
-MessageFormat support, the Meteor way.
+MessageFormat i18n support, the Meteor way.
 
 Easy reactive use of complicated strings (gender, plural, etc) with insanely
 easy translation into other languages (through a web UI).
