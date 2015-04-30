@@ -76,7 +76,9 @@ your page's `body` tag (which you can leverage with appropriate CSS rules).
 
 * The main package is now `msgfmt:core`.
 
-* The translation UI is now a separate package, `msgfmt:ui`.
+* The translation UI is now a separate package, `msgfmt:ui`.  By default,
+it's deployed to production too.  If you want translation in your dev
+environment only, use `msgfmt:ui-dev-only` *instead* (not both).
 
 * `mf_extract` is no more.  Install `msgfmt:extract` and forget about it,
 everything is automatic.

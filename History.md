@@ -1,5 +1,7 @@
 ## vNEXT (v2.0.0)
 
+See "Differences from v0" in the README too.
+
 * Use `msgfmt.setLocale(locale)` to set the locale.  If locale does not
   exist, we fallback to the lang only (no regional) and then native, e.g.
   en_US -> en -> native.
