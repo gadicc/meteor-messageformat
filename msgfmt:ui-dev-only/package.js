@@ -7,6 +7,6 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.use('msgfmt:ui');
+  api.use('msgfmt:ui@2.0.0-preview.2');
   api.imply('msgfmt:ui');
 });
