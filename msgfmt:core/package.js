@@ -24,6 +24,9 @@ Package.onUse(function (api) {
     'jquery'
   ], 'client');
 
+  // For msgfmt.storeUserLocale == true.
+  api.use('accounts-base', 'client', { weak: true });
+
   // api.use('browser-policy', 'server', { /* weak: true */ });
 
   // MDG maintained non-core

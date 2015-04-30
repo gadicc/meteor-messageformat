@@ -100,6 +100,9 @@ support without ever needing to connect once.
 
 * disallowUnsafeEval is now supported.
 
+* If `msgfmt.storeUserLocale = true` (default), `setLocale()` will also
+store the locale in Meteor.user().locale and sync across multiple instances.
+
 ### Pre release usage
 
 * Backup your database!  (Particularly your mf* collections)

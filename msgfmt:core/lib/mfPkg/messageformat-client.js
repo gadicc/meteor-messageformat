@@ -487,14 +487,11 @@ Tracker.autorun(function() {
     mfPkg.setLocale(sessionLocale);
 });
 
-if (msgfmt.storeUserLocale) {
+if (msgfmt.storeUserLocale && Meteor.user) {
+  Meteor.subscribe('msgfmt:locale');
   Meteor.startup(function() {
-    Meteor.subscribe('userLocale');
     Tracker.autorun(function() {
-      console.log(1);
-      console.log(Meteor.user);
       var user = Meteor.user();
-      console.log(2);
       if (user && user.locale && user.locale !== msgfmt._locale.curValue) {
         log.debug('Got new locale "' + user.locale + '" from Meteor.user()');
         msgfmt.setLocale(user.locale);

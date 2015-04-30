@@ -231,7 +231,7 @@ Meteor.publish('mfStrings', function(lang, after, fullInfo) {
   return mfPkg.mfStrings.find(query, options);
 });
 
-Meteor.publish('userLocale', function() {
+Meteor.publish('msgfmt:locale', function() {
   if (this.userId)
     return Meteor.users.find(this.userId, { fields: { locale: 1 } });
   else
