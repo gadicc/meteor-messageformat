@@ -86,7 +86,14 @@ mf = function(key, params, message, locale) {
         locale = Session.get('locale');
       } else {
         var currentInvocation = DDP._CurrentInvocation.get();
-        locale = currentInvocation.connection.locale;
+        if (currentInvocation)
+            locale = currentInvocation.connection.locale;
+        else {
+            console.log("[msgfmt] You called mf() outside of a method/publish and " +
+                "without specifying a locale, defaulting to native (" + msgfmt.native + ")");
+            locale = msgfmt.native;
+        }
+
       }
     }    
     if (!locale || (!mfPkg.strings[locale] && !mfPkg.compiled[locale]))

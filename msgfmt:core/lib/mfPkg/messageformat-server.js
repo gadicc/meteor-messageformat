@@ -387,6 +387,11 @@ mfPkg._sendCompiledCheck = function() {
 };
 Meteor.startup(mfPkg._sendCompiledCheck);
 
+Meteor.startup(function() {
+  if (!msgfmt.initted)
+    throw new Error("[msgfmt] Installed but msgfmt.init('en') etc was never called.");
+});
+
 // TODO, caching, compression
 // return functoins when security policy doesn't allow new function
 // allow fromDate?
