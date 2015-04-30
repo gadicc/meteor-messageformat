@@ -55,6 +55,10 @@ about custom security policies.
 
 ### Reactivity
 
+All `{{mf ...}}` strings are reactive and depend on the locale.  When
+changing locales, all strings on the currently viewed page will update,
+without any further action or reloading.
+
 * `msgfmt.locale()` is a reactive dependency on the current locale.  When
 calling `setLocale()`, the value might only change when language data is
 ready, depending on the value of `msgfmt.waitOnLoaded`.
@@ -82,11 +86,19 @@ everything is automatic.
 
 * Use `msgfmt.setLocale(locale)` to set the locale.
 
+* We now store the client's locale on the server per-connection.  This
+means that calling `mf()` from inside a `method` or `publish` will
+automatically and correctly output the correct language.
+
 * During initial page load, language data is loaded in parallel with a 2nd
 http request.  This is cached in localStorage if `msgfmt.useLocalStorage =
 true`.  On subsequent visits, only new/changed strings are downloaded.
 
-* Offline support is now official.
+* Offline support is now official.  In the future, we'll bundle the languages
+into the client package as part of the Cordova built process, for 100% offline
+support without ever needing to connect once.
+
+* disallowUnsafeEval is now supported.
 
 ### Pre release usage
 
@@ -106,3 +118,4 @@ true`.  On subsequent visits, only new/changed strings are downloaded.
   * msgfmt:ui
   * msgfmt:extract
 * Run Meteor and check that everything is working.
+
