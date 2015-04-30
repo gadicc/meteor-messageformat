@@ -109,11 +109,11 @@ store the locale in Meteor.user().locale and sync across multiple instances.
 * Save your most recent `mfAll.js` translations
 * Delete mfExtract.js and the mf* collections, e.g. `meteor shell` and then:
 ```
-> msgfmt.mfStrings.remove({});
+> mfPkg.mfStrings.remove({});
 337
-> msgfmt.mfMeta.remove({});
+> mfPkg.mfMeta.remove({});
 23
-> msgfmt.mfRevisions.remove({});
+> mfPkg.mfRevisions.remove({});
 707
 ```
 * Stop meteor.  Remove gadicohen:messageformat, add
