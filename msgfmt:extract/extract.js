@@ -18,7 +18,11 @@ var toDict = function(array) {
   return out;
 }
 
-var checkForUpdates = function() {
+var checkForUpdates = function(m) {
+  // https://github.com/meteor/meteor/pull/3704/files
+  if (m && !m.refresh)
+    return;
+
   log.debug('Checking for changed files...');
 
   var startTime = Date.now();
@@ -176,8 +180,12 @@ var checkForUpdates = function() {
 
 var log;
 var boundCheck = Meteor.bindEnvironment(checkForUpdates);
-process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
+
+// https://github.com/meteor/meteor/pull/3704/files
 process.on('SIGUSR2', boundCheck);  // Meteor < 1.0.4
+process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
+process.on('message', boundCheck);  // Meteor >= 1.0.4
+
 Meteor.startup(function() {
   if (!msgfmt.extractsLogLevel)
     msgfmt.extractLogLevel = 'trace';
