@@ -5,6 +5,7 @@
 
 msgfmt:core
 msgfmt:ui
+#msgfmt:ui-dev-only
 msgfmt:extract
 
 standard-app-packages

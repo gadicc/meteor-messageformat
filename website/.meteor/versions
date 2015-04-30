@@ -59,6 +59,7 @@ mrt:sp-marked@0.0.2
 msgfmt:core@2.0.0-preview.3
 msgfmt:extract@2.0.0-preview.3
 msgfmt:ui@2.0.0-preview.2
+msgfmt:ui-dev-only@2.0.0-preview.1
 npm-bcrypt@0.7.8_2
 oauth@1.1.4
 oauth2@1.1.3
