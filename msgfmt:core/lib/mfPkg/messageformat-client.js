@@ -491,7 +491,10 @@ if (msgfmt.storeUserLocale) {
   Meteor.startup(function() {
     Meteor.subscribe('userLocale');
     Tracker.autorun(function() {
+      console.log(1);
       var user = Meteor.user();
+      console.log(Meteor.user);
+      console.log(2);
       if (user && user.locale && user.locale !== msgfmt._locale.curValue) {
         log.debug('Got new locale "' + user.locale + '" from Meteor.user()');
         msgfmt.setLocale(user.locale);
