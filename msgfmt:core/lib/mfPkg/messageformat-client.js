@@ -9,7 +9,7 @@ mfPkg.sendPolicy = 'all';
 /*
  * Other settings which can be passed on client startup
  */
-mfPkg.waitOnLoaded = true;
+mfPkg.waitOnLoaded = false;
 
 /*
  * Reactive vars and reactive shortcut getters that the project uses

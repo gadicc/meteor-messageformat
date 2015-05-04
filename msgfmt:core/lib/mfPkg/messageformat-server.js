@@ -182,11 +182,19 @@ _.each(meta, function(m) {
     checkLocaleMetaExists(m._id);
 });
 
+var injectableOptions = ['waitOnLoaded', 'sendPolicy'];
+
 mfPkg.serverInit = function(native, options) {
   if (this.nativeQueue) {
     this.addNative(this.nativeQueue.strings, this.nativeQueue.meta);
     delete this.nativeQueue;
   }
+
+  if (options)
+    _.each(injectableOptions, function(key) {
+      if (options[key] !== undefined)
+        msgfmt[key] = options[key];
+    });
 
   checkLocaleMetaExists(native);
 
@@ -288,10 +296,17 @@ var headerLocale = function(acceptLangs) {
 var msgfmtClientData = function(req) {
   var out = {
     native: mfPkg.native,
-    locales: {},
-    sendCompiled: sendCompiled,
-    sendPolicy: mfPkg.sendPolicy
+    locales: {}
   };
+
+  // don't include boolean unless true
+  if (sendCompiled)
+    out.sendCompiled = sendCompiled;
+
+  _.each(injectableOptions, function(key) {
+    if (msgfmt[key] !== undefined)
+      out[key] = msgfmt[key];
+  });
 
   if (req.headers['accept-language'])
     out.headerLocale = headerLocale(req.headers['accept-language']);
