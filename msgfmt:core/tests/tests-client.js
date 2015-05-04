@@ -41,3 +41,19 @@ Tinytest.addAsync('msgfmt:core - sendPolicy:all', function(test, complete) {
     }
   });
 });
+
+Tinytest.addAsync('msgfmt:core - backcompat - mfPkg.ready(func) on startup', function(test, complete) {
+  mfPkg.ready(function() {
+    test.ok(true);
+    complete();
+  });
+});
+
+Tinytest.addAsync('msgfmt:core - backcompat - mfPkg.ready() waitOn dep', function(test, complete) {
+  Tracker.autorun(function(c) {
+    var ready = mfPkg.ready();
+    test.isTrue(ready);
+    c.stop();
+    complete();
+  });
+});

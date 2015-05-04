@@ -487,6 +487,19 @@ Tracker.autorun(function() {
     mfPkg.setLocale(sessionLocale);
 });
 
+// backcompat with v0
+msgfmt.ready = function(func) {
+  if (func) {
+    Meteor.startup(function() {
+      log.warn("Loading startup code in mfPkg.ready() is no longer required, just use Meteor.startup().");
+      func();
+    });
+  } else {
+    log.warn("Waiting on mfPkg or mfPkg.ready() is no longer required and should be removed.");
+    return true;
+  }
+};
+
 if (msgfmt.storeUserLocale && Meteor.user) {
   Meteor.subscribe('msgfmt:locale');
   Meteor.startup(function() {
