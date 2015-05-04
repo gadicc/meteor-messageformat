@@ -49,6 +49,30 @@ about custom security policies.
 
 ## More info
 
+### Optional Settings
+
+Defaults are shown below.
+
+```js
+msgfmt.init('en', {
+  // Send translations for all languages or current language
+  sendPolicy: "current",
+
+  // Don't invalidate msgfmt.locale() until new language is fully loaded
+  waitOnLoaded: true,
+  // Automatically adjust <body dir="rtl"> according to the language used
+  setBodyDir: true,
+
+  // Save setLocale() in Meteor.user().locale, sync to multiple clients
+  storeUserLocale: true,
+
+  // Use client's localStorage to avoid reloading unchanged translations
+  useLocalStorage: true // unless sendCompiled: true,
+  // Send translations to the client pre-compiled
+  sendCompiled: false // unless browserPolicy disallowUnsafeEval is set
+});
+```
+
 ### Debug logging
 
 `Logger.setLevel('msgfmt', 'trace');`
