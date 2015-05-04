@@ -1,12 +1,20 @@
 // server only, but used on the client in msgfmt:ui
 mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
 
+/*
+ * New entry point for startup (native) and any language modification.  Check that all
+ * the fields we need exist.  Don't test for these anywhere else.
+ */
+function checkLocaleMetaExists(locale) {
+  _.each(['strings', 'compiled', 'meta'], function(key) {
+    if (!mfPkg[key][locale])
+      mfPkg[key][locale] = {};
+  });
+}
+
 // Load each string and update the database if necessary
 mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
-	_.each(['strings', 'compiled', 'meta'], function(key) {
-		if (!mfPkg[key][lang])
-			mfPkg[key][lang] = {};
-	});
+  checkLocaleMetaExists(lang);
 	mfPkg.meta[lang].extractedAt = meta.extractedAt;
 	mfPkg.meta[lang].updatedAt = meta.updatedAt;
   if (mfPkg.meta.all) {
@@ -170,17 +178,21 @@ if (meta.syncExtracts) delete meta.synExtracts;
 _.each(meta, function(m) {
   mfPkg.meta[m._id] = m;
   delete mfPkg.meta[m._id]._id;
+  if (m._id && m._id !== 'all' && m._id !== 'syncTrans' && m.id !== 'syncExtracts')
+    checkLocaleMetaExists(m._id);
 });
 
 mfPkg.serverInit = function(native, options) {
-    if (this.nativeQueue) {
-        this.addNative(this.nativeQueue.strings, this.nativeQueue.meta);
-        delete this.nativeQueue;
-    }
+  if (this.nativeQueue) {
+    this.addNative(this.nativeQueue.strings, this.nativeQueue.meta);
+    delete this.nativeQueue;
+  }
 
-    // If addTrans() was never called, observe full translation database
-    if (!mfPkg.syncTrans)
-        mfPkg.observeFrom(0, 'trans');	
+  checkLocaleMetaExists(native);
+
+  // If addTrans() was never called, observe full translation database
+  if (!mfPkg.syncTrans)
+    mfPkg.observeFrom(0, 'trans');	
 }
 
 Meteor.methods({
@@ -372,7 +384,7 @@ mfPkg._sendCompiledCheck = function() {
 
       // XXX TODO need to keep up-to-date
       for (locale in msgfmt.strings) {
-        mf = mf = mfPkg.objects[locale];
+        mf = mfPkg.objects[locale];
         if (!mf) {
             mf = mfPkg.objects[locale] = new MessageFormat(locale);
             mfPkg.compiled[locale] = {};
@@ -393,8 +405,6 @@ Meteor.startup(function() {
 });
 
 // TODO, caching, compression
-// return functoins when security policy doesn't allow new function
-// allow fromDate?
 WebApp.connectHandlers.use(function(req, res, next) {
   if (req.url.substr(0, 15) === '/msgfmt/locale/') {
     var rest = req.url.substr(15).split('/');
