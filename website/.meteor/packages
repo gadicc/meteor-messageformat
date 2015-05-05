@@ -20,7 +20,7 @@ mizzao:bootstrap-3
 gadicohen:syntaxhighlighter
 gadicohen:pkgconfig
 
-appcache
+#appcache
 
 # if this package is used, app code sets disallowEval
 #browser-policy

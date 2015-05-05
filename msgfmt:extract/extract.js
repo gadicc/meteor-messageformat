@@ -128,7 +128,7 @@ var checkForUpdates = function(m) {
       log.trace('Marking "' + key + '" as removed.');
       newStrings[key] = oldStrings[key];
       newStrings[key].removed = true;
-      newStrings[key].mtime = Date.now();
+      newStrings[key].mtime = new Date();
       removeCount++;
     }
 
@@ -146,10 +146,11 @@ var checkForUpdates = function(m) {
     // console.log(newStrings);
 
     if (Object.keys(newStrings).length) {
+      // console.log(newStrings);
       var max = _.max(newStrings, function(s) { return s.mtime; }).mtime;
       mfPkg.addNative(newStrings, {
         extractedAt: Date.now(),
-        updatedAt: max.getTime()
+        updatedAt: max.getTime() // _.isObject(max) ? max.getTime() : max
       });
     }
 
