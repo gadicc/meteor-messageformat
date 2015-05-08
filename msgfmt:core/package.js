@@ -6,19 +6,19 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-	api.versionsFrom("METEOR@1.0.1");
+  api.versionsFrom("METEOR@1.0.1");
 
   // common deps
-	api.use([
-		'underscore',
-		'ddp',
-		'mongo@1.0.4',
-		'meteorhacks:inject-initial@1.0.2',
-		'jag:pince@0.0.6'
-	], [ 'client', 'server' ]);
+  api.use([
+    'underscore',
+    'ddp',
+    'mongo@1.0.4',
+    'meteorhacks:inject-initial@1.0.2',
+    'jag:pince@0.0.6'
+  ], [ 'client', 'server' ]);
 
   // client deps
-	api.use([
+  api.use([
     // core MDG packages
     'templating', 'session', 'tracker', 'reactive-var', 'ddp',
     // core 3rd party packages
@@ -38,25 +38,25 @@ Package.onUse(function (api) {
   // server deps
   api.use(['webapp'], 'server');
 
-	// common adds
-	api.addFiles('lib/messageformat.js/messageformat.js', ['client', 'server']);
-	api.addFiles([
-		'lib/mfPkg/messageformat.js',
-		'lib/mfPkg/locale-all.js'
-	], ['client', 'server']);
+  // common adds
+  api.addFiles('lib/messageformat.js/messageformat.js', ['client', 'server']);
+  api.addFiles([
+    'lib/mfPkg/messageformat.js',
+    'lib/mfPkg/locale-all.js'
+  ], ['client', 'server']);
 
-	// server
-	api.addFiles('lib/mfPkg/messageformat-server.js', 'server');
+  // server
+  api.addFiles('lib/mfPkg/messageformat-server.js', 'server');
 
-	// client
-	api.addFiles([
+  // client
+  api.addFiles([
     'lib/mfPkg/messageformat.html',
-		'lib/mfPkg/messageformat-client.js'
-	], 'client');
+    'lib/mfPkg/messageformat-client.js'
+  ], 'client');
 
   // TODO, on cordova, need to bundle all languages
 
-	api.export(['mfPkg', 'mf', 'msgfmt'], ['client', 'server']);
+  api.export(['mfPkg', 'mf', 'msgfmt'], ['client', 'server']);
 });
 
 Package.onTest(function(api) {
