@@ -1,6 +1,6 @@
 Package.describe({
   name:    "msgfmt:core",
-  version: "2.0.0-preview.6",
+  version: "2.0.0-preview.7",
   summary: "MessageFormat support, the Meteor way",
   git:     "https://github.com/gadicc/meteor-messageformat.git",
 });
@@ -10,16 +10,17 @@ Package.onUse(function (api) {
 
   // common deps
 	api.use([
-    'underscore',
+		'underscore',
+		'ddp',
 		'mongo@1.0.4',
 		'meteorhacks:inject-initial@1.0.2',
-    'jag:pince@0.0.6'
+		'jag:pince@0.0.6'
 	], [ 'client', 'server' ]);
 
   // client deps
 	api.use([
     // core MDG packages
-    'templating', 'session', 'tracker', 'reactive-var',
+    'templating', 'session', 'tracker', 'reactive-var', 'ddp',
     // core 3rd party packages
     'jquery'
   ], 'client');
