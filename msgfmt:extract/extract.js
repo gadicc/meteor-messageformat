@@ -18,7 +18,7 @@ var toDict = function(array) {
   return out;
 }
 
-var checkForUpdates = function(m) {
+var checkForUpdates = function(m, force) {
   // https://github.com/meteor/meteor/pull/3704/files
   if (m && !m.refresh)
     return;
@@ -53,7 +53,7 @@ var checkForUpdates = function(m) {
       var file = path.join(prettyDir, stat.name);
 
       var oldFileInfo = oldFilesInfo[file];
-      if (!oldFileInfo || oldFileInfo.mtime < stat.mtime) {
+      if (force || !oldFileInfo || oldFileInfo.mtime < stat.mtime) {
         upserts[file] = { mtime: stat.mtime };
         changedFiles[file] = {
           fromCwd: path.join(root, stat.name),
@@ -179,6 +179,12 @@ var checkForUpdates = function(m) {
   }));
 }
 
+msgfmt.forceExtract = function() {
+  checkForUpdates(null, true /* force */);
+  return 'Forcing (re)-extract of all files and keys.  See results in main console ' +
+    'log, according to your default debug level';
+};
+
 var log;
 var boundCheck = Meteor.bindEnvironment(checkForUpdates);
 
@@ -187,6 +193,7 @@ process.on('SIGUSR2', boundCheck);  // Meteor < 1.0.4
 process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
 process.on('message', boundCheck);  // Meteor >= 1.0.4
 
+// No reason to block startup, we can do update gradually in fibers
 Meteor.startup(function() {
   if (!msgfmt.extractsLogLevel)
     msgfmt.extractLogLevel = 'trace';

@@ -63,16 +63,6 @@ Template.mf.helpers({
 mfPkg.strings = mfPkg.useLocalStorage ? amplify.store('mfStrings') || {} : {};
 mfPkg.mfStringsSub = Meteor.subscribe('mfStrings', 'notReady');
 
-// For stuff that runs before clientInit, e.g. want correct log level
-log = {};
-var queuedLogs = { debug: [], trace: [], warn: [] };
-var defferedLog = function(text) { this.push(arguments); };
-(function() {
-  for (var key in queuedLogs)
-    log[key] = _.bind(defferedLog, queuedLogs[key]);
-})();
-
-
 mfPkg.clientInit = function(native, options) {
   var key;
 
@@ -88,11 +78,6 @@ mfPkg.clientInit = function(native, options) {
   // Note, even if this is the case, we might have "preloaded" last used lang
   //if (mfPkg.sendPolicy === 'all')
   //  mfPkg.loadLangs('all', updateSubs);
-
-  log = new Logger('msgfmt');
-  for (key in queuedLogs)
-    while (queuedLogs[key].length)
-      log.debug.apply(log, _.union(['[Q]'], queuedLogs[key].shift()));
 
   log.debug('clientInit, ' + (Date.now() - times.loading) +
     'ms after script loading');

@@ -45,8 +45,9 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 		existing = this.strings[lang][key];
 
 		// skip keys which haven't been modified since last sync
-		if (str.mtime <= lastSync)
-			continue;
+    // XXX, breaks v2... do we still want/need this?
+		//if (str.mtime <= lastSync)
+		//	continue;
 
 		// skip key if local copy is newer than this one (i.e. from other file)
 		if (existing && existing.mtime > str.mtime)
@@ -80,7 +81,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 
 		// insert unfound, or re-insert on wrong _id, otherwise update
 		if (existing) {
-			if (str._id && existing._id == str._id) {
+			if (str._id && existing._id === str._id) {
 				dbInsert = false;
 			} else {
 				// non-matching ID.  remove and insert with correct ID (mfAll.js)
@@ -137,6 +138,7 @@ mfPkg.addNative = function(strings, meta) {
 	if (!this.initted) {
 
 		// not initted yet, we don't know what the native lang is
+    log.debug('addNative() called before init(), queueing...');
 		this.nativeQueue = { strings: strings, meta: meta };
 
 	} else {
@@ -431,3 +433,16 @@ WebApp.connectHandlers.use(function(req, res, next) {
   }
   next();
 });
+
+msgfmt.strings = {};
+
+// Yes, we absolutely do want this to block, to be fully loaded before mfAll.js etc
+log.trace('Retrieving strings from database...');
+var startTime = Date.now();
+var allStrings = msgfmt.mfStrings.find().fetch();
+log.trace('Finished retrieval in ' + (Date.now() - startTime) + ' ms');
+_.each(allStrings, function(str) {
+  checkLocaleMetaExists(str.lang);
+  msgfmt.strings[str.lang][str.key] = str;
+});
+delete allStrings;

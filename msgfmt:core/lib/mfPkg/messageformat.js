@@ -12,6 +12,16 @@
  *
  */
 
+ // For stuff that runs before init, e.g. want correct log level
+log = {};
+var queuedLogs = { debug: [], trace: [], warn: [] };
+var defferedLog = function(text) { this.push(arguments); };
+(function() {
+  for (var key in queuedLogs)
+    log[key] = _.bind(defferedLog, queuedLogs[key]);
+})();
+
+
 mfPkg = msgfmt = {
     native: 'en',   // Fine to use reserved words for IdentifierNames (vs Identifiers)
     objects: {},
@@ -36,6 +46,12 @@ mfPkg = msgfmt = {
     init: function(native, options) {
         this.native = native;
         this.initted = true;
+
+          log = new Logger('msgfmt');
+          for (key in queuedLogs)
+            while (queuedLogs[key].length)
+              log.debug.apply(log, _.union(['[Q]'], queuedLogs[key].shift()));
+
         if (Meteor.isServer)
             this.serverInit(native, options);
         else
