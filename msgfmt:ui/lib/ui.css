@@ -1,3 +1,22 @@
+#mfTransContainer, #mfTransLang {
+	color: black;
+	background: white;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	padding: 1em;
+	margin: 0;
+}
+
+#mfTransLang table, #mfTransContainer table, #mfTransContainer input[type='submit'] {
+	color: black;
+}
+
+#mfTransContainer a, #mfTransLang a {
+	color: cornflowerblue;
+}
+
 table.mfTrans tr:first-child { background: #ccccee; }
 table.mfTrans tr:nth-child(odd) { background: #ddddff; }
 table.mfTrans tr:nth-child(even) { background: #eeeeee; }
