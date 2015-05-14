@@ -230,7 +230,10 @@ Meteor.startup(function() {
       });
     } else {
       log.trace('Creating ' + path.dirname(EXTRACTS_FILE) + ' in app root...');
-      fs.mkdir(dir, saveExtracts);
+      fs.mkdir(dir, function(err) {
+        if (err) throw err;
+        log.trace('Created ' + path.dirname(EXTRACTS_FILE) + ' in app root.')
+      });
     }
   });
 
