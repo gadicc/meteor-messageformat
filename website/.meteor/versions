@@ -56,8 +56,8 @@ mizzao:bootstrap-3@3.3.1_1
 mobile-status-bar@1.0.3
 mongo@1.1.0
 mrt:sp-marked@0.0.2
-msgfmt:core@2.0.0-preview.10
-msgfmt:extract@2.0.0-preview.7
+msgfmt:core@2.0.0-preview.11
+msgfmt:extract@2.0.0-preview.8
 msgfmt:ui@2.0.0-preview.2
 npm-bcrypt@0.7.8_2
 oauth@1.1.4

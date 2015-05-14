@@ -3,7 +3,7 @@
  * a local database.
  */
 
-var EXTRACTS_FILE = 'private/extracts.msgfmt~';
+var EXTRACTS_FILE = 'server/extracts.msgfmt~';
 
 var fs   = Npm.require('fs');
 var path = Npm.require('path');
