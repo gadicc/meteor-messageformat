@@ -143,6 +143,7 @@ mfPkg.addNative = function(strings, meta) {
 
 	} else {
 
+    log.debug('addNative() called');
 		var lastSync = this.mfMeta.findOne('syncExtracts');
 		lastSync = lastSync ? lastSync.mtime : 0;
 

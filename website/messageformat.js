@@ -52,5 +52,4 @@ if (Meteor.isServer) {
         BrowserPolicy.content.disallowEval();
       else
         BrowserPolicy.content.allowEval();
-
 }

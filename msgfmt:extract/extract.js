@@ -3,11 +3,16 @@
  * a local database.
  */
 
+var EXTRACTS_FILE = 'private/extracts.msgfmt~';
+
 var fs   = Npm.require('fs');
 var path = Npm.require('path');
 var walk = Npm.require('walk');
 
 var efiles = mfPkg.mfExtractFiles = new Meteor.Collection('mfExtractFiles');
+
+var relUp = path.join('..','..','..','..','..');
+var extractsFile = path.join.apply(null, [relUp].concat(EXTRACTS_FILE.split('/')));
 
 var toDict = function(array) {
   var out = {};
@@ -33,13 +38,11 @@ var checkForUpdates = function(m, force) {
   log.debug('Retrieved old file info from database (in a fiber) in ' +
     (Date.now() - lastTime) + 'ms');
   lastTime = Date.now();
- 
-  var relUp = path.join('..','..','..','..','..');
 
   var walker  = walk.walk(relUp, {
     followLinks: false,
     filters: [ 
-      /\/\.[^\.]+\//  // skip .directories
+      /\/\.[^\.]+\//  // skip .directories (hidden)
     ]
   });
 
@@ -83,6 +86,7 @@ var checkForUpdates = function(m, force) {
     var newStrings = {};
     var oldStrings = {};
     var nativeStrings = mfPkg.strings[mfPkg.native];
+    var saveData;
 
     for (name in changedFiles) {
       var file = changedFiles[name];
@@ -154,6 +158,16 @@ var checkForUpdates = function(m, force) {
       });
     }
 
+    if (Object.keys(newStrings).length || force) {
+      saveData = JSON.stringify([
+        msgfmt.strings[msgfmt.native],
+        {
+          extractedAt: Date.now(),
+          udpatedAt: max && max.getTime() || msgfmt.meta[msgfmt.native].updatedAt
+        }
+      ]);
+    }
+
     log.debug('Finished mfPkg.addNative in ' + (Date.now() - lastTime) + 'ms');
     lastTime = Date.now();
 
@@ -176,6 +190,13 @@ var checkForUpdates = function(m, force) {
       log.debug('Changed files: ' + _.keys(upserts).join(', '));
     if (Object.keys(oldFilesInfo).length)
       log.debug('Removed files: ' + _.keys(oldFilesInfo).join(', '));
+
+    if (saveData) {
+      log.trace('Writing ' + EXTRACTS_FILE + '...');
+      fs.writeFile(extractsFile, saveData, function() {
+        log.trace('Finished writing ' + EXTRACTS_FILE);
+      });
+    }
   }));
 }
 
@@ -193,11 +214,26 @@ process.on('SIGUSR2', boundCheck);  // Meteor < 1.0.4
 process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
 process.on('message', boundCheck);  // Meteor >= 1.0.4
 
-// No reason to block startup, we can do update gradually in fibers
+// No reason to block startup, we can do update gradually asyncronously
 Meteor.startup(function() {
   if (!msgfmt.extractsLogLevel)
     msgfmt.extractLogLevel = 'trace';
-    log = new Logger('msgfmt:extracts', msgfmt.extractLogLevel);
+  log = new Logger('msgfmt:extracts', msgfmt.extractLogLevel);
+
+  var dir = path.dirname(extractsFile);
+  fs.exists(dir, function(exists) {
+    if (exists) {
+      var triggerFile = extractsFile.replace(/~$/,'');
+      fs.exists(triggerFile, function(exists) {
+        if (!exists)
+          fs.writeFile(triggerFile, '# Used by ' + EXTRACTS_FILE + ', do not delete.\n');
+      });
+    } else {
+      log.trace('Creating ' + path.dirname(EXTRACTS_FILE) + ' in app root...');
+      fs.mkdir(dir, saveExtracts);
+    }
+  });
+
   checkForUpdates();
 });
 
