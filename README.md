@@ -12,6 +12,14 @@ For full info, docs and examples, see the
 **THIS IS AN IN-DEVELOPMENT RELEASE.  YOU SHOULD NOT BE USING IT UNLESS YOU KNOW
 WHAT YOU'RE DOING.  SEE THE VERY END OF THIS DOCUMENT FOR SOME MORE HELP**.
 
+## Features
+
+* Super powerful language use via the industry gold standard, MessageFormat
+* Super easy translation via automatic string extraction and translation UI
+* Super easy integration via automatic locale set on moment, parsley, etc
+* Super fast loading, caching, etc.  Works with BrowserPolicy, appcache, etc.
+* Offline support (including changing of languages while offline)
+
 ## Quick Start
 
 The most common configuration involves:
