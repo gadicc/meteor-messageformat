@@ -19,7 +19,8 @@ Package.onUse(function (api) {
     'ddp',
     'mongo@1.0.4',
     'meteorhacks:inject-initial@1.0.2',
-    'jag:pince@0.0.6'
+    'jag:pince@0.0.6',
+    'raix:eventemitter@0.1.2'
   ], [ 'client', 'server' ]);
 
   // client deps

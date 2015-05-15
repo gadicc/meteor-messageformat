@@ -77,6 +77,29 @@ msgfmt.init('en', {
 
 `Logger.setLevel('msgfmt', 'trace');`
 
+### Events
+
+```js
+msgfmt.on('localeChange', function(locale) {
+  doSomethingWith(locale);
+});
+```
+
+or
+
+```
+Tracker.autorun(function() {
+  doSomethingWith(msgfmt.locale());
+});
+```
+
+### Integrating with other packages
+
+The following calls are done automatically if the package exists:
+
+* `moment.locale()`
+* `ParsleyValidator.setLocale()`
+
 ### Reactivity
 
 All `{{mf ...}}` strings are reactive and depend on the locale.  When
@@ -95,6 +118,10 @@ regional settings.  e.g. locale `en_US` has a lang of `en`.
 current language, either `ltr` or `rtl`.  By default,
 `msgfmt.setBodyDir = true` and we'll change set the `dir` attribute on
 your page's `body` tag (which you can leverage with appropriate CSS rules).
+
+* `msgfmt.loading()` is a reactive dependency which returns the currently
+loading locale if `msgfmt.waitOnLoaded = true`, or returns `false` when
+everything is loaded.  Useful for UI hints to the user.
 
 ### Differences from v0
 

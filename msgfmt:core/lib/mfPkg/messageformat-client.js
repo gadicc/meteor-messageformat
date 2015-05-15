@@ -244,10 +244,6 @@ function localeReady(locale, dontStore) {
   }
   */
 
-  // if momentjs is used on the client, change the locale on moment globally
-  if (typeof moment === 'function')
-    moment.locale(locale);
-
   // backcompat
   Session.set('locale', locale);
 
@@ -258,6 +254,8 @@ function localeReady(locale, dontStore) {
     msgfmt._loading.set(false);
     log.debug('loading() set to false');
   }
+
+  msgfmt._Event.emit('localeChange', locale);
 
   // Lang data was changed
   if (!dontStore) {
@@ -278,6 +276,9 @@ function localeReady(locale, dontStore) {
  */
 mfPkg.setLocale = function(locale, dontStore) {
   var lang, dir;
+
+  if (typeof locale !== 'string')
+    return log.debug('Ignoring setLocale(' + locale + '), expecting a string...');
 
   // If "en_US" doesn't exist, fallback to "en" and then native
   // Not really that useful since user usually picks lang from a list
@@ -464,6 +465,17 @@ if (locale) {
 } else {
   mfPkg.setLocale(msgfmt.native);
 }
+
+var integrations = {
+            'moment': 'locale',
+  'ParsleyValidator': 'setLocale'
+};
+
+msgfmt.on('localeChange', function(locale) {
+  for (var name in integrations)
+    if (window[name] && window[name][integrations[name]])
+      window[name][integrations[name]](locale);
+});
 
 // backcompat with v0, auto call setLocale() on Session.set('locale')
 Tracker.autorun(function() {

@@ -156,3 +156,9 @@ mf = function(key, params, message, locale) {
     
     return cmessage;
 }
+
+// Could make this completely private but useful for plugins to use
+var Event = msgfmt._Event = new EventEmitter();
+_.each(['on','once','addListener','removeListener','removeAllListeners'], function(method) {
+    msgfmt[method] = _.bind(Event[method], Event);
+});
