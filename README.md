@@ -183,3 +183,17 @@ store the locale in Meteor.user().locale and sync across multiple instances.
   * msgfmt:extract
 * Run Meteor and check that everything is working.
 
+## Underlying Library Change
+
+In v0 we used @SlexAxton's [MessageFormat.js](https://github.com/SlexAxton/messageformat.js/),
+but switched in v2 to the [FormatJS](http://formatjs.io/) project.  MessageFormat.js is
+more focused as a server side library with precompilation.  We initially offered the
+precompilation feature as an option (which also solved a longstanding issue with
+BrowserPolicy's disallowUnsafeEval), but resulted in much more data needing to be sent
+to the client (i.e. slower loading times), and needing to maintain code to handle both
+types of sending in different situations.  FormatJS was created using some common code
+for similar reasons, and
+[is now collaborating](https://github.com/yahoo/intl-messageformat/issues/72) with
+Alex for shared code on both projects (particularly message parsing).  So ultimately,
+no change is needed on user strings and FormatJS was a better bit for this type of
+project and what we want to offer our users.
