@@ -23,4 +23,4 @@ gadicohen:pkgconfig
 #appcache
 
 # if this package is used, app code sets disallowEval
-browser-policy
+#browser-policy

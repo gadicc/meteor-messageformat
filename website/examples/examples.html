@@ -1,503 +1,543 @@
 <template name="examplesPage">
-	<div class="container" id="examples">
+  <div class="container" id="examples">
 
-		<h1>{{mf 'examples_header' 'Meteor MessageFormat examples'}}</h1>
+    <h1>{{mf 'examples_header' 'Meteor MessageFormat examples'}}</h1>
 
-		<p>The examples below rely purely on Session variables, because they allow for
-			easy demonstration on the client-side.  However, the results from a
-			<code>collection.find()</code> work just as well, and remain reactive.</p>
+    <p>The examples below rely purely on Session variables, because they allow for
+      easy demonstration on the client-side.  However, the results from a
+      <code>collection.find()</code> work just as well, and remain reactive.</p>
 
-		<div id="TOC">
-			<div>Contents</div>
-			<ol>
-					<li><a href="#simple_use">{{mf 'simple_use' 'Simple Use'}}</a></li>
-					<ol>
-							<li><a href="#simple_string">{{mf 'simple_string' 'Simple string translation'}}</a></li>
-							<li><a href="#simple_variable">{{mf 'simple_variable' 'String with a static variable'}}</a></li>
-							<li><a href="#simple_helper">{{mf 'simple_helper' 'String with a variable from a helper function'}}</a></li>
-					</ol>
-					<li><a href="#plural_extension">{{mf 'plural_extension' 'Plural Extension'}}</a></li>
-					<ol>
-							<li><a href="#string_plural">{{mf 'string_plural' 'String with a plural'}}</a></li>
-							<li><a href="#plural_offset">{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</a></li>
-					</ol>
-					<li><a href="#selectformat">{{mf 'selectformat' 'SelectFormat'}}</a></li>
-					<ol>
-							<li><a href="#string_gender">{{mf 'string_gender' 'String with a gender'}}</a></li>
-					</ol>
-					<li><a href="#numbersAndDates">{{mf 'numbersAndDates' 'Numbers and Dates'}}</a></li>
-					<ol>
-							<li><a href="#format_number">{{mf 'format_number' 'Number Formatting'}}</a></li>
-							<li><a href="#format_date">{{mf 'format_date' 'Date Formatting'}}</a></li>
-					</ol>					<li><a href="#mixing_it_up">{{mf 'mixing_it_up' 'Mixing it Up'}}</a></li>
-					<ol>
-							<li><a href="#string_gender_plural">{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</a></li>
-					</ol>
-			</ol>
-		</div><!-- TOC -->
+    <div id="TOC">
+      <div>Contents</div>
+      <ol>
+        <li><a href="#simple_use">{{mf 'simple_use' 'Simple Use'}}</a></li>
+        <ol>
+          <li><a href="#simple_string">{{mf 'simple_string' 'Simple string translation'}}</a></li>
+          <li><a href="#simple_variable">{{mf 'simple_variable' 'String with a static variable'}}</a></li>
+          <li><a href="#simple_helper">{{mf 'simple_helper' 'String with a variable from a helper function'}}</a></li>
+        </ol>
 
-		{{> examples}}
-	</div><!-- container -->
+        <li><a href="#plural_extension">{{mf 'plural_extension' 'Plural Extension'}}</a></li>
+        <ol>
+          <li><a href="#string_plural">{{mf 'string_plural' 'String with a plural'}}</a></li>
+          <li><a href="#plural_offset">{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</a></li>
+        </ol>
+
+        <li><a href="#selectformat">{{mf 'selectformat' 'SelectFormat'}}</a></li>
+        <ol>
+          <li><a href="#string_gender">{{mf 'string_gender' 'String with a gender'}}</a></li>
+        </ol>
+
+        <li><a href="#numbersAndDates">{{mf 'numbersAndDates' 'Numbers and Dates'}}</a></li>
+        <ol>
+          <li><a href="#format_number">{{mf 'format_number' 'Number Formatting'}}</a></li>
+          <li><a href="#format_date">{{mf 'format_date' 'Date Formatting'}}</a></li>
+          <li><a href="#format_time">{{mf 'format_time' 'Time Formatting'}}</a></li>
+        </ol>
+
+        <li><a href="#mixing_it_up">{{mf 'mixing_it_up' 'Mixing it Up'}}</a></li>
+        <ol>
+          <li><a href="#string_gender_plural">{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</a></li>
+        </ol>
+      </ol>
+    </div><!-- TOC -->
+
+    {{> examples}}
+  </div><!-- container -->
 </template>
 
 <template name="examples">
-		<a name="simple_use"></a>
-		<h2>{{mf 'simple_use' 'Simple Use'}}</h2>
+    <a name="simple_use"></a>
+    <h2>{{mf 'simple_use' 'Simple Use'}}</h2>
 
-		<a name="simple_string"></a>
-		<h3>{{mf 'simple_string' 'Simple string translation'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{dstache}}mf 'i_am_str' 'I am a string.'}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{mf 'i_am_str' 'I am a string.'}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		<!--
-		{{#example2}}
-			{{mf 'i_am_str' 'I am a string.' example=1}}
-		{{/example2}}
-		-->
-		{{> langButtons}}	
+    <a name="simple_string"></a>
+    <h3>{{mf 'simple_string' 'Simple string translation'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|mf 'i_am_str' 'I am a string.'}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{mf 'i_am_str' 'I am a string.'}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!--
+    {{#example2}}
+      {{mf 'i_am_str' 'I am a string.' example=1}}
+    {{/example2}}
+    -->
+    {{> langButtons}} 
 
-		<a name="simple_variable"></a>
-		<h3>{{mf 'simple_variable' 'String with a static variable'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{dstache}}mf 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{mf 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		<!--
-		{{#example2}}
-			{{mf 'hello_name' 'Hello, {NAME}.' NAME='Gadi' example=1}}
-		{{/example2}}
-		-->
-		{{> langButtons}}	
+    <a name="simple_variable"></a>
+    <h3>{{mf 'simple_variable' 'String with a static variable'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|mf 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{mf 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!--
+    {{#example2}}
+      {{mf 'hello_name' 'Hello, {NAME}.' NAME='Gadi' example=1}}
+    {{/example2}}
+    -->
+    {{> langButtons}} 
 
-		<a name="simple_helper"></a>
-		<h3>{{mf 'simple_helper' 'String with a variable from a helper function'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{dstache}}#mf KEY='hello_name' NAME=getName}}
-								Hello, {NAME}.
-							{{dstache}}/mf}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'javascript' 'JavaScript'}}:</td>
-					<td>
-						{{#sh_highlight lang='js'}}
-							Template.main.getName = function() {
-								var lang = msgfmt.lang(); // reactive
-								return lang == "he" ? "גדי" : "Gadi";
-							}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{#mf KEY='hello_name' NAME=getName}}
-							Hello, {NAME}.
-						{{/mf}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		<!--
-		{{#example2}}
-			{{#mf KEY='hello_name2' NAME=getName example=1}}
-				Hello, {NAME}.
-			{{/mf}}		
-		{{/example2}}
-		-->
-		{{> langButtons}}
+    <a name="simple_helper"></a>
+    <h3>{{mf 'simple_helper' 'String with a variable from a helper function'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|#mf KEY='hello_name' NAME=getName}}
+                Hello, {NAME}.
+              {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.main.getName = function() {
+                var lang = msgfmt.lang(); // reactive
+                return lang == "he" ? "גדי" : "Gadi";
+              }
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY='hello_name' NAME=getName}}
+              Hello, {NAME}.
+            {{/mf}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!--
+    {{#example2}}
+      {{#mf KEY='hello_name2' NAME=getName example=1}}
+        Hello, {NAME}.
+      {{/mf}}   
+    {{/example2}}
+    -->
+    {{> langButtons}}
 
-		<a name="plural_extension"></a>
-		<h2>{{mf 'plural_extension' 'Plural Extension'}}</h2>
+    <a name="plural_extension"></a>
+    <h2>{{mf 'plural_extension' 'Plural Extension'}}</h2>
 
-		<a name="string_plural"></a>
-		<h3>{{mf 'string_plural' 'String with a plural'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{dstache}}#mf KEY='there_are_widgets' NUM=getNum}}
-								There {NUM, plural,
-								     =0 {are no widgets}
-							    	one {is one widget}
-							  	other {are # widgets}
-								}.
-							{{dstache}}/mf}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'javascript' 'JavaScript'}}:</td>
-					<td>
-						{{#sh_highlight lang='js'}}
-							Template.main.getNum = function() {
-								return Session.get("NUM");
-							}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{#mf KEY='there_are_widgets' NUM=getNum}}
-							There {NUM, plural,
-							     =0 {are no widgets}
-						    	one {is one widget}
-						  	other {are # widgets}
-							}.
-						{{/mf}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		{{> langButtons}}<br />
-		{{> numButtons}}
+    <a name="string_plural"></a>
+    <h3>{{mf 'string_plural' 'String with a plural'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|#mf KEY='there_are_widgets' NUM=getNum}}
+                There {NUM, plural,
+                     =0 {are no widgets}
+                    one {is one widget}
+                  other {are # widgets}
+                }.
+              {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.main.getNum = function() {
+                return Session.get("NUM");
+              }
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY='there_are_widgets' NUM=getNum}}
+              There {NUM, plural,
+                   =0 {are no widgets}
+                  one {is one widget}
+                other {are # widgets}
+              }.
+            {{/mf}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}<br />
+    {{> numButtons}}
 
-		<a name='plural_offset'></a>
-		<h3>{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{dstache}}#mf KEY="added_to_profile" NUM_ADDS=getNum}}
-								You {NUM_ADDS, plural, offset:1
-								    =0 {didnt add this to your profile}
-								    =1 {added this to your profile}
-								   one {and one other person added this to their profile}
-								 other {and # others added this to their profiles}}.
-							{{dstache}}/mf}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'javascript' 'JavaScript'}}:</td>
-					<td>
-						{{#sh_highlight lang='js'}}
-							Template.main.getNum = function() {
-								return Session.get("NUM");
-							}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{#mf KEY="added_to_profile" NUM_ADDS=getNum}}
-							You {NUM_ADDS, plural, offset:1
-							    =0 {didnt add this to your profile}
-							    =1 {added this to your profile}
-							   one {and one other person added this to their profile}
-							 other {and # others added this to their profiles}}.
-					 	{{/mf}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		{{> langButtons}}<br />
-		{{> numButtons}}
+    <a name='plural_offset'></a>
+    <h3>{{mf 'plural_offset' 'Plural Offset ("and one other")'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|#mf KEY="added_to_profile" NUM_ADDS=getNum}}
+                You {NUM_ADDS, plural, offset:1
+                    =0 {didnt add this to your profile}
+                    =1 {added this to your profile}
+                   one {and one other person added this to their profile}
+                 other {and # others added this to their profiles}}.
+              {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.main.getNum = function() {
+                return Session.get("NUM");
+              }
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY="added_to_profile" NUM_ADDS=getNum}}
+              You {NUM_ADDS, plural, offset:1
+                  =0 {didnt add this to your profile}
+                  =1 {added this to your profile}
+                 one {and one other person added this to their profile}
+               other {and # others added this to their profiles}}.
+            {{/mf}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}<br />
+    {{> numButtons}}
 
-		<a name='selectformat'></a>
-		<h2>{{mf 'selectformat' 'SelectFormat'}}</h2>
+    <a name='selectformat'></a>
+    <h2>{{mf 'selectformat' 'SelectFormat'}}</h2>
 
-		<a name='string_gender'></a>
-		<h3>{{mf 'string_gender' 'String with a gender'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{dstache}}#mf KEY='select_gender' GENDER=getGender}}
-								{GENDER, select,
-										male {He}
-									female {She}
-									 other {They}} liked this.
-							{{dstache}}/mf}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'javascript' 'JavaScript'}}:</td>
-					<td>
-						{{#sh_highlight lang='js'}}
-						  Template.main.getGender = function() {
-						    return Session.get('GENDER');
-						  }
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{#mf KEY='select_gender' GENDER=getGender}}
-							{GENDER, select,
-									male {He}
-								female {She}
-								 other {They}} liked this.
-					 	{{/mf}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		{{> langButtons}}<br />
-		{{> genderButtons}}
+    <a name='string_gender'></a>
+    <h3>{{mf 'string_gender' 'String with a gender'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|#mf KEY='select_gender' GENDER=getGender}}
+                {GENDER, select,
+                    male {He}
+                  female {She}
+                   other {They}} liked this.
+              {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.main.getGender = function() {
+                return Session.get('GENDER');
+              }
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY='select_gender' GENDER=getGender}}
+              {GENDER, select,
+                  male {He}
+                female {She}
+                 other {They}} liked this.
+            {{/mf}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}<br />
+    {{> genderButtons}}
 
-		<a name='numbersAndDates'></a>
-		<h2>{{mf 'numbersAndDates'}}</h2>
+    <a name='numbersAndDates'></a>
+    <h2>{{mf 'numbersAndDates'}}</h2>
 
-		<a name='format_number'></a>
-		<h3>{{mf 'format_number'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{|#mf KEY='num_default' NUM=getNum}}
-								{NUM, number}
-						 	{{|/mf}}
-						 	<br>
-							{{|#mf KEY='num_usd' NUM=getNum}}
-								{NUM, number, ILS}
-						 	{{|/mf}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'javascript' 'JavaScript'}}:</td>
-					<td>
-						{{#sh_highlight lang='js'}}
-							Template.main.getNum = function() {
-								return Session.get("NUM");
-							}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{#mf KEY='num_default' NUM=getNum}}
-							{NUM, number}
-					 	{{/mf}}
-					 	<br>
-						{{#mf KEY='num_usd' NUM=getNum}}
-							{NUM, number, ILS}
-					 	{{/mf}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		{{> langButtons}}<br>
-		{{> numButtons}}
+    <a name='format_number'></a>
+    <h3>{{mf 'format_number'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|mf 'number_default' 'Default: {NUM, number}' NUM=getNum}}<br>
+              {{|mf 'number_decimal' 'Decimal: {NUM, number, decimal}' NUM=getNum}}<br>
+              {{|mf 'number_percent' 'Percent: {NUM, number, percent}' NUM=getNum}}<br>
+              {{|mf 'number_currency' 'Currency: {NUM, number, ILS}' NUM=getNum}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.main.getNum = function() {
+                return Session.get("NUM");
+              }
+              msgfmt.addFormat('number', { USD: { style: 'currency', currency: 'USD' } });
+              msgfmt.addCurrencyShortcut('ILS');
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY='number_note' NUM=420000}}
+              Note the group separator for large numbers, e.g. {NUM, number}
+            {{/mf}}<br>
+            {{mf 'number_default' 'Default: {NUM, number}' NUM=getNum}}<br>
+            {{mf 'number_decimal' 'Decimal: {NUM, number, decimal}' NUM=getNum}}<br>
+            {{mf 'number_percent' 'Percent: {NUM, number, percent}' NUM=getNum}}<br>
+            {{mf 'number_currency' 'Currency: {NUM, number, ILS}' NUM=getNum}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}<br>
+    {{> numButtons}}
 
-		<a name='format_date'></a>
-		<h3>{{mf 'format_date'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{|#mf KEY='num_default' NUM=getNum}}
-								{NUM, number}
-						 	{{|/mf}}
-						 	<br>
-							{{|#mf KEY='num_usd' NUM=getNum}}
-								{NUM, number, ILS}
-						 	{{|/mf}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'javascript' 'JavaScript'}}:</td>
-					<td>
-						{{#sh_highlight lang='js'}}
-							Template.main.getNum = function() {
-								return Session.get("NUM");
-							}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{#mf KEY='date_default' DATE=getDate}}
-							{DATE, date}
-					 	{{/mf}}
-					 	<br>
-						{{#mf KEY='date_usd' DATE=getDate}}
-							{DATE, relative}
-					 	{{/mf}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		{{> langButtons}}
+    <a name='format_date'></a>
+    <h3>{{mf 'format_date'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|mf 'date_default' 'Default: {DATE, date}' DATE=getDate}}<br>
+              {{|mf 'date_short' 'Short: {DATE, date, short}' DATE=getDate}}<br>
+              {{|mf 'date_medium' 'Medium: {DATE, date, medium}' DATE=getDate}}<br>
+              {{|mf 'date_long' 'Long: {DATE, date, long}' DATE=getDate}}<br>
+              {{|mf 'date_full' 'Full: {DATE, date, full}' DATE=getDate}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.main.getDate = function() {
+                return new Date(Date.now() - 500000);
+              }
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{mf 'date_default' 'Default: {DATE, date}' DATE=getDate}}<br>
+            {{mf 'date_short' 'Short: {DATE, date, short}' DATE=getDate}}<br>
+            {{mf 'date_medium' 'Medium: {DATE, date, medium}' DATE=getDate}}<br>
+            {{mf 'date_long' 'Long: {DATE, date, long}' DATE=getDate}}<br>
+            {{mf 'date_full' 'Full: {DATE, date, full}' DATE=getDate}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}
 
-		<h3>Other examples</h3>
-		Let me know if you think of any :)
+    <a name='format_time'></a>
+    <h3>{{mf 'format_time'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|mf 'time_default' 'Default: {DATE, time}' DATE=getDate}}<br>
+              {{|mf 'time_short' 'Short: {DATE, time, short}' DATE=getDate}}<br>
+              {{|mf 'time_medium' 'Medium: {DATE, time, medium}' DATE=getDate}}<br>
+              {{|mf 'time_long' 'Long: {DATE, time, long}' DATE=getDate}}<br>
+              {{|mf 'time_full' 'Full: {DATE, time, full}' DATE=getDate}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.main.getDate = function() {
+                return new Date(Date.now() - 500000);
+              }
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{mf 'time_default' 'Default: {DATE, time}' DATE=getDate}}<br>
+            {{mf 'time_short' 'Short: {DATE, time, short}' DATE=getDate}}<br>
+            {{mf 'time_medium' 'Medium: {DATE, time, medium}' DATE=getDate}}<br>
+            {{mf 'time_long' 'Long: {DATE, time, long}' DATE=getDate}}<br>
+            {{mf 'time_full' 'Full: {DATE, time, full}' DATE=getDate}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}
 
-		<a name="mixing_it_up"></a>
-		<h2>{{mf 'mixing_it_up' 'Mixing it Up'}}</h2>
+    <h3>Other examples</h3>
+    Let me know if you think of any :)
 
-		<h3>{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</h3>
-		<div class="exampleWrapper">
-			<table class="example">
-				<tr>
-					<td>{{mf 'template' 'Template'}}:</td>
-					<td>
-						{{#sh_highlight lang='html'}}
-							{{dstache}}#mf KEY='gender_plural' GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2}}
-						   {GENDER, select,
-						          male {He}
-						        female {She}
-						         other {They}
-						    } found {NUM_RESULTS, plural,
-						            =0 {no results}
-						           one {1 result}
-						         other {# results}
-						    } in {NUM_CATS, plural,
-						           one {1 category}
-						         other {# categories}
-						    }.
-							{{dstache}}/mf}}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'javascript' 'JavaScript'}}:</td>
-					<td>
-						{{#sh_highlight lang='js'}}
-						  Template.main.getGender = function() {
-						    return Session.get("GENDER");
-						  }
-							Template.main.getNum = function() {
-								return Session.get("NUM");
-							}
-							Template.main.getNum2 = function() {
-								return Session.get("NUM2");
-							}
-						{{/sh_highlight}}
-					</td>
-				</tr><tr>
-					<td>{{mf 'result' 'Result'}}:</td>
-					<td>
-						{{#mf KEY='gender_plural' GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2}}
-					   {GENDER, select,
-					          male {He}
-					        female {She}
-					         other {They}
-					    } found {NUM_RESULTS, plural,
-					            =0 {no results}
-					           one {1 result}
-					         other {# results}
-					    } in {NUM_CATS, plural,
-					           one {1 category}
-					         other {# categories}
-					    }.
-				    {{/mf}}
-					</td>
-				</tr>
-			</table>
-		</div>
-		{{> langButtons}}<br />
-		{{> genderButtons}}<br />
-		{{> numButtons}}<br />
-		{{> numButtons2}}
+    <a name="mixing_it_up"></a>
+    <h2>{{mf 'mixing_it_up' 'Mixing it Up'}}</h2>
+
+    <h3>{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|#mf KEY='gender_plural' GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2}}
+               {GENDER, select,
+                      male {He}
+                    female {She}
+                     other {They}
+                } found {NUM_RESULTS, plural,
+                        =0 {no results}
+                       one {1 result}
+                     other {# results}
+                } in {NUM_CATS, plural,
+                       one {1 category}
+                     other {# categories}
+                }.
+              {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.main.getGender = function() {
+                return Session.get("GENDER");
+              }
+              Template.main.getNum = function() {
+                return Session.get("NUM");
+              }
+              Template.main.getNum2 = function() {
+                return Session.get("NUM2");
+              }
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY='gender_plural' GENDER=getGender NUM_RESULTS=getNum NUM_CATS=getNum2}}
+             {GENDER, select,
+                    male {He}
+                  female {She}
+                   other {They}
+              } found {NUM_RESULTS, plural,
+                      =0 {no results}
+                     one {1 result}
+                   other {# results}
+              } in {NUM_CATS, plural,
+                     one {1 category}
+                   other {# categories}
+              }.
+            {{/mf}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}<br />
+    {{> genderButtons}}<br />
+    {{> numButtons}}<br />
+    {{> numButtons2}}
 </template>
 
 
 <template name="sh_origMfCall">{{helper UI.contentBlock}}</template>
 
 <template name="example2">
-	<div class="exampleWrapper">
-		<table class="example">
-		<tbody>
+  <div class="exampleWrapper">
+    <table class="example">
+    <tbody>
 
-			<tr>
-				<td>
-					{{mf 'template' 'Template'}}:
-				</td>
-				<td>
-					{{#sh_origMfCall}}{{> UI.contentBlock}}{{/sh_origMfCall}}
-				</td>
-			</tr>
+      <tr>
+        <td>
+          {{mf 'template' 'Template'}}:
+        </td>
+        <td>
+          {{#sh_origMfCall}}{{> UI.contentBlock}}{{/sh_origMfCall}}
+        </td>
+      </tr>
 
-			{{#if UI.elseBlock}}
-			<tr>
-				<td>
-					{{mf 'javascript' 'JavaScript'}}:
-				</td>
-				<td>
-					{{#sh_highlight lang='js'}}{{> UI.elseBlock}}{{/sh_highlight}}
-				</td>
-			</tr>
-			{{/if}}
+      {{#if UI.elseBlock}}
+      <tr>
+        <td>
+          {{mf 'javascript' 'JavaScript'}}:
+        </td>
+        <td>
+          {{#sh_highlight lang='js'}}{{> UI.elseBlock}}{{/sh_highlight}}
+        </td>
+      </tr>
+      {{/if}}
 
-			<tr>
-				<td>
-					{{mf 'result' 'Result'}}:
-				</td>
-				<td>
-					{{#sh_highlight lang='html'}}{{> UI.contentBlock}}{{/sh_highlight}}
-				</td>
-			</tr>
+      <tr>
+        <td>
+          {{mf 'result' 'Result'}}:
+        </td>
+        <td>
+          {{#sh_highlight lang='html'}}{{> UI.contentBlock}}{{/sh_highlight}}
+        </td>
+      </tr>
 
-		</tbody>
-		</table>
-	</div>
+    </tbody>
+    </table>
+  </div>
 </template>
 
 <template name="langButtons">
-	<button class="{{#if isLocale 'en'}}selected{{/if}}" value="en">msgfmt.setLocale('en');</button>
-	<button class="{{#if isLocale 'tr'}}selected{{/if}}" value="tr">msgfmt.setLocale('tr');</button>
-	<button class="{{#if isLocale 'he'}}selected{{/if}}" value="he">msgfmt.setLocale('he');</button>
+  <button class="{{#if isLocale 'en'}}selected{{/if}}" value="en">msgfmt.setLocale('en');</button>
+  <button class="{{#if isLocale 'tr'}}selected{{/if}}" value="tr">msgfmt.setLocale('tr');</button>
+  <button class="{{#if isLocale 'he'}}selected{{/if}}" value="he">msgfmt.setLocale('he');</button>
 </template>
 
 <template name="numButtons">
-	<button class="{{#if isNum 0}}selected{{/if}}" value="0">Session.set('NUM', 0);</button>
-	<button class="{{#if isNum 1}}selected{{/if}}" value="1">Session.set('NUM', 1);</button>
-	<button class="{{#if isNum 2}}selected{{/if}}" value="2">Session.set('NUM', 2);</button>
-	<button class="{{#if isNum 3}}selected{{/if}}" value="3">Session.set('NUM', 3);</button>
-	<button class="{{#if isNum 10000}}selected{{/if}}" value="10000">Session.set('NUM', 10000);</button>
+  <button class="{{#if isNum 0}}selected{{/if}}" value="0">Session.set('NUM', 0);</button>
+  <button class="{{#if isNum 1}}selected{{/if}}" value="1">Session.set('NUM', 1);</button>
+  <button class="{{#if isNum 1.5}}selected{{/if}}" value="1.5">Session.set('NUM', 1.5);</button>
+  <button class="{{#if isNum 2}}selected{{/if}}" value="2">Session.set('NUM', 2);</button>
+  <button class="{{#if isNum 3}}selected{{/if}}" value="3">Session.set('NUM', 3);</button>
+  <button class="{{#if isNum 10000}}selected{{/if}}" value="10000">Session.set('NUM', 10000);</button>
 </template>
 
 <template name="numButtons2">
-	<button class="{{#if isNum 0}}selected{{/if}}" value="0">Session.set('NUM2', 0);</button>
-	<button class="{{#if isNum 1}}selected{{/if}}" value="1">Session.set('NUM2', 1);</button>
-	<button class="{{#if isNum 2}}selected{{/if}}" value="2">Session.set('NUM2', 2);</button>
-	<button class="{{#if isNum 3}}selected{{/if}}" value="3">Session.set('NUM2', 3);</button>
-	<button class="{{#if isNum 4}}selected{{/if}}" value="4">Session.set('NUM2', 4);</button>
+  <button class="{{#if isNum 0}}selected{{/if}}" value="0">Session.set('NUM2', 0);</button>
+  <button class="{{#if isNum 1}}selected{{/if}}" value="1">Session.set('NUM2', 1);</button>
+  <button class="{{#if isNum 2}}selected{{/if}}" value="2">Session.set('NUM2', 2);</button>
+  <button class="{{#if isNum 3}}selected{{/if}}" value="3">Session.set('NUM2', 3);</button>
+  <button class="{{#if isNum 4}}selected{{/if}}" value="4">Session.set('NUM2', 4);</button>
 </template>
 
 <template name="genderButtons">
-	<button class="{{#if isGender "male"}}selected{{/if}}" value="male">Session.set('GENDER', 'male');</button>
-	<button class="{{#if isGender "female"}}selected{{/if}}" value="female">Session.set('GENDER', 'female');</button>
-	<button class="{{#if isGender "other"}}selected{{/if}}" value="other">Session.set('GENDER', 'other');</button>
+  <button class="{{#if isGender "male"}}selected{{/if}}" value="male">Session.set('GENDER', 'male');</button>
+  <button class="{{#if isGender "female"}}selected{{/if}}" value="female">Session.set('GENDER', 'female');</button>
+  <button class="{{#if isGender "other"}}selected{{/if}}" value="other">Session.set('GENDER', 'other');</button>
 </template>
 
 <template name="test">
