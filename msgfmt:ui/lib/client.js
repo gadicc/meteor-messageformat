@@ -167,6 +167,19 @@ Package['iron:router'].Router.map(function() {
           out[str.key].fuzzy = true;
       });
       data.strings = _.values(out);
+      data.strings.sort(function(a, b) {
+        if (!a.trans && b.trans)
+          return -1;
+        else if (a.trans && !b.trans)
+          return 1;
+
+        if (!a.fuzzy && b.fuzzy)
+          return -1;
+        else if (b.fuzzy && !a.fuzzy)
+          return 1;
+
+        return a.text - b.text;
+      });
 
       return data;
     }
