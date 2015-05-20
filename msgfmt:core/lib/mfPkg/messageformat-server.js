@@ -10,14 +10,6 @@ function checkLocaleMetaExists(locale) {
     if (!mfPkg[key][locale])
       mfPkg[key][locale] = {};
   });
-
-  if (!mfPkg.objects[locale]) {
-    try {
-      mfPkg.objects[locale] = new MessageFormat(locale);
-    } catch (err) {
-      log.warn(err);
-    }
-  }
 }
 
 // Load each string and update the database if necessary
@@ -310,10 +302,6 @@ var msgfmtClientData = function(req) {
     locales: {}
   };
 
-  // don't include boolean unless true
-  if (sendCompiled)
-    out.sendCompiled = sendCompiled;
-
   _.each(injectableOptions, function(key) {
     if (msgfmt[key] !== undefined)
       out[key] = msgfmt[key];
@@ -362,70 +350,6 @@ function localeStringsToDictionary(res, locale, mtime, flags) {
     JSON.stringify(out) + ');');
 }
 
-/*
- * TODO
- * - optimize / cache on server (use redis if available)
- * - client side caching (for online, disallowInline)
- * - manifest (for offline/cappcache, disallowInline)
- */
-function localeStringsCompiled(res, locale, mtime, flags) {
-  var key, out = 'Package["msgfmt:core"].msgfmt.fromServer({';
-  res.setHeader("Content-Type", "application/javascript");
-  res.writeHead(200);
-
-  // TODO lastUpdatedAt
-
-  if (locale === 'all') {
-    for (locale in mfPkg.compiled) {
-      out += '"'+locale+'":{';
-      for (key in mfPkg.compiled[locale])
-        if (mfPkg.strings[locale][key].mtime > mtime)
-          out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
-      out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + '},';
-    }
-    locale = 'all';
-  } else if (mfPkg.compiled[locale]) {
-    for (key in mfPkg.compiled[locale])
-      if (mfPkg.strings[locale][key].mtime > mtime)
-        out += '"'+key+'":' + mfPkg.compiled[locale][key].toString() + ',';
-    out += '_updatedAt:' + mfPkg.meta[locale].updatedAt + ',';
-  }
-  out += '_request:"' + locale + '/' + mtime + '"});';
-  res.end(out);
-}
-
-// Only sure about this after all app server code has run
-var sendCompiled = false, localeFunction = localeStringsToDictionary;
-//sendCompiled = true;
-mfPkg._sendCompiledCheck = function() {
-  if (Package['browser-policy-common']) {
-    var locale, key, mf, csp;
-    var BrowserPolicy = Package['browser-policy-common'].BrowserPolicy;
-    //csp = BrowserPolicy.content._constructCsp();
-    //sendCompiled = !csp.match(/'unsafe-eval'/);
-    sendCompiled = !BrowserPolicy.content
-      ._keywordAllowed("script-src", "'unsafe-eval'");
-
-    if (sendCompiled) {
-      localeFunction = localeStringsCompiled;
-
-      // XXX TODO need to keep up-to-date
-      for (locale in msgfmt.strings) {
-        mf = mfPkg.objects[locale];
-        if (!mf) {
-            mf = mfPkg.objects[locale] = new MessageFormat(locale);
-            mfPkg.compiled[locale] = {};
-        }
-
-        for (key in msgfmt.strings[locale])
-          msgfmt.compiled[locale][key] = mf.compile(msgfmt.strings[locale][key].text);
-      }
-    } else
-      localeFunction = localeStringsToDictionary;
-  }
-};
-//Meteor.startup(mfPkg._sendCompiledCheck);
-
 Meteor.startup(function() {
   if (!msgfmt.initted)
     throw new Error("[msgfmt] Installed but msgfmt.init('en') etc was never called.");
@@ -438,7 +362,7 @@ WebApp.connectHandlers.use(function(req, res, next) {
     var locale = rest[0];
     var mtime = rest[1] || 0;
     var flags = rest.slice(2);
-    localeFunction(res, locale, mtime, flags);
+    localeStringsToDictionary(res, locale, mtime, flags);
     return;
   }
   next();
@@ -454,20 +378,5 @@ log.trace('Finished retrieval in ' + (Date.now() - startTime) + ' ms');
 _.each(allStrings, function(str) {
   checkLocaleMetaExists(str.lang);
   msgfmt.strings[str.lang][str.key] = str;
-
-  if (sendCompiled) {
-    if (str.compiled) {
-      eval('msgfmt.compiled[str.lang][str.key] = ' + str.compiled);
-    } else {
-      try {
-        msgfmt.compiled[str.lang][str.key] = msgfmt.objects[str.lang].compile(str.text);
-        // TODO
-        //str.compiled = msgfmt.compiled[str.lang][str.key].toString();
-        // save to database, udpate compiled on new entries, etc
-      } catch (err) {
-        log.warn(err);      
-      }
-    }
-  }
 });
 delete allStrings;

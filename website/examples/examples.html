@@ -317,40 +317,41 @@
 		{{> langButtons}}<br>
 		{{> numButtons}}
 
-		<a name='string_gender'></a>
-		<h3>{{mf 'string_gender' 'String with a gender'}}</h3>
+		<a name='format_date'></a>
+		<h3>{{mf 'format_date'}}</h3>
 		<div class="exampleWrapper">
 			<table class="example">
 				<tr>
 					<td>{{mf 'template' 'Template'}}:</td>
 					<td>
 						{{#sh_highlight lang='html'}}
-							{{dstache}}#mf KEY='select_gender' GENDER=getGender}}
-								{GENDER, select,
-										male {He}
-									female {She}
-									 other {They}} liked this.
-							{{dstache}}/mf}}
+							{{|#mf KEY='num_default' NUM=getNum}}
+								{NUM, number}
+						 	{{|/mf}}
+						 	<br>
+							{{|#mf KEY='num_usd' NUM=getNum}}
+								{NUM, number, ILS}
+						 	{{|/mf}}
 						{{/sh_highlight}}
 					</td>
 				</tr><tr>
 					<td>{{mf 'javascript' 'JavaScript'}}:</td>
 					<td>
 						{{#sh_highlight lang='js'}}
-						  Template.main.getGender = function() {
-						    return Session.get('GENDER');
-						  }
+							Template.main.getNum = function() {
+								return Session.get("NUM");
+							}
 						{{/sh_highlight}}
 					</td>
 				</tr><tr>
 					<td>{{mf 'result' 'Result'}}:</td>
 					<td>
-						{{#mf KEY='date_default' DATE=dateNow}}
-							{NUM, number}
+						{{#mf KEY='date_default' DATE=getDate}}
+							{DATE, date}
 					 	{{/mf}}
 					 	<br>
-						{{#mf KEY='num_usd' NUM=1000}}
-							{NUM, number, USD}
+						{{#mf KEY='date_usd' DATE=getDate}}
+							{DATE, relative}
 					 	{{/mf}}
 					</td>
 				</tr>

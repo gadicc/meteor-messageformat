@@ -43,35 +43,8 @@ function serverFetch(locale) {
  * Server side tests - partials
  */
 
-function disallowUnsafeEvalTest(empty, locale, test) {
-  BrowserPolicy.content.disallowEval();
-  msgfmt._sendCompiledCheck();
-
-  var resp = HTTP.get(Meteor.absoluteUrl());
-
-  var injected = getInjected(resp.content);
-  test.isTrue(injected.sendCompiled);
-
-  var fetched = serverFetch(locale);
-  test.isTrue(fetched && fetched._request);
-
-  if (empty)
-    return;
-
-  if (locale === 'all')
-    test.equal(typeof fetched.en.test, 'function');
-  else
-    test.equal(typeof fetched.test, 'function');
-}
-
 function allowUnsafeEvalTest(empty, locale, test) {
-  BrowserPolicy.content.allowEval();
-  msgfmt._sendCompiledCheck();
-
   var resp = HTTP.get(Meteor.absoluteUrl());
-
-  var injected = getInjected(resp.content);
-  test.isFalse(injected.sendCompiled);
 
   var fetched = serverFetch(locale);
   test.isTrue(fetched && fetched._request);
@@ -89,17 +62,11 @@ function allowUnsafeEvalTest(empty, locale, test) {
  * Server side tests - no strings / empty database
  */
 
-Tinytest.add('msgfmt:core - allowUnsafeEval - empty db (en)',
+Tinytest.add('msgfmt:core - initial fetch - empty db (en)',
   _.partial(allowUnsafeEvalTest, true /* empty */, 'en'));
 
-Tinytest.add('msgfmt:core - disallowUnsafeEval - empty db (en)',
-  _.partial(disallowUnsafeEvalTest, true /* empty */, 'en'));
-
-Tinytest.add('msgfmt:core - allowUnsafeEval - empty db (all)',
+Tinytest.add('msgfmt:core - initial fetch - empty db (all)',
   _.partial(allowUnsafeEvalTest, true /* empty */, 'all'));
-
-Tinytest.add('msgfmt:core - disallowUnsafeEval - empty db (all)',
-  _.partial(disallowUnsafeEvalTest, true /* empty */, 'all'));
 
 /*
  * Server side tests - addNative
@@ -135,17 +102,11 @@ Tinytest.add('msgfmt:core - mf() - get native / no translation', function(test) 
  * Server side tests - non-empty database (but native only)
  */
 
-Tinytest.add('msgfmt:core - allowUnsafeEval - non-empty db (en)',
+Tinytest.add('msgfmt:core - intial fetch - non-empty db (en)',
   _.partial(allowUnsafeEvalTest, false /* empty */, 'en'));
 
-Tinytest.add('msgfmt:core - disallowUnsafeEval - non-empty db (en)',
-  _.partial(disallowUnsafeEvalTest, false /* empty */, 'en'));
-
-Tinytest.add('msgfmt:core - allowUnsafeEval - non-empty db (all)',
+Tinytest.add('msgfmt:core - initial fetch - non-empty db (all)',
   _.partial(allowUnsafeEvalTest, false /* empty */, 'all'));
-
-Tinytest.add('msgfmt:core - disallowUnsafeEval - non-empty db (all)',
-  _.partial(disallowUnsafeEvalTest, false /* empty */, 'all'));
 
 /*
  * Server side tests - non-empty database (with translations)

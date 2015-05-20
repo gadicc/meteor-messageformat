@@ -145,4 +145,10 @@ if (Meteor.isClient) {
       return Session.get('GENDER');
     }
   });
+
+  Template.examples.helpers({
+    getDate: function() {
+      return new Date(Date.now() - 500000);
+    }
+  });
 }

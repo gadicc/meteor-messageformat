@@ -89,9 +89,6 @@ mfPkg.clientInit = function(native, options) {
  */
 
 mfPkg.loadLangs = function(reqLang) {
-  if (mfPkg.sendCompiled)
-    throw new Error('mfPkg.loadLangs() called when sendCompiled = true');
-
   // TODO sendpolicy:all?
 
   if (mfPkg.waitOnLoaded) {
@@ -168,18 +165,8 @@ mfPkg._initialFetches = [];
 function fetchLocale(locale) {
   var url, unique;
 
-  // Catch the case where the server changes what it's sending
-  // and the client has cached the wrong type via localStorage
-  if (mfPkg.lastSync._sendCompiled &&
-      mfPkg.lastSync._sendCompiled !== mfPkg.sendCompiled) {
-    // invalidate entire catch
-    mfPkg.lastSync = {};
-    mfPkg.lastSync._sendCompiled = mfPkg.sendCompiled;
-  }
-
   if (mfPkg.lastSync[locale] &&
-      mfPkg.lastSync[locale] === mfPkg.timestamps[locale] &&
-      mfPkg.lastSync._sendCompiled === mfPkg.sendCompiled) {
+      mfPkg.lastSync[locale] === mfPkg.timestamps[locale]) {
     log.debug('fetchLocale request for "' + locale + '", ' +
       'have latest already, aborting');
     return;
@@ -195,8 +182,7 @@ function fetchLocale(locale) {
 
   unique = locale + '/' + (mfPkg.lastSync[locale] || 0);
   url = '/msgfmt/locale/' + unique;
-  log.debug('fetchLocale request for "' + locale + '", url: ' + url +
-    ", sendCompiled: " + mfPkg.sendCompiled);
+  log.debug('fetchLocale request for "' + locale + '", url: ' + url);
   times.fetches[unique] = Date.now();
 
   // TODO, settimeout make sure it arrives
@@ -324,10 +310,8 @@ mfPkg.setLocale = function(locale, dontStore) {
     fetchLocale(locale);
   } else if (!_.contains(mfPkg._initialFetches, locale)
       && mfPkg.sendPolicy !== 'all') {
-    if (mfPkg.sendCompiled)
-      fetchLocale(locale);
-    else
-      mfPkg.loadLangs(locale);
+    // leverage existing connection
+    mfPkg.loadLangs(locale);
   } else {
     // TODO, subs etc
 
@@ -380,7 +364,7 @@ msgfmt.fromServer = function(data) {
     delete data._updatedAt;
   }
 
-  target = msgfmt.sendCompiled ? msgfmt.compiled : msgfmt.strings;
+  target = msgfmt.strings;
   if (locale !== 'all') {
     if (!target[locale])
       target[locale] = {};
@@ -412,14 +396,8 @@ mfPkg.resetStorage = function() {
 
 var injected = Injected.obj('msgfmt');
 mfPkg.timestamps = injected && injected.locales;
-mfPkg.sendCompiled = injected.sendCompiled;
 mfPkg.native = injected.native;
 mfPkg.sendPolicy = injected.sendPolicy;
-
-if (mfPkg.sendCompiled && mfPkg.useLocalStorage) {
-  log.debug('disallowInlineEval detected, setting useLocalStorage to false');
-  mfPkg.useLocalStorage = false;
-}
 
 if (mfPkg.timestamps) {
   (function() {
