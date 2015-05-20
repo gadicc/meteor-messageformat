@@ -25,7 +25,11 @@
 					<ol>
 							<li><a href="#string_gender">{{mf 'string_gender' 'String with a gender'}}</a></li>
 					</ol>
-					<li><a href="#mixing_it_up">{{mf 'mixing_it_up' 'Mixing it Up'}}</a></li>
+					<li><a href="#numbersAndDates">{{mf 'numbersAndDates' 'Numbers and Dates'}}</a></li>
+					<ol>
+							<li><a href="#format_number">{{mf 'format_number' 'Number Formatting'}}</a></li>
+							<li><a href="#format_date">{{mf 'format_date' 'Date Formatting'}}</a></li>
+					</ol>					<li><a href="#mixing_it_up">{{mf 'mixing_it_up' 'Mixing it Up'}}</a></li>
 					<ol>
 							<li><a href="#string_gender_plural">{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</a></li>
 					</ol>
@@ -267,6 +271,93 @@
 		{{> langButtons}}<br />
 		{{> genderButtons}}
 
+		<a name='numbersAndDates'></a>
+		<h2>{{mf 'numbersAndDates'}}</h2>
+
+		<a name='format_number'></a>
+		<h3>{{mf 'format_number'}}</h3>
+		<div class="exampleWrapper">
+			<table class="example">
+				<tr>
+					<td>{{mf 'template' 'Template'}}:</td>
+					<td>
+						{{#sh_highlight lang='html'}}
+							{{|#mf KEY='num_default' NUM=getNum}}
+								{NUM, number}
+						 	{{|/mf}}
+						 	<br>
+							{{|#mf KEY='num_usd' NUM=getNum}}
+								{NUM, number, ILS}
+						 	{{|/mf}}
+						{{/sh_highlight}}
+					</td>
+				</tr><tr>
+					<td>{{mf 'javascript' 'JavaScript'}}:</td>
+					<td>
+						{{#sh_highlight lang='js'}}
+							Template.main.getNum = function() {
+								return Session.get("NUM");
+							}
+						{{/sh_highlight}}
+					</td>
+				</tr><tr>
+					<td>{{mf 'result' 'Result'}}:</td>
+					<td>
+						{{#mf KEY='num_default' NUM=getNum}}
+							{NUM, number}
+					 	{{/mf}}
+					 	<br>
+						{{#mf KEY='num_usd' NUM=getNum}}
+							{NUM, number, ILS}
+					 	{{/mf}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		{{> langButtons}}<br>
+		{{> numButtons}}
+
+		<a name='string_gender'></a>
+		<h3>{{mf 'string_gender' 'String with a gender'}}</h3>
+		<div class="exampleWrapper">
+			<table class="example">
+				<tr>
+					<td>{{mf 'template' 'Template'}}:</td>
+					<td>
+						{{#sh_highlight lang='html'}}
+							{{dstache}}#mf KEY='select_gender' GENDER=getGender}}
+								{GENDER, select,
+										male {He}
+									female {She}
+									 other {They}} liked this.
+							{{dstache}}/mf}}
+						{{/sh_highlight}}
+					</td>
+				</tr><tr>
+					<td>{{mf 'javascript' 'JavaScript'}}:</td>
+					<td>
+						{{#sh_highlight lang='js'}}
+						  Template.main.getGender = function() {
+						    return Session.get('GENDER');
+						  }
+						{{/sh_highlight}}
+					</td>
+				</tr><tr>
+					<td>{{mf 'result' 'Result'}}:</td>
+					<td>
+						{{#mf KEY='date_default' DATE=dateNow}}
+							{NUM, number}
+					 	{{/mf}}
+					 	<br>
+						{{#mf KEY='num_usd' NUM=1000}}
+							{NUM, number, USD}
+					 	{{/mf}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		{{> langButtons}}
+
 		<h3>Other examples</h3>
 		Let me know if you think of any :)
 
@@ -391,7 +482,7 @@
 	<button class="{{#if isNum 1}}selected{{/if}}" value="1">Session.set('NUM', 1);</button>
 	<button class="{{#if isNum 2}}selected{{/if}}" value="2">Session.set('NUM', 2);</button>
 	<button class="{{#if isNum 3}}selected{{/if}}" value="3">Session.set('NUM', 3);</button>
-	<button class="{{#if isNum 4}}selected{{/if}}" value="4">Session.set('NUM', 4);</button>
+	<button class="{{#if isNum 10000}}selected{{/if}}" value="10000">Session.set('NUM', 10000);</button>
 </template>
 
 <template name="numButtons2">

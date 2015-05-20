@@ -96,6 +96,27 @@ mfPkg = msgfmt = {
 
 mfPkg.mfMeta.deny(function() { return true; });
 
+var formats = msgfmt.formats = {
+    number: {
+        USD: {
+            style   : 'currency',
+            currency: 'USD'
+        }
+    }
+};
+
+msgfmt.addFormat = function(which, data) {
+    _.extend(formats[which], data);
+};
+msgfmt.addCurrencyShortcut = function(currency) {
+    var obj = {};
+    obj[currency] = { style: 'currency', currency: currency };
+    msgfmt.addFormat('number', obj);
+};
+
+msgfmt.addFormat('number', { ZAR: { style: 'currency', currency: 'ZAR' } });
+msgfmt.addCurrencyShortcut('ILS');
+
 mf = function(key, params, message, locale) {
     if (!locale) {
       if (Meteor.isClient) {
@@ -121,7 +142,7 @@ mf = function(key, params, message, locale) {
 
     var mf = mfPkg.objects[locale];
     if (!mf) {
-        mf = mfPkg.objects[locale] = new MessageFormat(locale);
+        mf = mfPkg.objects[locale] = 1; //new MessageFormat(locale);
         if (!mfPkg.strings[locale]) mfPkg.strings[locale] = {};
         if (!mfPkg.compiled[locale]) mfPkg.compiled[locale] = {};
     }
@@ -144,11 +165,13 @@ mf = function(key, params, message, locale) {
         if (Meteor.isServer && _.isObject(message))
         	message = message.text;
 
-        cmessage = mfPkg.compiled[locale][key] = mf.compile(message);
+        // cmessage = mfPkg.compiled[locale][key] = mf.compile(message);
+        cmessage = mfPkg.compiled[locale][key] = new IntlMessageFormat(message, locale, formats);
     }
 
     try {
-        cmessage = cmessage(params);
+        //cmessage = cmessage(params);
+        cmessage = cmessage.format(params);
     }
     catch(err) {
         cmessage = err;

@@ -424,7 +424,7 @@ mfPkg._sendCompiledCheck = function() {
       localeFunction = localeStringsToDictionary;
   }
 };
-Meteor.startup(mfPkg._sendCompiledCheck);
+//Meteor.startup(mfPkg._sendCompiledCheck);
 
 Meteor.startup(function() {
   if (!msgfmt.initted)

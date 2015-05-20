@@ -45,10 +45,16 @@ Package.onUse(function (api) {
   api.use(['webapp'], 'server');
 
   // common adds
-  api.addFiles('lib/messageformat.js/messageformat.js', ['client', 'server']);
+//  api.addFiles('lib/messageformat.js/messageformat.js', ['client', 'server']);
+
+  // TODO, locales by demand, respect namespacing by wrapping files ourselves
   api.addFiles([
-    'lib/mfPkg/messageformat.js',
-    'lib/mfPkg/locale-all.js'
+    'lib/intl-messageformat/dist/intl-messageformat-with-locales.js'
+  ], [ 'client', 'server' ])
+
+  api.addFiles([
+    'lib/mfPkg/messageformat.js'//,
+//    'lib/mfPkg/locale-all.js'
   ], ['client', 'server']);
 
   // server
