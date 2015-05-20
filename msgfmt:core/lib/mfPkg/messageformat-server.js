@@ -10,6 +10,14 @@ function checkLocaleMetaExists(locale) {
     if (!mfPkg[key][locale])
       mfPkg[key][locale] = {};
   });
+
+  if (!mfPkg.objects[locale]) {
+    try {
+      mfPkg.objects[locale] = new MessageFormat(locale);
+    } catch (err) {
+      log.warn(err);
+    }
+  }
 }
 
 // Load each string and update the database if necessary
@@ -388,6 +396,7 @@ function localeStringsCompiled(res, locale, mtime, flags) {
 
 // Only sure about this after all app server code has run
 var sendCompiled = false, localeFunction = localeStringsToDictionary;
+//sendCompiled = true;
 mfPkg._sendCompiledCheck = function() {
   if (Package['browser-policy-common']) {
     var locale, key, mf, csp;
@@ -445,5 +454,20 @@ log.trace('Finished retrieval in ' + (Date.now() - startTime) + ' ms');
 _.each(allStrings, function(str) {
   checkLocaleMetaExists(str.lang);
   msgfmt.strings[str.lang][str.key] = str;
+
+  if (sendCompiled) {
+    if (str.compiled) {
+      eval('msgfmt.compiled[str.lang][str.key] = ' + str.compiled);
+    } else {
+      try {
+        msgfmt.compiled[str.lang][str.key] = msgfmt.objects[str.lang].compile(str.text);
+        // TODO
+        //str.compiled = msgfmt.compiled[str.lang][str.key].toString();
+        // save to database, udpate compiled on new entries, etc
+      } catch (err) {
+        log.warn(err);      
+      }
+    }
+  }
 });
 delete allStrings;
