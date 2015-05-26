@@ -278,16 +278,16 @@ handlers.html = function(file, data, mtime, strings) {
   var result, re;
 
   // {{mf "key" 'text' attr1=val1 attr2=val2 etc}}
-  re = /{{[\s]?mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
+  re = /\{\{[\s]?mf ['"](.*?)['"] ?(["'](.*?)['"])?(.*?)\}\}/g;
   while (result = re.exec(data)) {
-    var key = result[2], text = result[4], attributes = attrDict(result[5]);
+    var key = result[1], text = result[3], attributes = attrDict(result[4]);
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text,
+      text: text ? text : ("<" + key + ">" ),
       file: file,
       line: line,
       mtime: mtime,
