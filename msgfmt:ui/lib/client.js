@@ -244,7 +244,15 @@ Template.mfTrans.events({
 var unsavedDest;
 Template.mfTransLang.events({
   'click #mfTransLang tr': function(event) {
-    changeKey(this.key);
+    var tr = $(event.target).parents('tr');
+    var key = tr.data('key');
+    if (key) changeKey(key);
+  },
+  'click #translationShowKey': function(event) {
+    Session.set('translationShowKey', event.currentTarget.checked);
+  },
+  'click .translationSort': function(event) {
+    Session.set('translationSortField', event.currentTarget.attributes['data-sortField'].value);
   },
   'keyup #mfTransDest': function(event) {
     unsavedDest = event.target.value;
@@ -252,6 +260,18 @@ Template.mfTransLang.events({
 });
 
 Template.mfTransLang.helpers({
+  sortedStrings: function() {
+    var sortField = Session.get('translationSortField');
+    if (!sortField) {
+      Session.set('translationSortField', 'orig');
+    }
+    return this.strings.sort(function(a, b) {
+      return a[sortField] > b[sortField] ? 1 : (a[sortField] < b[sortField] ? -1 : 0);
+    });
+  },
+  showKey: function() {
+    return Session.get('translationShowKey');
+  },
   stateClass: function() {
     if (this.fuzzy)
       return 'fuzzy';

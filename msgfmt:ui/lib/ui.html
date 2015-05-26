@@ -66,22 +66,29 @@
 </template>
 
 <template name="mfTransLang">
+{{ debug }}
   <div class="container" id="mfTransLang">
 
     <div id="mfTransPreview">
       <table>
         <thead>
           <tr>
-            <th>Original String ({{origLang}})</th>
-            <th>Translation ({{destLang}})</th>
+            {{#if showKey}}
+              <th><a href="#" class="translationSort" data-sortField="key">Key</a></th>
+            {{/if}}
+            <th><a href="#" class="translationSort" data-sortField="orig">Original String ({{orig}})</a></th>
+            <th>Translation ({{trans}})</th>
           </tr>
         </thead>
       </table>
       <div class="tbodyScroll">
         <table>
           <tbody>
-          {{#each strings}}
+          {{#each sortedStrings}}
             <tr data-key="{{key}}" class="{{stateClass}} {{isCurrent}}">
+              {{#if showKey}}
+                <td>{{key}}</td>
+              {{/if}}
               <td>{{orig}}</td>
               <td>{{trans}}</td>
             </tr>
@@ -90,7 +97,7 @@
         </table>
       </div>
     </div>
-    <p>Use ctrl-up and ctrl-down to quickly change keys</p>
+    <p><input type="checkbox" id="translationShowKey">Show key, Use ctrl-up and ctrl-down to quickly change keys</p>
     <span><b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{keyInfo.line
       }}{{#if keyInfo.template}} (template
         {{#if keyInfo.routeUrl}}
