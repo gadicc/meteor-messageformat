@@ -254,7 +254,7 @@ var lastFile = null;
 function logKey(file, key, text, file, line, strings) {
   if (strings[key] && strings[key].text != text)
     log.warn('{ ' + key + ': "' + text + '" } in '
-      + file + ':' + line + ' replaces DUP_KEY\n         { '
+      + file + ':' + line + ' replaces DUP_KEY { '
       + key + ': "' + strings[key].text + '" } in '
       + strings[key].file + ':' + strings[key].line);
 
