@@ -266,7 +266,7 @@ function logKey(file, key, text, file, line, strings) {
     log.trace(file);
   }
 
-  log.trace('* ' + key + ': "' + text.replace(/\s+/g, ' ') + '"');
+  log.trace('* ' + key + ': "' + (text ? text.replace(/\s+/g, ' ') : "NO TEXT") + '"');
 }
 
 /* handlers */
@@ -305,7 +305,7 @@ handlers.html = function(file, data, mtime, strings) {
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text,
+      text: text ? text : ("<" + key + ">" ),
       file: file,
       line: line,
       mtime: mtime,
@@ -328,7 +328,7 @@ handlers.jade = function(file, data, mtime, strings) {
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text,
+      text: text ? text : ("<" + key + ">" ),
       file: file,
       line: line,
       mtime: mtime,
@@ -346,7 +346,7 @@ handlers.jade = function(file, data, mtime, strings) {
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text,
+      text: text ? text : ("<" + key + ">" ),
       file: file,
       line: line,
       mtime: mtime,
@@ -374,7 +374,7 @@ handlers.js = function(file, data, mtime, strings) {
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text,
+      text: text ? text : ("<" + key + ">" ),
       file: file,
       line: line,
       mtime: mtime,
@@ -404,7 +404,7 @@ handlers.coffee = function(file, data, mtime, strings) {
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text,
+      text: text ? text : ("<" + key + ">" ),
       file: file,
       line: line,
       func: func,
