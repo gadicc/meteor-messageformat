@@ -93,7 +93,12 @@
               <td>{{orig}}</td>
               <td>
                 {{#if isCurrent}}
-                  <input value="{{trans}}" placeholder="{{orig}}" type="text" class="transInput">
+                  {{#if hasMoreRows}}
+                    <textarea rows="1" placeholder="{{orig}}" type="text" class="transInput">{{trans}}</textarea>
+                  {{else}}
+                    <input value="{{trans}}" placeholder="{{orig}}" type="text" class="transInput">
+                  {{/if}}
+                
                 {{else}}
                   {{trans}}
                 {{/if}}

@@ -202,6 +202,15 @@ Template.mfTransLang.events({
     var key = Session.get('mfTransKey');
 
     saveChange(destLang, key, $(event.currentTarget).val());
+  },
+  'keydown .transInput': function(event) {
+    // if enter is pressed we possibly switch to textarea
+    if (event.keyCode == 13 && $(event.currentTarget).val().indexOf('\n') == -1) {
+      var destLang = Session.get('mfTransTrans');
+      var key = Session.get('mfTransKey');
+
+      saveChange(destLang, key, $(event.currentTarget).val() + "\n");
+    }
   }
 });
 
@@ -217,6 +226,9 @@ Template.mfTransLang.helpers({
   },
   showKey: function() {
     return Session.get('translationShowKey');  
+  },
+  hasMoreRows: function() {
+    return this.trans.indexOf('\n') > -1;
   },
   stateClass: function() {
     if (this.fuzzy)
