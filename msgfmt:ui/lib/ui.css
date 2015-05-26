@@ -42,7 +42,7 @@ div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 }
 
 #mfTransPreview .tbodyScroll {
-	overflow: hidden; height: 200px; overflow-y: scroll;
+	overflow: hidden; height: 400px; overflow-y: scroll;
 	border-left: 1px solid black; border-bottom: 1px solid black;
 	position: relative; /* makes jquery scroll stuff easier */
 }
@@ -80,4 +80,10 @@ div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 	font-family: monospace;
 	height: 5em; width: 100%;
 	margin-top: 5px;
+}
+
+.transInput {
+	width: 100%;
+	border: 1px #ddd dotted;
+	border-style: dashed;
 }

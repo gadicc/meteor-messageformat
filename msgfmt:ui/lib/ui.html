@@ -1,7 +1,8 @@
 <template name="mfTrans">
+{{ debug }}
   <div class="container" id="mfTransContainer">
   <h2>{{mf 'mf_site_translations' 'Site Translations'}}</h2>
-  <p>Native language: <b>{{native}}</b> ({{stats.total}} strings)</p>
+  <p>Native language: <a href="/translate/{{native}}"><b>{{native}}</b></a> ({{stats.total}} strings)</p>
 
   {{#if stats.total}}
 
@@ -90,7 +91,13 @@
                 <td>{{key}}</td>
               {{/if}}
               <td>{{orig}}</td>
-              <td>{{trans}}</td>
+              <td>
+                {{#if isCurrent}}
+                  <input value="{{trans}}" placeholder="{{orig}}" type="text" class="transInput">
+                {{else}}
+                  {{trans}}
+                {{/if}}
+              </td>
             </tr>
           {{/each}}
           </tbody>
@@ -104,11 +111,7 @@
           <a href="{{keyInfo.routeUrl}}">{{keyInfo.template}}</a
         >{{else}}"{{keyInfo.template}}"{{/if}}){{/if
       }}{{#if keyInfo.func}}; {{keyInfo.func}}{{/if}}
-    </span><br />
-    <textarea id="mfTransOrig" readonly>{{mfTransOrig}}</textarea>
-    <textarea id="mfTransDest">{{mfTransTrans}}</textarea>
-
-  <br /><br />
+    </span>
   <p>
     <a href="/translate">Back to Translation Summary</a>
   </p>

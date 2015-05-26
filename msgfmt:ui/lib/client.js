@@ -76,20 +76,7 @@ function saveChange(lang, key, text) {
  * Called everytime the current key is changed (ctrl up/down or click)
  */
 function changeKey(newKey) {
-  var destLang = Session.get('mfTransTrans');
-  var oldKey = Session.get('mfTransKey');
-  if (oldKey == newKey) return;
-
-  saveChange(destLang, oldKey, $('#mfTransDest').val());
-
-  // Temporary, need to turn off preserve
-  var str = mfPkg.mfStrings.findOne({
-    key: newKey, lang: destLang
-  });
-  $('#mfTransDest').val(str ? str.text : '');
-
   Session.set('mfTransKey', newKey);
-  $('#mfTransDest').focus();
 }
 
 if (Package['iron:router'])
@@ -132,7 +119,6 @@ Package['iron:router'].Router.map(function() {
               ? $('#mfTransLang tr.current').prev()
               : $('#mfTransLang tr.current').next();
             if (tr.length) {
-              changeKey(tr.data('key'));
               mfCheckScroll(tr);
             }
           }
@@ -203,13 +189,19 @@ Template.mfTransLang.events({
   'click #mfTransLang tr': function(event) {
     var tr = $(event.target).parents('tr'); 
     var key = tr.data('key');
-    if (key) changeKey(key);
+    if (key) changeKey(key, null);
   },
   'click #translationShowKey': function(event) {
     Session.set('translationShowKey', event.currentTarget.checked);
   },
   'click .translationSort': function(event) {
     Session.set('translationSortField', event.currentTarget.attributes['data-sortField'].value);
+  },
+  'change .transInput': function(event) {
+    var destLang = Session.get('mfTransTrans');
+    var key = Session.get('mfTransKey');
+
+    saveChange(destLang, key, $(event.currentTarget).val());
   }
 });
 
@@ -271,8 +263,6 @@ var initialRender = _.once(function() {
     tr = $('#mfTransLang tr[data-key="'+key+'"]');
   if (tr.length)
     $('#mfTransPreview .tbodyScroll').scrollTop(tr.position().top);
-
-  $('#mfTransDest').focus();
 });
 
 Template.mfTransLang.rendered = function() {
@@ -284,7 +274,5 @@ Template.mfTransLang.rendered = function() {
     Session.set('mfTransKey', key);
   }
 
-  var transDest = $('#mfTransDest');
-  if (typeof transDest.tabOverride === 'function') transDest.tabOverride();
   initialRender();
 };
