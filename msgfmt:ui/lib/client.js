@@ -77,6 +77,7 @@ function saveChange(lang, key, text) {
  */
 function changeKey(newKey) {
   Session.set('mfTransKey', newKey);
+  Meteor.setTimeout(function() { $('.transInput').focus(), 200 });
 }
 
 if (Package['iron:router'])
@@ -187,9 +188,10 @@ Template.mfTrans.events({
 
 Template.mfTransLang.events({
   'click #mfTransLang tr': function(event) {
-    var tr = $(event.target).parents('tr'); 
+    var tr = $(event.target).parents('tr');
     var key = tr.data('key');
     if (key) changeKey(key, null);
+
   },
   'click #translationShowKey': function(event) {
     Session.set('translationShowKey', event.currentTarget.checked);
@@ -210,6 +212,24 @@ Template.mfTransLang.events({
       var key = Session.get('mfTransKey');
 
       saveChange(destLang, key, $(event.currentTarget).val() + "\n");
+    } else if (event.keyCode == 9) {
+      event.preventDefault();
+      var destLang = Session.get('mfTransTrans');
+      var key = Session.get('mfTransKey');
+      saveChange(destLang, key, $(event.currentTarget).val());
+
+      var tr;
+
+      if (event.shiftKey) {
+        tr = $(event.target).parents('tr').prev();
+      } else {
+        tr = $(event.target).parents('tr').next();
+      }
+      if (tr) {
+        var key = tr.data('key');
+        if (key) changeKey(key, null);
+      }
+      return false;
     }
   }
 });
@@ -225,7 +245,7 @@ Template.mfTransLang.helpers({
     });
   },
   showKey: function() {
-    return Session.get('translationShowKey');  
+    return Session.get('translationShowKey');
   },
   hasMoreRows: function() {
     return this.trans.indexOf('\n') > -1;
