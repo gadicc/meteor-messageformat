@@ -41,7 +41,7 @@ var checkForUpdates = function(m, force) {
 
   var walker  = walk.walk(relUp, {
     followLinks: false,
-    filters: [ 
+    filters: [
       /\/\.[^\.]+\//  // skip .directories (hidden)
     ]
   });
@@ -211,7 +211,7 @@ var boundCheck = Meteor.bindEnvironment(checkForUpdates);
 
 // https://github.com/meteor/meteor/pull/3704/files
 process.on('SIGUSR2', boundCheck);  // Meteor < 1.0.4
-process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
+process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4
 process.on('message', boundCheck);  // Meteor >= 1.0.4
 
 // No reason to block startup, we can do update gradually asyncronously
@@ -269,6 +269,10 @@ function logKey(file, key, text, file, line, strings) {
   log.trace('* ' + key + ': "' + (text ? text.replace(/\s+/g, ' ') : "NO TEXT") + '"');
 }
 
+function checkText(text, key) {
+  return text ? text : ("<" + key + ">" );
+}
+
 /* handlers */
 
 var handlers = {};
@@ -284,10 +288,11 @@ handlers.html = function(file, data, mtime, strings) {
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text ? text : ("<" + key + ">" ),
+      text: text,
       file: file,
       line: line,
       mtime: mtime,
@@ -302,10 +307,11 @@ handlers.html = function(file, data, mtime, strings) {
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
       .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text ? text : ("<" + key + ">" ),
+      text: text,
       file: file,
       line: line,
       mtime: mtime,
@@ -325,10 +331,11 @@ handlers.jade = function(file, data, mtime, strings) {
     var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])(.*?)\1\s*\)[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text ? text : ("<" + key + ">" ),
+      text: text,
       file: file,
       line: line,
       mtime: mtime,
@@ -343,10 +350,11 @@ handlers.jade = function(file, data, mtime, strings) {
     var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])([^\1]+?)\1\s*\)[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text ? text : ("<" + key + ">" ),
+      text: text,
       file: file,
       line: line,
       mtime: mtime,
@@ -371,10 +379,11 @@ handlers.js = function(file, data, mtime, strings) {
     var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
       .exec(data.substring(0, result.index));
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text ? text : ("<" + key + ">" ),
+      text: text,
       file: file,
       line: line,
       mtime: mtime,
@@ -401,10 +410,11 @@ handlers.coffee = function(file, data, mtime, strings) {
     }
 
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
-      text: text ? text : ("<" + key + ">" ),
+      text: text,
       file: file,
       line: line,
       func: func,
