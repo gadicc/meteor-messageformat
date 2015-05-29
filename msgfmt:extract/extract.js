@@ -238,7 +238,7 @@ Meteor.startup(function() {
   });
 
   checkForUpdates();
-});
+});  
 
 /* handler helpers */
 
@@ -270,7 +270,7 @@ function logKey(file, key, text, file, line, strings) {
 }
 
 function checkText(text, key) {
-  return text ? text : ("<" + key + ">" );
+  return (text == null || text == '' || text == "''" || text == '"') ? ("<" + key + ">" ) : text;
 }
 
 /* handlers */

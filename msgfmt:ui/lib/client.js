@@ -3,18 +3,18 @@
 // Setup in msgfmt:core on server, only used on the client in msgfmt:ui
 mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
 
-/*
- * Finds the name of the first route using the given template
- */
-function routeNameFromTemplate(name) {
-  var route = _.find(Router.routes, function(route) {
-    if (route.options.template)
-      return route.options.template == name;
-    else
-      return route.name == name;
-  });
-  return route && route.name;
-}
+// /*
+//  * Finds the name of the first route using the given template
+//  */
+// function routeNameFromTemplate(name) {
+//   var route = _.find(Router.routes, function(route) {
+//     if (route.options.template)
+//       return route.options.template == name;
+//     else
+//       return route.name == name;
+//   });
+//   return route && route.name;
+// }
 
 /*
  * After user presses ctrl up-down, if the newly highlighted row
@@ -77,105 +77,34 @@ function saveChange(lang, key, text) {
  */
 function changeKey(newKey) {
   Session.set('mfTransKey', newKey);
+  // wait for re-render and focus the new control
   Meteor.setTimeout(function() { $('.transInput').focus(), 200 });
 }
 
-if (Package['iron:router'])
-Package['iron:router'].Router.map(function() {
-  // Main translation page, summary of all language data
-  this.route('mfTrans', {
-    path: '/translate',
-    waitOn: function() {
-      return Meteor.subscribe('mfStats');
-    },
-    data: function() {
-      var data = {};
-      data.strings = mfPkg.mfStrings.find();
-      data.stats = mfPkg.mfMeta.findOne({_id: '__stats'});
-      data.native = mfPkg.native;
-      return data;
-    }
-  });
+//////////////////////////////////////
+// Template Language list
 
-  // Modify translations for a particular language
-  this.route('mfTransLang', {
-    path: '/translate/:lang',
-    waitOn: function() {
-      // Note, this is in ADDITION to the regular mfStrings sub
-      return Meteor.subscribe('mfStrings',
-        [mfPkg.native, this.params.lang], 0, true);
-    },
-    onBeforeAction: function() {
-      if (!mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this)) {
-        this.render('mfTransLangDenied');
-      } else {
-        // Temporary, only used to override preserve on dest
-        Session.set('mfTransTrans', this.params.lang);
-
-        // Handle ctrl-up/ctrl-down, respectively
-        $(window).on('keydown.mfTrans', function(event) {
-          if (event.ctrlKey && (event.which == 38 || event.which == 40)) {
-            event.preventDefault(); event.stopPropagation();
-            var tr = event.which == 38
-              ? $('#mfTransLang tr.current').prev()
-              : $('#mfTransLang tr.current').next();
-            if (tr.length) {
-              mfCheckScroll(tr);
-            }
-          }
-        });
-
-        this.subscribe('mfRevisions', this.params.lang, 10);
-        this.next();
-      }
-    },
-    onStop: function() {
-      $(window).off('keydown.mfTrans');
-    },
-    data: function() {
-      var data = { strings: {} };
-      var strings, out = {};
-      data.orig = mfPkg.native;
-      data.trans = this.params.lang;
-
-      // summarise matching keys (orig + trans) to a single record
-      strings = mfPkg.mfStrings.find({
-        $and: [{$or: [{lang: data.orig}, {lang: this.params.lang}]},
-          {removed: undefined}]
-      }).fetch();
-      _.each(strings, function(str) {
-        if (!out[str.key])
-          out[str.key] = { key: str.key };
-        if (str.lang == data.orig)
-          out[str.key].orig = str.text;
-        else
-          out[str.key].trans = str.text;
-        if (str.fuzzy)
-          out[str.key].fuzzy = true;
-      });
-      data.strings = _.values(out);
-      data.strings.sort(function(a, b) {
-        if (!a.trans && b.trans)
-          return -1;
-        else if (a.trans && !b.trans)
-          return 1;
-
-        if (!a.fuzzy && b.fuzzy)
-          return -1;
-        else if (b.fuzzy && !a.fuzzy)
-          return 1;
-
-        return a.text - b.text;
-      });
-
-      return data;
-    }
-  });
+Template.mfTrans.onCreated(function() {
+  this.data.native = mfPkg.native;
 });
+
+Template.mfTrans.helpers({
+  strings: function() {
+    return mfPkg.mfStrings.find();
+  }, 
+  stats: function() {
+    return mfPkg.mfMeta.findOne({_id: '__stats'});
+  } 
+})
 
 Template.mfTrans.events({
   'click #mfTransNewSubmit': function() {
-    Router.go('/translate/' + $('#mfTransNewText').val());
+    var url = '/translate/' + $('#mfTransNewText').val();
+    if (mfPkg.router) {
+      mfPkg.router.go(url);
+    } else {
+      window.location = '/translate/' + $('#mfTransNewText').val();
+    }
   },
   'click #mfAllJs': function(event, tpl) {
     // Make sure we have no conflicts with iron-router
@@ -184,6 +113,15 @@ Template.mfTrans.events({
     event.stopPropagation();
     window.location = '/translate/mfAll.js';
   }
+});
+
+/////////////////////////////////
+// Template Language translation
+
+Template.mfTransLang.onCreated(function () {
+  this.data.strings = {};
+  this.data.orig = mfPkg.native;
+  this.data.trans = Session.get("translationLanguage");
 });
 
 Template.mfTransLang.events({
@@ -200,7 +138,7 @@ Template.mfTransLang.events({
     Session.set('translationSortField', event.currentTarget.attributes['data-sortField'].value);
   },
   'change .transInput': function(event) {
-    var destLang = Session.get('mfTransTrans');
+    var destLang = Template.currentData().trans;
     var key = Session.get('mfTransKey');
 
     saveChange(destLang, key, $(event.currentTarget).val());
@@ -208,14 +146,18 @@ Template.mfTransLang.events({
   'keydown .transInput': function(event) {
     // if enter is pressed we possibly switch to textarea
     if (event.keyCode == 13 && $(event.currentTarget).val().indexOf('\n') == -1) {
-      var destLang = Session.get('mfTransTrans');
+      var destLang = Template.currentData().trans;
       var key = Session.get('mfTransKey');
 
       saveChange(destLang, key, $(event.currentTarget).val() + "\n");
-    } else if (event.keyCode == 9) {
+    } 
+    // if tab was pressed we save the current one and move to next input
+    else if (event.keyCode == 9) {
+      
       event.preventDefault();
-      var destLang = Session.get('mfTransTrans');
+      var destLang = Template.currentData().trans;
       var key = Session.get('mfTransKey');
+      
       saveChange(destLang, key, $(event.currentTarget).val());
 
       var tr;
@@ -235,12 +177,50 @@ Template.mfTransLang.events({
 });
 
 Template.mfTransLang.helpers({
-  sortedStrings: function() {
+  strings: function() {
+    // summarise matching keys (orig + trans) to a single record
+      var self = this;
+      var strings = mfPkg.mfStrings.find({
+        $and: [{$or: [{lang: self.orig}, {lang: self.trans}]},
+          {removed: undefined}]
+      }).fetch();
+      
+      if (!strings) return;
+      
+      var out = {};
+      _.each(strings, function(str) {
+        if (!out[str.key])
+          out[str.key] = { key: str.key };
+        if (str.lang == self.orig)
+          out[str.key].orig = str.text;
+        else
+          out[str.key].trans = str.text;
+        if (str.fuzzy)
+          out[str.key].fuzzy = true;
+      });
+      strings = _.values(out);
+      strings.sort(function(a, b) {
+        if (!a.trans && b.trans)
+          return -1;
+        else if (a.trans && !b.trans)
+          return 1;
+
+        if (!a.fuzzy && b.fuzzy)
+          return -1;
+        else if (b.fuzzy && !a.fuzzy)
+          return 1;
+
+        return a.text - b.text;
+      });
+      
+      return strings;
+  },
+  sortedStrings: function(strings) {
     var sortField = Session.get('translationSortField');
     if (!sortField) {
       Session.set('translationSortField', 'orig');
     }
-    return this.strings.sort(function(a, b) {
+    return strings.sort(function(a, b) {
       return a[sortField] > b[sortField] ? 1 : (a[sortField] < b[sortField] ? -1 : 0);
     });
   },
@@ -281,11 +261,11 @@ Template.mfTransLang.helpers({
       key: Session.get('mfTransKey'),
       lang: this.orig
     });
-    if (str && str.template) {
-      var routeName = routeNameFromTemplate(str.template);
-      if (routeName)
-        str.routeUrl = Router.path(routeName);
-    }
+    // if (str && str.template) {
+    //   var routeName = routeNameFromTemplate(str.template);
+    //   if (routeName)
+    //     str.routeUrl = Router.path(routeName);
+    // }
     return str || {};
   }
 });
