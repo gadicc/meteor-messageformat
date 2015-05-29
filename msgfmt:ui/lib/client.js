@@ -3,18 +3,18 @@
 // Setup in msgfmt:core on server, only used on the client in msgfmt:ui
 mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
 
-/*
- * Finds the name of the first route using the given template
- */
-function routeNameFromTemplate(name) {
-  var route = _.find(Router.routes, function(route) {
-    if (route.options.template)
-      return route.options.template == name;
-    else
-      return route.name == name;
-  });
-  return route && route.name;
-}
+// /*
+//  * Finds the name of the first route using the given template
+//  */
+// function routeNameFromTemplate(name) {
+//   var route = _.find(Router.routes, function(route) {
+//     if (route.options.template)
+//       return route.options.template == name;
+//     else
+//       return route.name == name;
+//   });
+//   return route && route.name;
+// }
 
 /*
  * After user presses ctrl up-down, if the newly highlighted row
@@ -76,98 +76,130 @@ function saveChange(lang, key, text) {
  * Called everytime the current key is changed (ctrl up/down or click)
  */
 function changeKey(newKey) {
-  var destLang = Session.get('mfTransTrans');
-  var oldKey = Session.get('mfTransKey');
-  if (oldKey == newKey) return;
-
-  saveChange(destLang, oldKey, $('#mfTransDest').val());
-
-  // Temporary, need to turn off preserve
-  var str = mfPkg.mfStrings.findOne({
-    key: newKey, lang: destLang
-  });
-  $('#mfTransDest').val(str ? str.text : '');
-
   Session.set('mfTransKey', newKey);
-  $('#mfTransDest').focus();
+  // wait for re-render and focus the new control
+  Meteor.setTimeout(function() { $('.transInput').focus(), 200 });
 }
 
-if (Package['iron:router'])
-Package['iron:router'].Router.map(function() {
-  // Main translation page, summary of all language data
-  this.route('mfTrans', {
-    path: '/translate',
-    waitOn: function() {
-      return Meteor.subscribe('mfStats');
-    },
-    data: function() {
-      var data = {};
-      data.strings = mfPkg.mfStrings.find();
-      data.stats = mfPkg.mfMeta.findOne({_id: '__stats'});
-      data.native = mfPkg.native;
-      return data;
+//////////////////////////////////////
+// Template Language list
+
+Template.mfTrans.onCreated(function() {
+  this.data.native = mfPkg.native;
+});
+
+Template.mfTrans.helpers({
+  strings: function() {
+    return mfPkg.mfStrings.find();
+  }, 
+  stats: function() {
+    return mfPkg.mfMeta.findOne({_id: '__stats'});
+  } 
+})
+
+Template.mfTrans.events({
+  'click #mfTransNewSubmit': function() {
+    var url = '/translate/' + $('#mfTransNewText').val();
+    if (mfPkg.router) {
+      mfPkg.router.go(url);
+    } else {
+      window.location = '/translate/' + $('#mfTransNewText').val();
     }
-  });
+  },
+  'click #mfAllJs': function(event, tpl) {
+    // Make sure we have no conflicts with iron-router
+    // Not really sure why this is necessary; TODO, investigate
+    event.preventDefault();
+    event.stopPropagation();
+    window.location = '/translate/mfAll.js';
+  }
+});
 
-  // Modify translations for a particular language
-  this.route('mfTransLang', {
-    path: '/translate/:lang',
-    waitOn: function() {
-      // Note, this is in ADDITION to the regular mfStrings sub
-      return Meteor.subscribe('mfStrings',
-        [mfPkg.native, this.params.lang], 0, true);
-    },
-    onBeforeAction: function() {
-      if (!mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this)) {
-        this.render('mfTransLangDenied');
+/////////////////////////////////
+// Template Language translation
+
+Template.mfTransLang.onCreated(function () {
+  this.data.strings = {};
+  this.data.orig = mfPkg.native;
+  this.data.trans = Session.get("translationLanguage");
+});
+
+Template.mfTransLang.events({
+  'click #mfTransLang tr': function(event) {
+    var tr = $(event.target).parents('tr');
+    var key = tr.data('key');
+    if (key) changeKey(key, null);
+
+  },
+  'click #translationShowKey': function(event) {
+    Session.set('translationShowKey', event.currentTarget.checked);
+  },
+  'click .translationSort': function(event) {
+    Session.set('translationSortField', event.currentTarget.attributes['data-sortField'].value);
+  },
+  'change .transInput': function(event) {
+    var destLang = Template.currentData().trans;
+    var key = Session.get('mfTransKey');
+
+    saveChange(destLang, key, $(event.currentTarget).val());
+  },
+  'keydown .transInput': function(event) {
+    // if enter is pressed we possibly switch to textarea
+    if (event.keyCode == 13 && $(event.currentTarget).val().indexOf('\n') == -1) {
+      var destLang = Template.currentData().trans;
+      var key = Session.get('mfTransKey');
+
+      saveChange(destLang, key, $(event.currentTarget).val() + "\n");
+    } 
+    // if tab was pressed we save the current one and move to next input
+    else if (event.keyCode == 9) {
+      
+      event.preventDefault();
+      var destLang = Template.currentData().trans;
+      var key = Session.get('mfTransKey');
+      
+      saveChange(destLang, key, $(event.currentTarget).val());
+
+      var tr;
+
+      if (event.shiftKey) {
+        tr = $(event.target).parents('tr').prev();
       } else {
-        // Temporary, only used to override preserve on dest
-        Session.set('mfTransTrans', this.params.lang);
-
-        // Handle ctrl-up/ctrl-down, respectively
-        $(window).on('keydown.mfTrans', function(event) {
-          if (event.ctrlKey && (event.which == 38 || event.which == 40)) {
-            event.preventDefault(); event.stopPropagation();
-            var tr = event.which == 38
-              ? $('#mfTransLang tr.current').prev()
-              : $('#mfTransLang tr.current').next();
-            if (tr.length) {
-              changeKey(tr.data('key'));
-              mfCheckScroll(tr);
-            }
-          }
-        });
-
-        this.subscribe('mfRevisions', this.params.lang, 10);
-        this.next();
+        tr = $(event.target).parents('tr').next();
       }
-    },
-    onStop: function() {
-      $(window).off('keydown.mfTrans');
-    },
-    data: function() {
-      var data = { strings: {} };
-      var strings, out = {};
-      data.orig = mfPkg.native;
-      data.trans = this.params.lang;
+      if (tr) {
+        var key = tr.data('key');
+        if (key) changeKey(key, null);
+      }
+      return false;
+    }
+  }
+});
 
-      // summarise matching keys (orig + trans) to a single record
-      strings = mfPkg.mfStrings.find({
-        $and: [{$or: [{lang: data.orig}, {lang: this.params.lang}]},
+Template.mfTransLang.helpers({
+  strings: function() {
+    // summarise matching keys (orig + trans) to a single record
+      var self = this;
+      var strings = mfPkg.mfStrings.find({
+        $and: [{$or: [{lang: self.orig}, {lang: self.trans}]},
           {removed: undefined}]
       }).fetch();
+      
+      if (!strings) return;
+      
+      var out = {};
       _.each(strings, function(str) {
         if (!out[str.key])
           out[str.key] = { key: str.key };
-        if (str.lang == data.orig)
+        if (str.lang == self.orig)
           out[str.key].orig = str.text;
         else
           out[str.key].trans = str.text;
         if (str.fuzzy)
           out[str.key].fuzzy = true;
       });
-      data.strings = _.values(out);
-      data.strings.sort(function(a, b) {
+      strings = _.values(out);
+      strings.sort(function(a, b) {
         if (!a.trans && b.trans)
           return -1;
         else if (a.trans && !b.trans)
@@ -180,34 +212,24 @@ Package['iron:router'].Router.map(function() {
 
         return a.text - b.text;
       });
-
-      return data;
-    }
-  });
-});
-
-Template.mfTrans.events({
-  'click #mfTransNewSubmit': function() {
-    Router.go('/translate/' + $('#mfTransNewText').val());
+      
+      return strings;
   },
-  'click #mfAllJs': function(event, tpl) {
-    // Make sure we have no conflicts with iron-router
-    // Not really sure why this is necessary; TODO, investigate
-    event.preventDefault();
-    event.stopPropagation();
-    window.location = '/translate/mfAll.js';
-  }
-});
-
-Template.mfTransLang.events({
-  'click #mfTransLang tr': function(event) {
-    var tr = $(event.target).parents('tr');
-    var key = tr.data('key');
-    if (key) changeKey(key);
-  }
-});
-
-Template.mfTransLang.helpers({
+  sortedStrings: function(strings) {
+    var sortField = Session.get('translationSortField');
+    if (!sortField) {
+      Session.set('translationSortField', 'orig');
+    }
+    return strings.sort(function(a, b) {
+      return a[sortField] > b[sortField] ? 1 : (a[sortField] < b[sortField] ? -1 : 0);
+    });
+  },
+  showKey: function() {
+    return Session.get('translationShowKey');
+  },
+  hasMoreRows: function() {
+    return this.trans.indexOf('\n') > -1;
+  },
   stateClass: function() {
     if (this.fuzzy)
       return 'fuzzy';
@@ -239,11 +261,11 @@ Template.mfTransLang.helpers({
       key: Session.get('mfTransKey'),
       lang: this.orig
     });
-    if (str && str.template) {
-      var routeName = routeNameFromTemplate(str.template);
-      if (routeName)
-        str.routeUrl = Router.path(routeName);
-    }
+    // if (str && str.template) {
+    //   var routeName = routeNameFromTemplate(str.template);
+    //   if (routeName)
+    //     str.routeUrl = Router.path(routeName);
+    // }
     return str || {};
   }
 });
@@ -253,8 +275,6 @@ var initialRender = _.once(function() {
     tr = $('#mfTransLang tr[data-key="'+key+'"]');
   if (tr.length)
     $('#mfTransPreview .tbodyScroll').scrollTop(tr.position().top);
-
-  $('#mfTransDest').focus();
 });
 
 Template.mfTransLang.rendered = function() {
@@ -266,7 +286,5 @@ Template.mfTransLang.rendered = function() {
     Session.set('mfTransKey', key);
   }
 
-  var transDest = $('#mfTransDest');
-  if (typeof transDest.tabOverride === 'function') transDest.tabOverride();
   initialRender();
 };
