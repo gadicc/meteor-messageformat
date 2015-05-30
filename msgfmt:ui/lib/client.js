@@ -3,6 +3,24 @@
 // Setup in msgfmt:core on server, only used on the client in msgfmt:ui
 mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
 
+mfPkg.uiConfiguration = {
+    flowLayout: 'layout',
+    flowTemplate: 'main',
+    flowMiddleware: function() {
+
+    },
+    ironRouteChange: function() {
+
+    }
+}
+
+mfPkg.configureUI = function(config) {
+  mfPkg.uiConfiguration.flowLayout = config.flowLayout ? config.flowLayout : mfPkg.uiConfiguration.flowLayout;
+  mfPkg.uiConfiguration.flowTemplate = config.flowTemplate ? config.flowTemplate : mfPkg.uiConfiguration.flowTemplate;
+  mfPkg.uiConfiguration.flowMiddleware = config.flowMiddleware ? config.flowMiddleware : mfPkg.uiConfiguration.flowMiddleware;
+  mfPkg.uiConfiguration.ironRouteChange = config.ironRouteChange ? config.ironRouteChange : mfPkg.uiConfiguration.ironRouteChange;
+}
+
 // /*
 //  * Finds the name of the first route using the given template
 //  */
@@ -84,17 +102,16 @@ function changeKey(newKey) {
 //////////////////////////////////////
 // Template Language list
 
-Template.mfTrans.onCreated(function() {
-  this.data.native = mfPkg.native;
-});
-
 Template.mfTrans.helpers({
+  native: function() {
+    return mfPkg.native;
+  },
   strings: function() {
     return mfPkg.mfStrings.find();
-  }, 
+  },
   stats: function() {
     return mfPkg.mfMeta.findOne({_id: '__stats'});
-  } 
+  }
 })
 
 Template.mfTrans.events({
@@ -118,16 +135,9 @@ Template.mfTrans.events({
 /////////////////////////////////
 // Template Language translation
 
-Template.mfTransLang.onCreated(function () {
-  this.data.strings = {};
-  this.data.orig = mfPkg.native;
-  this.data.trans = Session.get("translationLanguage");
-});
-
 Template.mfTransLang.events({
   'click #mfTransLang tr': function(event) {
-    var tr = $(event.target).parents('tr');
-    var key = tr.data('key');
+    var key = this.key;
     if (key) changeKey(key, null);
 
   },
@@ -138,7 +148,7 @@ Template.mfTransLang.events({
     Session.set('translationSortField', event.currentTarget.attributes['data-sortField'].value);
   },
   'change .transInput': function(event) {
-    var destLang = Template.currentData().trans;
+    var destLang = Session.get("translationLanguage");
     var key = Session.get('mfTransKey');
 
     saveChange(destLang, key, $(event.currentTarget).val());
@@ -146,18 +156,18 @@ Template.mfTransLang.events({
   'keydown .transInput': function(event) {
     // if enter is pressed we possibly switch to textarea
     if (event.keyCode == 13 && $(event.currentTarget).val().indexOf('\n') == -1) {
-      var destLang = Template.currentData().trans;
+      var destLang = Session.get("translationLanguage");
       var key = Session.get('mfTransKey');
 
       saveChange(destLang, key, $(event.currentTarget).val() + "\n");
-    } 
+    }
     // if tab was pressed we save the current one and move to next input
     else if (event.keyCode == 9) {
-      
+
       event.preventDefault();
-      var destLang = Template.currentData().trans;
+      var destLang = Session.get("translationLanguage");
       var key = Session.get('mfTransKey');
-      
+
       saveChange(destLang, key, $(event.currentTarget).val());
 
       var tr;
@@ -179,19 +189,21 @@ Template.mfTransLang.events({
 Template.mfTransLang.helpers({
   strings: function() {
     // summarise matching keys (orig + trans) to a single record
-      var self = this;
+      var orig = mfPkg.native;
+      var trans = Session.get("translationLanguage");
+
       var strings = mfPkg.mfStrings.find({
-        $and: [{$or: [{lang: self.orig}, {lang: self.trans}]},
+        $and: [{$or: [{lang: orig}, {lang: trans}]},
           {removed: undefined}]
       }).fetch();
-      
+
       if (!strings) return;
-      
+
       var out = {};
       _.each(strings, function(str) {
         if (!out[str.key])
           out[str.key] = { key: str.key };
-        if (str.lang == self.orig)
+        if (str.lang == orig)
           out[str.key].orig = str.text;
         else
           out[str.key].trans = str.text;
@@ -212,7 +224,7 @@ Template.mfTransLang.helpers({
 
         return a.text - b.text;
       });
-      
+
       return strings;
   },
   sortedStrings: function(strings) {
@@ -228,7 +240,9 @@ Template.mfTransLang.helpers({
     return Session.get('translationShowKey');
   },
   hasMoreRows: function() {
-    return this.trans.indexOf('\n') > -1;
+    if (this.trans) {
+      return this.trans.indexOf('\n') > -1;
+    }
   },
   stateClass: function() {
     if (this.fuzzy)
@@ -252,7 +266,7 @@ Template.mfTransLang.helpers({
   mfTransTrans: function() {
     var str = mfPkg.mfStrings.findOne({
       key: Session.get('mfTransKey'),
-      lang: this.trans
+      lang: Session.get("translationLanguage")
     });
     return str ? str.text : '';
   },
