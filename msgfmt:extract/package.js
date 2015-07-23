@@ -16,7 +16,7 @@ Package.onUse(function(api) {
   //api.versionsFrom('1.0.4.1');
 
   api.use('msgfmt:core@2.0.0-preview.2');
-  api.use('jag:pince@0.0.6', 'client');
+  api.use('jag:pince@0.0.8');
 
   api.addFiles('extract.js', 'server');
 });
