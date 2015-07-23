@@ -114,7 +114,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 
 		if (updating) {
 			// does this update affect translations?
-			if (existing) {
+			if (existing && (lang == mfPkg.native || str.removed)) {
 				query = { $set: {} };
 				if (lang == mfPkg.native) {
 					// TODO, consider string comparison with threshold to mark as fuzzy
