@@ -39,25 +39,24 @@ if (Meteor.isServer) {
   mfPkg.mfRevisions.deny({insert:mfPkg.webUI.denied, update:mfPkg.webUI.denied, remove:mfPkg.webUI.denied});
 }
 
-// needs to be on client and server for routing to work properly
-if (Package['iron:router'])
-Package['iron:router'].Router.map(function() {
-    this.route('mfAll', {
-        path: '/translate/mfAll.js',
-        where: 'server',
-        action: function() {
-            var out, meta = { exportedAt: new Date().getTime(), updatedAt: 0 };
-            for (lang in mfPkg.strings)
-                for (key in mfPkg.strings[lang])
-                    if (mfPkg.strings[lang][key].mtime > meta.updatedAt)
-                        meta.updatedAt = mfPkg.strings[lang][key].mtime;
+// function serve content
 
-            out = 'mfPkg.syncAll('
-                + JSON.stringify(mfPkg.strings, null, 2)
-                + ', ' + JSON.stringify(meta, null, 2) + ');';
-            //this.response.writeHead(200, {'Content-Type': 'application/javascript'});
-            this.response.writeHead(200, {'Content-Disposition': 'attachment; filename=mfAll.js'});
-            this.response.end(out, 'utf8');
-        }
-    });
-});
+if (Meteor.isServer) {
+  var serve = function (req, response) { 
+  var out, meta = { exportedAt: new Date().getTime(), updatedAt: 0 };
+  for (lang in mfPkg.strings)
+      for (key in mfPkg.strings[lang])
+          if (mfPkg.strings[lang][key].mtime > meta.updatedAt)
+              meta.updatedAt = mfPkg.strings[lang][key].mtime;
+
+  out = 'mfPkg.syncAll('
+      + JSON.stringify(mfPkg.strings, null, 2)
+      + ', ' + JSON.stringify(meta, null, 2) + ');';
+  //this.response.writeHead(200, {'Content-Type': 'application/javascript'});
+  response.writeHead(200, {'Content-Disposition': 'attachment; filename=mfAll.js'});
+  response.end(out, 'utf8');
+  }
+  
+  // declare route from which we are serving the js file
+  WebApp.connectHandlers.use('/translate/mfAll.js', serve);
+}

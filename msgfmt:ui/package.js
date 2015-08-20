@@ -8,8 +8,11 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom("METEOR@1.0.1");
   api.use(['templating', 'underscore'], 'client');
-  api.use('iron:router@1.0.0', ['client', 'server']);
   api.use('mongo');
+  api.use(['webapp'], 'server');
+  api.use(['iron:router'], 'client', { weak: true});
+  api.use(['meteorhacks:flow-router'], 'client', { weak: true});
+  api.use(['meteorhacks:flow-layout'], 'client', { weak: true});
   api.use('msgfmt:core@2.0.0-preview.2');
 
   api.addFiles('lib/common.js');
@@ -17,6 +20,7 @@ Package.onUse(function (api) {
 
   // client
   api.addFiles([
+    'lib/router.js',
     'lib/ui.html',
     'lib/ui.css',
     'lib/client.js',

@@ -41,7 +41,7 @@ var checkForUpdates = function(m, force) {
 
   var walker  = walk.walk(relUp, {
     followLinks: false,
-    filters: [ 
+    filters: [
       /\/\.[^\.]+\//  // skip .directories (hidden)
     ]
   });
@@ -211,7 +211,7 @@ var boundCheck = Meteor.bindEnvironment(checkForUpdates);
 
 // https://github.com/meteor/meteor/pull/3704/files
 process.on('SIGUSR2', boundCheck);  // Meteor < 1.0.4
-process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
+process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4
 process.on('message', boundCheck);  // Meteor >= 1.0.4
 
 // No reason to block startup, we can do update gradually asyncronously
@@ -238,7 +238,7 @@ Meteor.startup(function() {
   });
 
   checkForUpdates();
-});
+});  
 
 /* handler helpers */
 
@@ -254,7 +254,7 @@ var lastFile = null;
 function logKey(file, key, text, file, line, strings) {
   if (strings[key] && strings[key].text != text)
     log.warn('{ ' + key + ': "' + text + '" } in '
-      + file + ':' + line + ' replaces DUP_KEY\n         { '
+      + file + ':' + line + ' replaces DUP_KEY { '
       + key + ': "' + strings[key].text + '" } in '
       + strings[key].file + ':' + strings[key].line);
 
@@ -266,7 +266,11 @@ function logKey(file, key, text, file, line, strings) {
     log.trace(file);
   }
 
-  log.trace('* ' + key + ': "' + text.replace(/\s+/g, ' ') + '"');
+  log.trace('* ' + key + ': "' + (text ? text.replace(/\s+/g, ' ') : "NO TEXT") + '"');
+}
+
+function checkText(text, key) {
+  return (text == null || text == '' || text == "''" || text == '"') ? ("<" + key + ">" ) : text;
 }
 
 /* handlers */
@@ -278,12 +282,13 @@ handlers.html = function(file, data, mtime, strings) {
   var result, re;
 
   // {{mf "key" 'text' attr1=val1 attr2=val2 etc}}
-  re = /{{[\s]?mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
+  re = /\{\{[\s]?mf ['"](.*?)['"] ?(["'](.*?)['"])?(.*?)\}\}/g;
   while (result = re.exec(data)) {
-    var key = result[2], text = result[4], attributes = attrDict(result[5]);
+    var key = result[1], text = result[3], attributes = attrDict(result[4]);
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
@@ -302,6 +307,7 @@ handlers.html = function(file, data, mtime, strings) {
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
       .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
@@ -325,6 +331,7 @@ handlers.jade = function(file, data, mtime, strings) {
     var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])(.*?)\1\s*\)[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
@@ -343,6 +350,7 @@ handlers.jade = function(file, data, mtime, strings) {
     var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])([^\1]+?)\1\s*\)[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
@@ -371,6 +379,7 @@ handlers.js = function(file, data, mtime, strings) {
     var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
       .exec(data.substring(0, result.index));
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
@@ -401,6 +410,7 @@ handlers.coffee = function(file, data, mtime, strings) {
     }
 
     var line = data.substring(0, result.index).split('\n').length;
+    text = checkText(text, key);
     logKey(file, key, text, file, line, strings);
     strings[key] = {
       key: key,
