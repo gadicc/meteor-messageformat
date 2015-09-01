@@ -3,17 +3,33 @@
 // Setup in msgfmt:core on server, only used on the client in msgfmt:ui
 mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
 
+var ironRouter = Package['iron:router'] && Package['iron:router'].Router;
+
 /*
  * Finds the name of the first route using the given template
  */
 function routeNameFromTemplate(name) {
-  var route = _.find(Router.routes, function(route) {
-    if (route.options.template)
-      return route.options.template == name;
-    else
-      return route.name == name;
-  });
-  return route && route.name;
+  var route;
+
+  if (ironRouter) {
+
+    route = _.find(ironRouter.routes, function(route) {
+      if (route.options.template)
+        return route.options.template === name;
+      else
+        return route.getName() === name;
+    });
+    return route && route.getName();
+
+  }
+
+  // Unsupported router
+  return;
+}
+
+function routePathFromName(name) {
+  if (ironRouter)
+    return ironRouter.path(name);
 }
 
 /*
@@ -92,103 +108,98 @@ function changeKey(newKey) {
   $('#mfTransDest').focus();
 }
 
-if (Package['iron:router'])
-Package['iron:router'].Router.map(function() {
-  // Main translation page, summary of all language data
-  this.route('mfTrans', {
-    path: '/translate',
-    waitOn: function() {
-      return Meteor.subscribe('mfStats');
-    },
-    data: function() {
-      var data = {};
-      data.strings = mfPkg.mfStrings.find();
-      data.stats = mfPkg.mfMeta.findOne({_id: '__stats'});
-      data.native = mfPkg.native;
-      return data;
-    }
-  });
+RouterLayer.route('/translate', { template: 'mfTrans' });
+RouterLayer.route('/translate/:lang', { template: 'mfTransLang' });
 
-  // Modify translations for a particular language
-  this.route('mfTransLang', {
-    path: '/translate/:lang',
-    waitOn: function() {
-      // Note, this is in ADDITION to the regular mfStrings sub
-      return Meteor.subscribe('mfStrings',
-        [mfPkg.native, this.params.lang], 0, true);
-    },
-    onBeforeAction: function() {
-      if (!mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this)) {
-        this.render('mfTransLangDenied');
-      } else {
-        // Temporary, only used to override preserve on dest
-        Session.set('mfTransTrans', this.params.lang);
+Template.mfTrans.onCreated(function() {
+  this.subscribe('mfStats');
+});
 
-        // Handle ctrl-up/ctrl-down, respectively
-        $(window).on('keydown.mfTrans', function(event) {
-          if (event.ctrlKey && (event.which == 38 || event.which == 40)) {
-            event.preventDefault(); event.stopPropagation();
-            var tr = event.which == 38
-              ? $('#mfTransLang tr.current').prev()
-              : $('#mfTransLang tr.current').next();
-            if (tr.length) {
-              changeKey(tr.data('key'));
-              mfCheckScroll(tr);
-            }
-          }
-        });
+Template.mfTransLang.onCreated(function() {
+  // Note, this is in ADDITION to the regular mfStrings sub
+  var lang = RouterLayer.getParam('lang');
+  this.subscribe('mfStrings', [mfPkg.native, lang], 0, true);
+  this.subscribe('mfRevisions', lang, 10);
 
-        this.subscribe('mfRevisions', this.params.lang, 10);
-        this.next();
+  // Temporary, only used to override preserve on dest
+  Session.set('mfTransTrans', lang);
+
+  // Handle ctrl-up/ctrl-down, respectively
+  $(window).on('keydown.mfTrans', function(event) {
+    if (event.ctrlKey && (event.which == 38 || event.which == 40)) {
+      event.preventDefault(); event.stopPropagation();
+      var tr = event.which == 38
+        ? $('#mfTransLang tr.current').prev()
+        : $('#mfTransLang tr.current').next();
+      if (tr.length) {
+        changeKey(tr.data('key'));
+        mfCheckScroll(tr);
       }
-    },
-    onStop: function() {
-      $(window).off('keydown.mfTrans');
-    },
-    data: function() {
-      var data = { strings: {} };
-      var strings, out = {};
-      data.orig = mfPkg.native;
-      data.trans = this.params.lang;
-
-      // summarise matching keys (orig + trans) to a single record
-      strings = mfPkg.mfStrings.find({
-        $and: [{$or: [{lang: data.orig}, {lang: this.params.lang}]},
-          {removed: undefined}]
-      }).fetch();
-      _.each(strings, function(str) {
-        if (!out[str.key])
-          out[str.key] = { key: str.key };
-        if (str.lang == data.orig)
-          out[str.key].orig = str.text;
-        else
-          out[str.key].trans = str.text;
-        if (str.fuzzy)
-          out[str.key].fuzzy = true;
-      });
-      data.strings = _.values(out);
-      data.strings.sort(function(a, b) {
-        if (!a.trans && b.trans)
-          return -1;
-        else if (a.trans && !b.trans)
-          return 1;
-
-        if (!a.fuzzy && b.fuzzy)
-          return -1;
-        else if (b.fuzzy && !a.fuzzy)
-          return 1;
-
-        return a.text - b.text;
-      });
-
-      return data;
     }
   });
 });
 
+Template.mfTransLang.onDestroyed(function() {
+  $(window).off('keydown.mfTrans');
+});
+
+Template.mfTrans.helpers({
+  strings: function() { return mfPkg.mfStrings.find(); },
+  stats: function() { return mfPkg.mfMeta.findOne({_id: '__stats'}); },
+  native: mfPkg.native,
+  allowed: function() {
+    return !mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this);
+  }
+});
+
+Template.mfTransLang.helpers({
+  allowed: function() {
+    return !mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this);
+  },
+  strings: function() {
+    var orig = mfPkg.native;
+    var lang = RouterLayer.getParam('lang');
+
+    // summarise matching keys (orig + trans) to a single record
+    var out = {}, strings = mfPkg.mfStrings.find({
+      $and: [{$or: [{lang: orig}, {lang: lang}]},
+        {removed: undefined}]
+    }).fetch();
+
+    _.each(strings, function(str) {
+      if (!out[str.key])
+        out[str.key] = { key: str.key };
+      if (str.lang == orig)
+        out[str.key].orig = str.text;
+      else
+        out[str.key].trans = str.text;
+      if (str.fuzzy)
+        out[str.key].fuzzy = true;
+    });
+
+    strings = _.values(out);
+    strings.sort(function(a, b) {
+      if (!a.trans && b.trans)
+        return -1;
+      else if (a.trans && !b.trans)
+        return 1;
+
+      if (!a.fuzzy && b.fuzzy)
+        return -1;
+      else if (b.fuzzy && !a.fuzzy)
+        return 1;
+
+      return a.text - b.text;
+    });
+
+    return strings;
+  }
+});
+
+
 Template.mfTrans.events({
   'click #mfTransNewSubmit': function() {
-    Router.go('/translate/' + $('#mfTransNewText').val());
+    RouterLayer.go('mfTransLang', { lang: $('#mfTransNewText').val() });
   },
   'click #mfAllJs': function(event, tpl) {
     // Make sure we have no conflicts with iron-router
@@ -223,26 +234,25 @@ Template.mfTransLang.helpers({
   mfTransOrig: function() {
     var str = mfPkg.mfStrings.findOne({
       key: Session.get('mfTransKey'),
-      lang: this.orig
+      lang: mfPkg.native
     });
     return str ? str.text : '';
   },
   mfTransTrans: function() {
     var str = mfPkg.mfStrings.findOne({
       key: Session.get('mfTransKey'),
-      lang: this.trans
+      lang: RouterLayer.getParam('lang')
     });
     return str ? str.text : '';
   },
   keyInfo: function() {
     var str = mfPkg.mfStrings.findOne({
       key: Session.get('mfTransKey'),
-      lang: this.orig
+      lang: mfPkg.native
     });
     if (str && str.template) {
       var routeName = routeNameFromTemplate(str.template);
-      if (routeName)
-        str.routeUrl = Router.path(routeName);
+      if (routeName) str.routeUrl = routePathFromName(routeName);
     }
     return str || {};
   }
@@ -257,7 +267,7 @@ var initialRender = _.once(function() {
   $('#mfTransDest').focus();
 });
 
-Template.mfTransLang.rendered = function() {
+Template.mfTransLang.onRendered(function() {
   var tr, key = Session.get('mfTransKey');
 
   // For unset or nonexistent key, set to first row
@@ -269,4 +279,4 @@ Template.mfTransLang.rendered = function() {
   var transDest = $('#mfTransDest');
   if (typeof transDest.tabOverride === 'function') transDest.tabOverride();
   initialRender();
-};
+});

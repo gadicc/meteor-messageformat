@@ -76,3 +76,18 @@ Meteor.publish('mfStats', function() {
     handle.stop();
   });
 });
+
+WebApp.connectHandlers.use('/translate/mfAll.js', function(req, res, next) {
+  var out, meta = { exportedAt: new Date().getTime(), updatedAt: 0 };
+  for (lang in mfPkg.strings)
+      for (key in mfPkg.strings[lang])
+          if (mfPkg.strings[lang][key].mtime > meta.updatedAt)
+              meta.updatedAt = mfPkg.strings[lang][key].mtime;
+
+  out = 'mfPkg.syncAll('
+      + JSON.stringify(mfPkg.strings, null, 2)
+      + ', ' + JSON.stringify(meta, null, 2) + ');';
+  //res.writeHead(200, {'Content-Type': 'application/javascript'});
+  res.writeHead(200, {'Content-Disposition': 'attachment; filename=mfAll.js'});
+  res.end(out, 'utf8');  
+});

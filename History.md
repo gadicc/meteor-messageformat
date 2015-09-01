@@ -7,6 +7,7 @@ See "Differences from v0" in the README too.
   en_US -> en -> native.
 
 * Split off the translation UI into a separate package (#29)
+* mf:ui is now router agnostic via nicolaslopezj:meteor-router-layer
 
 * Server now keeps track of connection locales (#83) thanks @lucazulian
 
@@ -16,7 +17,6 @@ See "Differences from v0" in the README too.
 * msgfmt.locale(), msgfmt.lang(), msgfmt.dir() reactive getters
 
 * msgfmt.setBodyDir = true (default) will set <body> direction
-
 
 
 TODO

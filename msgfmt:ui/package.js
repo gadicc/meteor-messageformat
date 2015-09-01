@@ -8,7 +8,11 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom("METEOR@1.0.1");
   api.use(['templating', 'underscore'], 'client');
-  api.use('iron:router@1.0.0', ['client', 'server']);
+  api.use('webapp', 'server');
+
+  //api.use('iron:router@1.0.0', ['client', 'server']);
+  api.use('nicolaslopezj:router-layer@0.0.11', 'client');
+
   api.use('mongo');
   api.use('msgfmt:core@2.0.0-preview.2');
 
