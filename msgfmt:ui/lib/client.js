@@ -178,6 +178,8 @@ Template.mfTrans.helpers({
 });
 
 Template.mfTransLang.helpers({
+  origLang: mfPkg.native,
+  destLang: function() { return RouterLayer.getParam('lang'); },
   allowed: function() {
     return !mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this);
   },
