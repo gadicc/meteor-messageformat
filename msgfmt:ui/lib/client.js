@@ -51,6 +51,10 @@ function mfCheckScroll(tr) {
  * consider refactoring as a Method
  */
 function saveChange(lang, key, text) {
+  if (!lang) lang = Session.get('mfTransTrans');
+  if (!key) key = Session.get('mfTransKey');
+  if (!text) text = $('#mfTransDest').val();
+
   var existing = mfPkg.mfStrings.findOne({
     lang: lang, key: key
   });
@@ -115,6 +119,7 @@ Template.mfTrans.onCreated(function() {
   this.subscribe('mfStats');
 });
 
+var origOnPopState, origPushState;
 Template.mfTransLang.onCreated(function() {
   // Note, this is in ADDITION to the regular mfStrings sub
   var lang = RouterLayer.getParam('lang');
@@ -137,10 +142,30 @@ Template.mfTransLang.onCreated(function() {
       }
     }
   });
+
+  origOnPopState = window.onpopstate;
+  window.onpopstate = function() {
+    saveChange(null, null, unsavedDest);
+    if (origOnPopState)
+      origOnPopState.apply(this, arguments);
+  }
+
+  origPushState = history && history.pushState;
+  history.pushState = function() {
+    saveChange(null, null, unsavedDest);
+    if (origPushState)
+      origPushState.apply(this, arguments);
+  }
 });
 
 Template.mfTransLang.onDestroyed(function() {
   $(window).off('keydown.mfTrans');
+
+  // after template destroy so event still fires during exit
+  _.defer(function() {
+    window.onpopstate = origOnPopState;
+    if (history) history.pushState = origPushState;
+  });
 });
 
 Template.mfTrans.helpers({
@@ -210,9 +235,13 @@ Template.mfTrans.events({
   }
 });
 
+var unsavedDest;
 Template.mfTransLang.events({
   'click #mfTransLang tr': function(event) {
     changeKey(this.key);
+  },
+  'keyup #mfTransDest': function(event) {
+    unsavedDest = event.target.value;
   }
 });
 
