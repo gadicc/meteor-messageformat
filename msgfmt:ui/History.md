@@ -1,5 +1,7 @@
 ## vNEXT
 
+## 2.0.0-preview.4
+
 * Feature: Router agnosticism via `nicolaslopezj:meteor-router-layer`.  You
   can now use mf:ui with either iron-router or flow-router (#152)
 

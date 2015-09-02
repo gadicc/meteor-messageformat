@@ -14,7 +14,11 @@ accounts-password
 accounts-github
 accounts-google
 accounts-facebook
+
 iron:router
+#kadira:flow-router
+#kadira:blaze-layout
+
 mrt:sp-marked
 mizzao:bootstrap-3
 gadicohen:syntaxhighlighter
