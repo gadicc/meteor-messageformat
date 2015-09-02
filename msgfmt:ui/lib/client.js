@@ -212,9 +212,7 @@ Template.mfTrans.events({
 
 Template.mfTransLang.events({
   'click #mfTransLang tr': function(event) {
-    var tr = $(event.target).parents('tr');
-    var key = tr.data('key');
-    if (key) changeKey(key);
+    changeKey(this.key);
   }
 });
 
