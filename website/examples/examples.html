@@ -39,6 +39,12 @@
         <ol>
           <li><a href="#string_gender_plural">{{mf 'string_gender_plural' 'Gender and 2 plurals'}}</a></li>
         </ol>
+
+        <li><a href="#html_examples">{{mf 'html_examples' 'HTML Examples'}}</a></li>
+        <ol>
+          <li><a href="#html_inline">{{mf 'html_inline' 'Inline HTML'}}</a></li>
+        </ol>
+
       </ol>
     </div><!-- TOC -->
 
@@ -467,6 +473,33 @@
     {{> genderButtons}}<br />
     {{> numButtons}}<br />
     {{> numButtons2}}
+
+    <a name="html_examples"></a>
+    <h2>{{mf 'html_examples' 'HTML Examples'}}</h2>
+
+    <h3>{{mf 'html_inline' 'Inline HTML'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|#mf KEY='ex_html_inline'}}
+               Hello <b>there</b>, my friend.
+              {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY='ex_html_inline'}}
+              Hello <b>there</b>, my friend.
+            {{/mf}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}<br />
 </template>
 
 
