@@ -479,6 +479,11 @@
     <a name="html_examples"></a>
     <h2>{{mf 'html_examples' 'HTML Examples'}}</h2>
 
+    <p><i>Note: HTML is escaped by default.  To allow HTML in your text
+    (and notably, you trust your translators), either use a triple-stache
+    or the <code>_html=true</code> parameter in your block helpers, as
+    per the examples below.</i></p>
+
     <a name="html_inline"></a>
     <h3>{{mf 'html_inline' 'Inline HTML'}}</h3>
     <div class="exampleWrapper">
@@ -511,9 +516,13 @@
           <td>{{mf 'template' 'Template'}}:</td>
           <td>
             {{#sh_highlight lang='html'}}
-              {{|#mf KEY='ex_html_link1' linkHelper=linkHelper}}
+              &lt;!-- Block helper: -->
+              {{|#mf KEY='ex_html_link1' _html=true linkHelper=linkHelper}}
                Hello {linkHelper}, my friend.
               {{|/mf}}
+
+              &lt;!-- Triple stache: -->
+              {{{|mf 'ex_html_link1' 'Hello {linkHelper}, my friend.' linkHelper=linkHelper}}}
             {{/sh_highlight}}
           </td>
         </tr><tr>
@@ -530,9 +539,11 @@
         </tr><tr>
           <td>{{mf 'result' 'Result'}}:</td>
           <td>
-            {{#mf KEY='ex_html_link1' linkHelper=linkHelper}}
+            {{#mf KEY='ex_html_link1' _html=true linkHelper=linkHelper}}
               Hello {linkHelper}, my friend.
             {{/mf}}
+            <br>
+            {{{mf 'ex_html_link1' 'Hello {linkHelper}, my friend.' linkHelper=linkHelper}}}
           </td>
         </tr>
       </table>
@@ -547,17 +558,23 @@
           <td>{{mf 'template' 'Template'}}:</td>
           <td>
             {{#sh_highlight lang='html'}}
-              {{|#mf KEY='ex_html_link2'  A1a="<a href='...'>" A1b="</a>"}}
+              &lt;!-- Block helper: -->
+              {{|#mf KEY='ex_html_link2' _html=true A1a="<a href='...'>" A1b="</a>"}}
                Hello {A1a}there{A1b}, my friend.
               {{|/mf}}
+
+              &lt;!-- Triple stache: -->
+              {{{|mf 'ex_html_link2' 'Hello {A1a}there{A1b}, my friend.' A1a="<a href='...'>" A1b="</a>"}}}
             {{/sh_highlight}}
           </td>
         </tr><tr>
           <td>{{mf 'result' 'Result'}}:</td>
           <td>
-            {{#mf KEY='ex_html_link2' A1a="<a href='...'>" A1b="</a>"}}
+            {{#mf KEY='ex_html_link2' _html=true A1a="<a href='...'>" A1b="</a>"}}
               Hello {A1a}there{A1b}, my friend.
             {{/mf}}
+            <br>
+            {{{mf 'ex_html_link2' 'Hello {A1a}there{A1b}, my friend.' A1a="<a href='...'>" A1b="</a>"}}}
           </td>
         </tr>
       </table>
