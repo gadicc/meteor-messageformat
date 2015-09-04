@@ -151,4 +151,10 @@ if (Meteor.isClient) {
       return new Date(Date.now() - 500000);
     }
   });
+
+  Template.examples.helpers({
+    linkHelper: function() {
+      return '<a href="...">' + mf('linkLabel', 'there') + '</a>';
+    }
+  });
 }

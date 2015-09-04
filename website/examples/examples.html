@@ -43,6 +43,8 @@
         <li><a href="#html_examples">{{mf 'html_examples' 'HTML Examples'}}</a></li>
         <ol>
           <li><a href="#html_inline">{{mf 'html_inline' 'Inline HTML'}}</a></li>
+          <li><a href="#html_link1">{{mf 'html_link1' 'Link (Style #1)'}}</a></li>
+          <li><a href="#html_link2">{{mf 'html_link2' 'Link (Style #2)'}}</a></li>
         </ol>
 
       </ol>
@@ -477,6 +479,7 @@
     <a name="html_examples"></a>
     <h2>{{mf 'html_examples' 'HTML Examples'}}</h2>
 
+    <a name="html_inline"></a>
     <h3>{{mf 'html_inline' 'Inline HTML'}}</h3>
     <div class="exampleWrapper">
       <table class="example">
@@ -494,6 +497,66 @@
           <td>
             {{#mf KEY='ex_html_inline'}}
               Hello <b>there</b>, my friend.
+            {{/mf}}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <a name="html_link1"></a>
+    <h3>{{mf 'html_link1'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|#mf KEY='ex_html_link1' linkHelper=linkHelper}}
+               Hello {linkHelper}, my friend.
+              {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'javascript' 'JavaScript'}}:</td>
+          <td>
+            {{#sh_highlight lang='js'}}
+              Template.examples.helpers({
+                linkHelper: function() {
+                  return '<a href="...">' + mf('linkLabel', 'there') + '</a>';
+                }
+              });
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY='ex_html_link1' linkHelper=linkHelper}}
+              Hello {linkHelper}, my friend.
+            {{/mf}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {{> langButtons}}<br />
+
+    <a name="html_link2"></a>
+    <h3>{{mf 'html_link2'}}</h3>
+    <div class="exampleWrapper">
+      <table class="example">
+        <tr>
+          <td>{{mf 'template' 'Template'}}:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              {{|#mf KEY='ex_html_link2'  A1a="<a href='...'>" A1b="</a>"}}
+               Hello {A1a}there{A1b}, my friend.
+              {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>{{mf 'result' 'Result'}}:</td>
+          <td>
+            {{#mf KEY='ex_html_link2' A1a="<a href='...'>" A1b="</a>"}}
+              Hello {A1a}there{A1b}, my friend.
             {{/mf}}
           </td>
         </tr>
