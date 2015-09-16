@@ -41,7 +41,7 @@ var checkForUpdates = function(m, force) {
 
   var walker  = walk.walk(relUp, {
     followLinks: false,
-    filters: [ 
+    filters: [
       /\/\.[^\.]+\//  // skip .directories (hidden)
     ]
   });
@@ -51,7 +51,7 @@ var checkForUpdates = function(m, force) {
 
   walker.on('file', function(root, stat, next) {
     // Add this file to the list of files (skip .dirs)
-    if (stat.name.match(/html$|js$|coffee$|jade$/)) {
+    if (stat.name.match(/html$|js$|coffee$|jsx$|jade$/)) {
       var prettyDir = root.substr(relUp.length-1);
       var file = path.join(prettyDir, stat.name);
 
@@ -211,7 +211,7 @@ var boundCheck = Meteor.bindEnvironment(checkForUpdates);
 
 // https://github.com/meteor/meteor/pull/3704/files
 process.on('SIGUSR2', boundCheck);  // Meteor < 1.0.4
-process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
+process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4
 process.on('message', boundCheck);  // Meteor >= 1.0.4
 
 // No reason to block startup, we can do update gradually asyncronously
@@ -382,6 +382,8 @@ handlers.js = function(file, data, mtime, strings) {
     };
   }
 };
+
+handlers.jsx = handlers.js;
 
 handlers.coffee = function(file, data, mtime, strings) {
   // XXX TODO, escaped quotes
