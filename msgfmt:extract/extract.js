@@ -41,7 +41,7 @@ var checkForUpdates = function(m, force) {
 
   var walker  = walk.walk(relUp, {
     followLinks: false,
-    filters: [ 
+    filters: [
       /\/\.[^\.]+\//  // skip .directories (hidden)
     ]
   });
@@ -51,7 +51,7 @@ var checkForUpdates = function(m, force) {
 
   walker.on('file', function(root, stat, next) {
     // Add this file to the list of files (skip .dirs)
-    if (stat.name.match(/html$|js$|coffee$|jade$/)) {
+    if (stat.name.match(/html$|js$|coffee$|jsx$|jade$/)) {
       var prettyDir = root.substr(relUp.length-1);
       var file = path.join(prettyDir, stat.name);
 
@@ -211,7 +211,7 @@ var boundCheck = Meteor.bindEnvironment(checkForUpdates);
 
 // https://github.com/meteor/meteor/pull/3704/files
 process.on('SIGUSR2', boundCheck);  // Meteor < 1.0.4
-process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
+process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4
 process.on('message', boundCheck);  // Meteor >= 1.0.4
 
 // No reason to block startup, we can do update gradually asyncronously
@@ -363,6 +363,32 @@ handlers.js = function(file, data, mtime, strings) {
 
   // function blah(), blah = function(), helper('moo', function() {...
   // mf('test_key', params, 'test_text'), mf('test_key', 'test_text')
+
+  re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,?\s*(['"])(.*?)\3,?.*?\)/g;
+  while (result = re.exec(data)) {
+    var key = result[2], text = result[4], attributes = attrDict(result[5]);
+    if (!text && _.isString(result[3])) text = result[3];
+    var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
+      .exec(data.substring(0, result.index));
+    var line = data.substring(0, result.index).split('\n').length;
+    logKey(file, key, text, file, line, strings);
+    strings[key] = {
+      key: key,
+      text: text,
+      file: file,
+      line: line,
+      mtime: mtime,
+      func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
+    };
+  }
+};
+
+handlers.jsx = function(file, data, mtime, strings) {
+  // XXX TODO, escaped quotes
+  var result, re;
+
+    // <MyComponent>{mf('test_jsx_key','test_jsx_text')}</MyComponent>
+    // mf('test_jsx_key','test_jsx_text')
 
   re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,?\s*(['"])(.*?)\3,?.*?\)/g;
   while (result = re.exec(data)) {
