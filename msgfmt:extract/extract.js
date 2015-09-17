@@ -211,7 +211,7 @@ var boundCheck = Meteor.bindEnvironment(checkForUpdates);
 
 // https://github.com/meteor/meteor/pull/3704/files
 process.on('SIGUSR2', boundCheck);  // Meteor < 1.0.4
-process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4
+process.on('SIGHUP', boundCheck);   // Meteor >= 1.0.4 
 process.on('message', boundCheck);  // Meteor >= 1.0.4
 
 // No reason to block startup, we can do update gradually asyncronously
