@@ -1,6 +1,6 @@
 Package.describe({
   name:    "msgfmt:core",
-  version: "2.0.0-preview.12",
+  version: "2.0.0-preview.13",
   summary: "MessageFormat support, the Meteor way",
   git:     "https://github.com/gadicc/meteor-messageformat.git",
 });

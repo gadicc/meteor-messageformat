@@ -1,5 +1,9 @@
 ## vNEXT
 
+## 2.0.0-preview.13
+
+* JSX support! (#170, #138; thanks @flipace)
+
 ## v0.0.48
 
 * Work around /translate/mfAll.js not loading correctly with iron-router (#81)
