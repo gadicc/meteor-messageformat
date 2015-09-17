@@ -383,7 +383,31 @@ handlers.js = function(file, data, mtime, strings) {
   }
 };
 
-handlers.jsx = handlers.js;
+handlers.jsx = function(file, data, mtime, strings) {
+  // XXX TODO, escaped quotes
+  var result, re;
+
+    // <MyComponent>{mf('test_jsx_key','test_jsx_text')}</MyComponent>
+    // mf('test_jsx_key','test_jsx_text')
+
+  re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,?\s*(['"])(.*?)\3,?.*?\)/g;
+  while (result = re.exec(data)) {
+    var key = result[2], text = result[4], attributes = attrDict(result[5]);
+    if (!text && _.isString(result[3])) text = result[3];
+    var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
+      .exec(data.substring(0, result.index));
+    var line = data.substring(0, result.index).split('\n').length;
+    logKey(file, key, text, file, line, strings);
+    strings[key] = {
+      key: key,
+      text: text,
+      file: file,
+      line: line,
+      mtime: mtime,
+      func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
+    };
+  }
+};
 
 handlers.coffee = function(file, data, mtime, strings) {
   // XXX TODO, escaped quotes
