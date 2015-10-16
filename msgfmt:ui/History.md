@@ -1,5 +1,10 @@
 ## vNEXT
 
+## 2.0.0-preview.5
+
+* Bugfix: `Uncaught Error: No route found named "mfTransLang"` when adding
+  new languages (#169).
+
 ## 2.0.0-preview.4
 
 * Feature: Router agnosticism via `nicolaslopezj:meteor-router-layer`.  You

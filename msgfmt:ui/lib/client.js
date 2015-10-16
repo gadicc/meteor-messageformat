@@ -112,8 +112,8 @@ function changeKey(newKey) {
   $('#mfTransDest').focus();
 }
 
-RouterLayer.route('/translate', { template: 'mfTrans' });
-RouterLayer.route('/translate/:lang', { template: 'mfTransLang' });
+RouterLayer.route('/translate', { name: 'mfTrans', template: 'mfTrans' });
+RouterLayer.route('/translate/:lang', { name: 'mfTransLang', template: 'mfTransLang' });
 
 Template.mfTrans.onCreated(function() {
   this.subscribe('mfStats');
