@@ -12,6 +12,15 @@ For full info, docs and examples, see the
 **THIS IS AN IN-DEVELOPMENT RELEASE.  YOU SHOULD NOT BE USING IT UNLESS YOU KNOW
 WHAT YOU'RE DOING.  SEE THE VERY END OF THIS DOCUMENT FOR SOME MORE HELP**.
 
+Current versions of each package (requires manual, explicit updates until
+the stable release):
+
+```
+meteor add msgfmt:core@2.0.0-preview.13
+meteor add msgfmt:extract@2.0.0-preview.10
+meteor add msgfmt:ui@2.0.0-preview.5
+```
+
 ## Features
 
 * Super powerful language use via the industry gold standard, MessageFormat
