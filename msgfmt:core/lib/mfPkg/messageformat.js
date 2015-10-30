@@ -12,6 +12,13 @@
  *
  */
 
+if (Meteor.isServer && Package['gadicohen:messageformat']) {
+  throw new Error('You have conflicting versions of messageformat installed (v0 and v2).  ' +
+    'Please thoroughly read the Upgrade Instructions in the README and remove `gadicohen:messageformat` ' +
+    'if you\d like to use v2.');
+  return;
+}
+
  // For stuff that runs before init, e.g. want correct log level
 log = {};
 var queuedLogs = { debug: [], trace: [], warn: [] };

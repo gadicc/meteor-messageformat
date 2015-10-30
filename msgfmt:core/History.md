@@ -1,5 +1,10 @@
 ## vNEXT
 
+## 2.0.0-preview.14
+
+* Add `check` package (now that Meteor 1.2 is stricter)
+* Throw error if `gadicohen:messageformat` (i.e. `v0`) is also installed.
+
 ## 2.0.0-preview.13
 
 * JSX support! (#170, #138; thanks @flipace)

@@ -1,3 +1,9 @@
+## See respective History.md files, for:
+
+* [msgfmt:core](msgfmt:core/History.md)
+* [msgfmt:extract](msgfmt:extract/History.md)
+* [msgfmt:ui](msgfmt:ui/History.md)
+
 ## vNEXT (v2.0.0)
 
 See "Differences from v0" in the README too.
