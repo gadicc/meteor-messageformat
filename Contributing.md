@@ -24,6 +24,7 @@ a `git:` URL scheme).
 Make sure all tests are running during development:
 
 ```bash
+git submodule init && git submodule update
 cd website
 meteor -p 3002 test-packages
 ```
