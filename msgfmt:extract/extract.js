@@ -364,7 +364,7 @@ handlers.js = function(file, data, mtime, strings) {
   // function blah(), blah = function(), helper('moo', function() {...
   // mf('test_key', params, 'test_text'), mf('test_key', 'test_text')
 
-  re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,?\s*(['"])(.*?)\3,?.*?\)/g;
+  re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,?\s*(['"])(.*?)\3,?.*?\s*\)/g;
   while (result = re.exec(data)) {
     var key = result[2], text = result[4], attributes = attrDict(result[5]);
     if (!text && _.isString(result[3])) text = result[3];
