@@ -17,7 +17,7 @@ the stable release):
 
 ```
 meteor add msgfmt:core@2.0.0-preview.14
-meteor add msgfmt:extract@2.0.0-preview.11
+meteor add msgfmt:extract@2.0.0-preview.12
 meteor add msgfmt:ui@2.0.0-preview.5
 ```
 

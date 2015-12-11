@@ -1,5 +1,10 @@
 ## vNEXT
 
+## 2.0.0-preview.12
+
+* Add Blaze subexpression support in .html regex.
+  Thanks @MartinFournier.  (#180)
+
 ## 2.0.0-preview.11
 
 * More flexible regex for `*.js` files, allow a newline before
