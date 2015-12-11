@@ -6,7 +6,7 @@ All packages are under the main repo.  To clone the dev environment:
 
 ```bash
 $ git clone -b v2 https://github.com/gadicc/meteor-messageformat.git
-$ cd meteor-messageformat 
+$ cd meteor-messageformat
 ```
 
 This directory now contains the repo base dir (README, etc), `msgfmt:core`, `msgfmt:ui`,
@@ -35,6 +35,24 @@ and open a browser to http://localhost:3002/.
 1. Add a test that fails without your change
 1. Create your new code
 1. Confirm that your test now passes
+
+## Pull Request Requirements
+
+We greatly appreciate help with this project but we have a few requirements
+to ensure smooth development.
+
+1. **Keep your PR as simple and concise as possible**.  *Do not mix multiple
+**unrelated** features/fixes into a single PR.*  It is almost always
+impossible for us to accept PRs that ignore this rule.  To submit multiple PRs,
+simply use a different *branch* for each feature.  This is common practice
+everywhere.  e.g. `git checkout -b faster-loads` (see also the GitHub
+pull request doc linked below).
+
+1. **All PRs should contain a test, that what would have failed before your
+change and passes after (see above)**.  If there's no existing test that you
+can copy, paste and modify to test for your work, and you don't feel
+comfortable writing your own, it's ok, but then please state this when
+submitting.
 
 ## Contributing your change (Pull Requests)
 
