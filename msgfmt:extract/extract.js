@@ -278,7 +278,8 @@ handlers.html = function(file, data, mtime, strings) {
   var result, re;
 
   // {{mf "key" 'text' attr1=val1 attr2=val2 etc}}
-  re = /{{[\s]?mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)}}/g;
+  // or attribute=(mf "key" 'text' attr1=val1 attr2=val2 etc)
+  re = /(?:{{|=\()[\s]?mf (['"])(.*?)\1 ?(["'])(.*?)\3(.*?)(?:}}|\))/g;
   while (result = re.exec(data)) {
     var key = result[2], text = result[4], attributes = attrDict(result[5]);
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
