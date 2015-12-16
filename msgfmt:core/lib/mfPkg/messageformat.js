@@ -133,8 +133,11 @@ mf = function(key, params, message, locale) {
         if (currentInvocation)
             locale = currentInvocation.connection.locale;
         else {
-            console.log("[msgfmt] You called mf() outside of a method/publish and " +
-                "without specifying a locale, defaulting to native (" + msgfmt.native + ")");
+            console.log(
+              "[msgfmt] You called mf() with the key '" + key +
+              "' outside of a method/publish and " +
+              "without specifying a locale, defaulting to native (" + msgfmt.native + ")"
+            );
             locale = msgfmt.native;
         }
 
