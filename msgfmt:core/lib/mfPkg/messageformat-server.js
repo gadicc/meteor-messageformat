@@ -40,7 +40,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	 * the database and update them accordingly, then update mfPkg.string key
 	 */
 
-	var str, existing, revisionId, obj, updating, dbInsert, result, query,
+	var str, existing, revisionId, obj, updating, dbInsert, result, query, asyncErr,
 		optional = ['_id', 'file', 'line', 'template', 'func', 'removed', 'fuzzy'];
 	for (key in strings) {
 		str = strings[key];
@@ -111,8 +111,9 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 		if (dbInsert) {
 			obj._id = this.mfStrings.insert(obj)
 		} else {
-			this.mfStrings.update(obj._id, obj);
+			this.mfStrings.update(obj._id, obj, function(err, upc) { if (err) asyncErr = err; });
 		}
+		if (asyncErr) throw asyncErr;
 
 		if (updating) {
 			// does this update affect translations?
