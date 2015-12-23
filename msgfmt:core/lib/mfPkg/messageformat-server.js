@@ -1,3 +1,5 @@
+var Fiber = Npm.require('fibers');
+
 // server only, but used on the client in msgfmt:ui
 mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
 
@@ -158,21 +160,26 @@ mfPkg.addNative = function(strings, meta) {
 
 // called from mfTrans.js
 mfPkg.syncAll = function(strings, meta) {
+  new Fiber(function() {
+    var startTime = Date.now();
 
-	var lastSync = this.mfMeta.findOne('syncTrans');
-	lastSync = lastSync ? lastSync.mtime : 0;
+    var lastSync = msgfmt.mfMeta.findOne('syncTrans');
+    lastSync = lastSync ? lastSync.mtime : 0;
 
-	for (lang in strings)
-		if (lang != this.native)
-			this.langUpdate(lang, strings[lang], meta, lastSync);
+    for (lang in strings)
+      if (lang != msgfmt.native)
+        msgfmt.langUpdate(lang, strings[lang], meta, lastSync);
 
-	// TODO.  Sync native strings too, ensure _id's are the same,
-	// allow for random load order	
+    // TODO.  Sync native strings too, ensure _id's are the same,
+    // allow for random load order  
 
-	this['syncTrans'] = meta.updatedAt;
-	this.mfMeta.upsert('syncTrans', {$set: {mtime: this['syncTrans'] } });
+    msgfmt['syncTrans'] = meta.updatedAt;
+    msgfmt.mfMeta.upsert('syncTrans', {$set: {mtime: msgfmt['syncTrans'] } });
 
-    this.observeFrom(meta.updatedAt, 'trans');
+    msgfmt.observeFrom(meta.updatedAt, 'trans');
+
+    log.debug('Finished syncAll (in a fiber) in ' + (Date.now() - startTime) + ' ms');
+  }).run();
 }
 
 var meta = mfPkg.mfMeta.find().fetch();

@@ -1,5 +1,16 @@
 ## vNEXT
 
+## 2.0.0-preview.15
+
+* Run `syncAll` in it's own Fiber to avoid blocking on load
+  from `server/mfAll.js` in the case of slow I/O (#175).
+  Thanks also @sbalmer and @1u.
+
+* When warning about calling mf() on the server from outside
+  a method/publish, mention the offfending key (!)
+  use `log.warn` instead of `console.log`.
+  Thanks @MartinFournier (#182).
+
 ## 2.0.0-preview.14
 
 * Add `check` package (now that Meteor 1.2 is stricter)
