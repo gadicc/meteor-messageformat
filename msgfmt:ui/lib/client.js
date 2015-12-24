@@ -100,6 +100,8 @@ function changeKey(newKey) {
   var oldKey = Session.get('mfTransKey');
   if (oldKey == newKey) return;
 
+  unsavedDest = null;
+
   saveChange(destLang, oldKey, $('#mfTransDest').val());
 
   // Temporary, need to turn off preserve
@@ -145,14 +147,16 @@ Template.mfTransLang.onCreated(function() {
 
   origOnPopState = window.onpopstate;
   window.onpopstate = function() {
-    saveChange(null, null, unsavedDest);
+    if (unsavedDest !== null)
+      saveChange(null, null, unsavedDest);
     if (origOnPopState)
       origOnPopState.apply(this, arguments);
   }
 
   origPushState = history && history.pushState;
   history.pushState = function() {
-    saveChange(null, null, unsavedDest);
+    if (unsavedDest !== null)
+      saveChange(null, null, unsavedDest);
     if (origPushState)
       origPushState.apply(this, arguments);
   }
