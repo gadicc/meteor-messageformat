@@ -1,5 +1,10 @@
 ## vNEXT
 
+## 2.0.0-preview.6
+
+* Bugfix: Fixe duplicated insertions on route-change
+  Thanks @1u! (#183, #185)
+
 ## 2.0.0-preview.5
 
 * Bugfix: `Uncaught Error: No route found named "mfTransLang"` when adding
