@@ -395,9 +395,13 @@ mfPkg.resetStorage = function() {
 /* code below involves loading the actual module at long time */
 
 var injected = Injected.obj('msgfmt');
-mfPkg.timestamps = injected && injected.locales;
-mfPkg.native = injected.native;
-mfPkg.sendPolicy = injected.sendPolicy;
+mfPkg.timestamps = injected ?
+  injected.locales : {
+    'fr': new Date(), 'en': new Date()
+  };
+
+mfPkg.native = injected ? injected.native : 'fr' ;
+mfPkg.sendPolicy = injected ? injected.sendPolicy : 'all';
 
 if (mfPkg.timestamps) {
   (function() {
@@ -433,13 +437,14 @@ if (msgfmt.setBodyDir) {
 var locale = mfPkg.useLocalStorage && amplify.store('mfLocale');
 if (locale) {
   log.debug('Found stored locale "' + locale + '"');
-  mfPkg.setLocale(locale, true /* dontStore */);  
+  mfPkg.setLocale(locale, true /* dontStore */);
 } else if (locale = Session.get('locale')) {
   log.debug('Found session locale "' + locale + '"');
   mfPkg.setLocale(locale);
-} else if (locale = injected.headerLocale) {
+} else if (injected && injected.headerLocale) {
+  locale = injected.headerLocale
   log.debug('Setting locale from header: ' + locale);
-  mfPkg.setLocale(locale);  
+  mfPkg.setLocale(locale);
 } else {
   mfPkg.setLocale(msgfmt.native);
 }
