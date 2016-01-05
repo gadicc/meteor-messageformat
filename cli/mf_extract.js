@@ -101,7 +101,7 @@ function attrDict(string) {
 }
 
 var lastFile = null;
-function logKey(file, key, text, file, line) {
+function logKey(key, text, file, line) {
 	if (strings[key] && strings[key].text != text)
 		console.log('Warning, { ' + key + ': "' + text + '" } in '
 			+ file + ':' + line + ' replaces DUP_KEY\n         { '
@@ -130,7 +130,7 @@ function processHtml(file, data) {
 		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
 				.exec(data.substring(0, result.index)); // TODO, optimize
 		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
+		logKey(key, text, file, line);
 		strings[key] = {
 			key: key,
 			text: text,
@@ -147,7 +147,7 @@ function processHtml(file, data) {
 		var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
 			.exec(data.substring(0, result.index)); // TODO, optimize
 		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
+		logKey(key, text, file, line);
 		strings[key] = {
 			key: key,
 			text: text,
@@ -169,7 +169,7 @@ function processJade(file, data) {
 		var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])(.*?)\1\s*\)[\s\S]*?$/
 				.exec(data.substring(0, result.index)); // TODO, optimize
 		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
+		logKey(key, text, file, line);
 		strings[key] = {
 			key: key,
 			text: text,
@@ -186,7 +186,7 @@ function processJade(file, data) {
 		var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])([^\1]+?)\1\s*\)[\s\S]*?$/
 				.exec(data.substring(0, result.index)); // TODO, optimize
 		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
+		logKey(key, text, file, line);
 		strings[key] = {
 			key: key,
 			text: text,
@@ -213,7 +213,7 @@ function processJS(file, data) {
 		var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
 			.exec(data.substring(0, result.index));
 		var line = data.substring(0, result.index).split('\n').length;
-		logKey(file, key, text, file, line);
+		logKey(key, text, file, line);
 		strings[key] = {
 			key: key,
 			text: text,
@@ -242,7 +242,7 @@ function processCoffee(file, data) {
         }
 
         var line = data.substring(0, result.index).split('\n').length;
-        logKey(file, key, text, file, line);
+        logKey(key, text, file, line);
         strings[key] = {
             key: key,
             text: text,
