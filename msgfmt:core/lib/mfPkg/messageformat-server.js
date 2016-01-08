@@ -334,7 +334,7 @@ WebApp.connectHandlers.use(function(req, res, next) {
 
 function localeStringsToDictionary(res, locale, mtime, flags) {
   var key, out = {};
-  res.setHeader("Content-Type", "application/javascript");
+  res.setHeader("Content-Type", "application/javascript; charset=UTF-8");
   res.writeHead(200);
 
   if (locale === 'all') {
