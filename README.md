@@ -90,6 +90,21 @@ msgfmt.init('en', {
 });
 ```
 
+## Cordova
+
+There's an issue with the inject-initial package under Cordova which causes information to not be properly hooked to the client. To counter this, you may define the locales of the application in the settings file, under the public element.
+```json
+{
+  "public": {
+    ...,
+    "localization": {
+      "native": "en",
+      "locales": ["en", "fr"]
+    }
+  }
+}
+```
+
 ### Debug logging
 
 `Logger.setLevel('msgfmt', 'trace');`
