@@ -1,6 +1,16 @@
 ## vNEXT
 
+## 2.0.0-preview.17
+
+* Workaround for Cordova problems, see README.
+  Many thanks @MartinFournier! (#191)
+
+* Note: this was released the same time as preview.16 so be aware of below.
+  TESTED INTERNAL CHANGE but backup your database (mf* database) to be safe.
+
 ## 2.0.0-preview.16
+
+* TESTED INTERNAL CHANGE but backup your database (mf* database) to be safe.
 
 * Don't rely on `_id` in translation data.  Set compound index in mongo
   on (key, lang).  Remove possible duplicates in database when upgrading.

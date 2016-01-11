@@ -57,7 +57,7 @@ mobile-status-bar@1.0.3
 momentjs:moment@2.10.6
 mongo@1.1.0
 mrt:sp-marked@0.0.2
-msgfmt:core@2.0.0-preview.16
+msgfmt:core@2.0.0-preview.17
 msgfmt:extract@2.0.0-preview.12
 msgfmt:ui@2.0.0-preview.6
 nicolaslopezj:router-layer@0.0.11
