@@ -18,8 +18,12 @@ the stable release):
 ```
 meteor add msgfmt:core@2.0.0-preview.16         # 2016-01-11
 meteor add msgfmt:extract@2.0.0-preview.12
-meteor add msgfmt:ui@2.0.0-preview.5
+meteor add msgfmt:ui@2.0.0-preview.7            # 2016-01-11
 ```
+
+If you don't want the UI translator on production (i.e. no crowd translation),
+instead of adding msgfmt:ui, add `msgfmt:ui-dev-only` (no need to specify
+version).
 
 ## Features
 

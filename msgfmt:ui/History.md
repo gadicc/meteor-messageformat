@@ -1,5 +1,13 @@
 ## vNEXT
 
+## 2.0.0-preview.7
+
+* Feature: show/hide and sort by `key` (thanks @tomitrescak, #133,
+  and @MartinFournier, #192)
+
+* Feature: sort by translated string, case-insensitive sort,
+  code cleanup and UI hints (thanks @MartinFournier, #192)
+
 ## 2.0.0-preview.6
 
 * Bugfix: Fixe duplicated insertions on route-change

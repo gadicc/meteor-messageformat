@@ -1,6 +1,6 @@
 Package.describe({
   name:    "msgfmt:ui",
-  version: "2.0.0-preview.6",
+  version: "2.0.0-preview.7",
   summary: "messageformat: translation UI",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
 });
