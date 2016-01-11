@@ -109,6 +109,18 @@ website is only available in one language, e.g.:
  You and one other person added this to their profile.
  ```
 
+### Using with autoForm
+
+Pass a custom helper for the label value
+
+    {{> afQuickField name='productName' value=preProductName label=mfProductName}} 
+    
+Create the custom helper to return the value
+
+    mfProductName: function(){
+        return mf('lineItem.productName');
+    },
+  
 For full info, docs and examples, see the
 [Meteor MessageFormat home page](http://messageformat.meteor.com/)
 (or install/clone the smart package and run `mrt` in its `website` directory).
