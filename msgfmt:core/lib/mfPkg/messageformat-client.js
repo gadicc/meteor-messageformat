@@ -403,10 +403,10 @@ if (injected) {
   log.debug('Injected object was undefined, this is most likely a Cordova session');
   mfPkg.timestamps = {};
   var time = (new Date()).getTime();
-  if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.localization) {
-    var localization = Meteor.settings.public.localization;
-    mfPkg.native = localization.native;
-    _.each(localization.locales, function(locale) {
+  if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.msgfmt) {
+    var msgfmtSettings = Meteor.settings.public.msgfmt;
+    mfPkg.native = msgfmtSettings.native;
+    _.each(msgfmtSettings.locales, function(locale) {
       mfPkg.timestamps[locale] = time;
     });
   } else {

@@ -97,7 +97,7 @@ There's an issue with the inject-initial package under Cordova which causes info
 {
   "public": {
     ...,
-    "localization": {
+    "msgfmt": {
       "native": "en",
       "locales": ["en", "fr"]
     }
