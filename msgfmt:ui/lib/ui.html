@@ -97,7 +97,17 @@
         </table>
       </div>
     </div>
-    <p><input type="checkbox" id="translationShowKey">Show key, Use ctrl-up and ctrl-down to quickly change keys</p>
+    <p class='options'>
+      <label>
+        <input type="checkbox" id="translationShowKey" {{isCheckboxChecked showKey}}>
+        Show key
+      </label>
+      <label>
+        <input type='checkbox' id='translationCaseInsensitiveOrdering' {{isCheckboxChecked caseInsensitiveOrdering}}>
+        Case Insensitive Ordering
+      </label>
+      Use ctrl-up and ctrl-down to quickly change keys
+    </p>
     <span><b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{keyInfo.line
       }}{{#if keyInfo.template}} (template
         {{#if keyInfo.routeUrl}}

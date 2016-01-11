@@ -252,6 +252,9 @@ Template.mfTransLang.events({
   'click #translationShowKey': function(event) {
     Session.set('translationShowKey', event.currentTarget.checked);
   },
+  'click #translationCaseInsensitiveOrdering': function(event) {
+    Session.set('translationCaseInsensitiveOrdering', event.currentTarget.checked);
+  },
   'click .translationSort': function(event) {
     var currentSort = Session.get('translationSortField');
     var newSort = event.currentTarget.attributes['data-sortField'].value;
@@ -284,15 +287,23 @@ Template.mfTransLang.helpers({
       sortOrder = 'asc';
     }
     return strings().sort(function(a, b) {
+      var first = a[sortField];
+      var second = b[sortField];
+      var caseInsensitiveOrdering = Session.get('translationCaseInsensitiveOrdering');
+      if (first && caseInsensitiveOrdering) first = first.toLowerCase();
+      if (second && caseInsensitiveOrdering) second = second.toLowerCase();
       if (sortOrder === 'asc') {
-        return a[sortField] > b[sortField] ? 1 : (a[sortField] < b[sortField] ? -1 : 0);
+        return first > second ? 1 : (first < second ? -1 : 0);
       } else {
-        return a[sortField] > b[sortField] ? -1 : (a[sortField] < b[sortField] ? 1 : 0);
+        return first > second ? -1 : (first < second ? 1 : 0);
       }
     });
   },
   showKey: function() {
     return Session.get('translationShowKey');
+  },
+  caseInsensitiveOrdering: function() {
+    return Session.get('caseInsensitiveOrdering');
   },
   stateClass: function() {
     if (this.fuzzy)
@@ -333,6 +344,9 @@ Template.mfTransLang.helpers({
   },
   encodeURIComponent : function(text) {
     return encodeURIComponent(text);
+  },
+  isCheckboxChecked: function(value) {
+    return (value === true ? 'checked' : '');
   }
 });
 

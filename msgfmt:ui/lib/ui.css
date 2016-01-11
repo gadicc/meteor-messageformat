@@ -75,6 +75,7 @@ div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 */
 #mfTransPreview table tr.current { background: #5598d7; color: white;}
 
+#mfTransLang .options label { margin-right: 10px; }
 
 #mfTransLang textarea {
 	font-family: monospace;
