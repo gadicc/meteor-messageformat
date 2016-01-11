@@ -1,5 +1,10 @@
 ## vNEXT
 
+## v0.0.53
+
+* Add `check` package due to stricter requirements of Meteor 1.2 for
+  global imports (fixes #188).
+
 ## v0.0.52 (.51 had a publish error)
 
 * Docs: remove mrt and reference `gadicohen:messageformat` instead.

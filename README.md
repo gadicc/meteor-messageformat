@@ -2,6 +2,11 @@
 
 MessageFormat support, the Meteor way.
 
+**Note: This `v0` branch is feature frozen.  Critical bugs and security issues
+will still be fixed, but for the most part, all our attention is now on the
+`v2` branch** (which at time of writing, has still not been released officially
+but is being used in production since around March 2015)
+
 For iron:router < 1.0.0, use messageformat v0.0.45.
 
 For Meteor < 0.8.0, use messageformat v0.0.26.
