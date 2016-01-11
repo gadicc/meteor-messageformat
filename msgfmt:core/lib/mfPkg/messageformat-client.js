@@ -181,7 +181,7 @@ function fetchLocale(locale) {
     locale = 'all';
 
   unique = locale + '/' + (mfPkg.lastSync[locale] || 0);
-  url = '/msgfmt/locale/' + unique;
+  url = Meteor.absoluteUrl('msgfmt/locale/' + unique);
   log.debug('fetchLocale request for "' + locale + '", url: ' + url);
   times.fetches[unique] = Date.now();
 
@@ -395,9 +395,26 @@ mfPkg.resetStorage = function() {
 /* code below involves loading the actual module at long time */
 
 var injected = Injected.obj('msgfmt');
-mfPkg.timestamps = injected && injected.locales;
-mfPkg.native = injected.native;
-mfPkg.sendPolicy = injected.sendPolicy;
+if (injected) {
+  mfPkg.native = injected.native;
+  mfPkg.sendPolicy = injected.sendPolicy;
+  mfPkg.timestamps = injected.locales;
+} else {
+  log.debug('Injected object was undefined, this is most likely a Cordova session');
+  mfPkg.timestamps = {};
+  var time = (new Date()).getTime();
+  if (Meteor.settings && Meteor.settings.public && Meteor.settings.public.msgfmt) {
+    var msgfmtSettings = Meteor.settings.public.msgfmt;
+    mfPkg.native = msgfmtSettings.native;
+    _.each(msgfmtSettings.locales, function(locale) {
+      mfPkg.timestamps[locale] = time;
+    });
+  } else {
+    log.warn('Cordova builds have issues with the inject-initial package, make sure to define settings keys public.localization.native && public.localization.locales');
+    mfPkg.native = injected.native;
+    mfPkg.timestamps[mfPkg.native] = time;
+  }
+}
 
 if (mfPkg.timestamps) {
   (function() {
@@ -437,7 +454,8 @@ if (locale) {
 } else if (locale = Session.get('locale')) {
   log.debug('Found session locale "' + locale + '"');
   mfPkg.setLocale(locale);
-} else if (locale = injected.headerLocale) {
+} else if (injected && injected.headerLocale) {
+  locale = injected.headerLocale
   log.debug('Setting locale from header: ' + locale);
   mfPkg.setLocale(locale);  
 } else {

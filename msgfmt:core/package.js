@@ -22,7 +22,7 @@ Package.onUse(function (api) {
     'underscore',
     'ddp',
     'mongo@1.0.4',
-    'meteorhacks:inject-initial@1.0.2',
+    'meteorhacks:inject-initial@1.0.3',
     'jag:pince@0.0.6',
     'raix:eventemitter@0.1.2'
   ], both);
