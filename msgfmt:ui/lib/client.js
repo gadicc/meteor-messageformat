@@ -181,53 +181,39 @@ Template.mfTrans.helpers({
   }
 });
 
-Template.registerHelper('strings', function() {
-  var orig = mfPkg.native;
-  var lang = RouterLayer.getParam('lang');
-
-  // summarise matching keys (orig + trans) to a single record
-  var out = {}, strings = mfPkg.mfStrings.find({
-    $and: [{$or: [{lang: orig}, {lang: lang}]},
-      {removed: undefined}]
-  }).fetch();
-
-  _.each(strings, function(str) {
-    if (!out[str.key])
-      out[str.key] = { key: str.key };
-    if (str.lang == orig)
-      out[str.key].orig = str.text;
-    else
-      out[str.key].trans = str.text;
-    if (str.fuzzy)
-      out[str.key].fuzzy = true;
-  });
-
-  strings = _.values(out);
-  strings.sort(function(a, b) {
-    if (!a.trans && b.trans)
-      return -1;
-    else if (a.trans && !b.trans)
-      return 1;
-
-    if (!a.fuzzy && b.fuzzy)
-      return -1;
-    else if (b.fuzzy && !a.fuzzy)
-      return 1;
-
-    return a.text - b.text;
-  });
-
-  return strings;
-});
-
 Template.mfTransLang.helpers({
   origLang: mfPkg.native,
   destLang: function() { return RouterLayer.getParam('lang'); },
   allowed: function() {
     return !mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this);
+  },
+  strings: function() {
+    var orig = mfPkg.native;
+    var lang = RouterLayer.getParam('lang');
+
+    // summarise matching keys (orig + trans) to a single record
+    var out = {}, strings = mfPkg.mfStrings.find({
+      $and: [{$or: [{lang: orig}, {lang: lang}]},
+        {removed: undefined}]
+    }).fetch();
+
+    _.each(strings, function(str) {
+      if (!out[str.key])
+        out[str.key] = { key: str.key };
+      if (str.lang == orig)
+        out[str.key].orig = str.text;
+      else
+        out[str.key].trans = str.text;
+      if (str.fuzzy)
+        out[str.key].fuzzy = true;
+    });
+
+    strings = _.values(out);
+    strings = sortStrings(strings);
+
+    return strings;
   }
 });
-
 
 Template.mfTrans.events({
   'click #mfTransNewSubmit': function() {
@@ -272,33 +258,6 @@ Template.mfTransLang.events({
 });
 
 Template.mfTransLang.helpers({
-  sortedStrings: function() {
-    var strings = Blaze._globalHelpers['strings'];
-    if (!strings) return;
-
-    var sortField = Session.get('translationSortField');
-    var sortOrder = Session.get('translationSortOrder');
-    if (!sortField) {
-      Session.set('translationSortField', 'orig');
-      sortField = 'orig';
-    }
-    if (!sortOrder) {
-      Session.set('translationSortOrder', 'asc');
-      sortOrder = 'asc';
-    }
-    return strings().sort(function(a, b) {
-      var first = a[sortField];
-      var second = b[sortField];
-      var caseInsensitiveOrdering = Session.get('translationCaseInsensitiveOrdering');
-      if (first && caseInsensitiveOrdering) first = first.toLowerCase();
-      if (second && caseInsensitiveOrdering) second = second.toLowerCase();
-      if (sortOrder === 'asc') {
-        return first > second ? 1 : (first < second ? -1 : 0);
-      } else {
-        return first > second ? -1 : (first < second ? 1 : 0);
-      }
-    });
-  },
   showKey: function() {
     return Session.get('translationShowKey');
   },
@@ -349,6 +308,31 @@ Template.mfTransLang.helpers({
     return (value === true ? 'checked' : '');
   }
 });
+
+var sortStrings = function(strings) {
+  var sortField = Session.get('translationSortField');
+  var sortOrder = Session.get('translationSortOrder');
+  if (!sortField) {
+    Session.set('translationSortField', 'orig');
+    sortField = 'orig';
+  }
+  if (!sortOrder) {
+    Session.set('translationSortOrder', 'asc');
+    sortOrder = 'asc';
+  }
+  return strings.sort(function(a, b) {
+    var first = a[sortField];
+    var second = b[sortField];
+    var caseInsensitiveOrdering = Session.get('translationCaseInsensitiveOrdering');
+    if (first && caseInsensitiveOrdering) first = first.toLowerCase();
+    if (second && caseInsensitiveOrdering) second = second.toLowerCase();
+    if (sortOrder === 'asc') {
+      return first > second ? 1 : (first < second ? -1 : 0);
+    } else {
+      return first > second ? -1 : (first < second ? 1 : 0);
+    }
+  });
+};
 
 var initialRender = _.once(function() {
   var key = Session.get('mfTransKey'),
