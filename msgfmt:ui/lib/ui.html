@@ -74,10 +74,16 @@
         <thead>
           <tr>
             {{#if showKey}}
-              <th><a href="#" class="translationSort" data-sortField="key">Key</a></th>
+              <th class="{{sortOrderHeaderClass 'key'}}">
+                <a href="#" class='translationSort' data-sortField="key">Key</a>
+              </th>
             {{/if}}
-            <th><a href="#" class="translationSort" data-sortField="orig">Original String ({{origLang}})</a></th>
-            <th><a href="#" class="translationSort" data-sortField="trans">Translation ({{destLang}})</a></th>
+            <th class="{{sortOrderHeaderClass 'orig'}}">
+              <a href="#" class="translationSort" data-sortField="orig">Original String ({{origLang}})</a>
+            </th>
+            <th class="{{sortOrderHeaderClass 'trans'}}">
+              <a href="#" class="translationSort" data-sortField="trans">Translation ({{destLang}})</a>
+            </th>
           </tr>
         </thead>
       </table>
@@ -104,9 +110,10 @@
       </label>
       <label>
         <input type='checkbox' id='translationCaseInsensitiveOrdering' {{isCheckboxChecked caseInsensitiveOrdering}}>
-        Case Insensitive Ordering
+        Case insensitive ordering
       </label>
-      Use ctrl-up and ctrl-down to quickly change keys
+      <br />
+      Use ctrl-up and ctrl-down to quickly change keys & click on headers to reorder the columns.
     </p>
     <span><b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{keyInfo.line
       }}{{#if keyInfo.template}} (template

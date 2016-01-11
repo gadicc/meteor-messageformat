@@ -77,6 +77,18 @@ div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 
 #mfTransLang .options label { margin-right: 10px; }
 
+#mfTransLang th { position: relative; }
+#mfTransLang th.active-sort { background-color: #CCC; }
+#mfTransLang th.active-sort a { font-weight: 500; }
+#mfTransLang th.active-sort::after {
+	font-size: 0.6em;
+	position: absolute;
+  top: 5px;
+  right: 10px;
+}
+#mfTransLang th.active-sort.asc::after { content: '▲'; }
+#mfTransLang th.active-sort.desc::after { content: '▼'; }
+
 #mfTransLang textarea {
 	font-family: monospace;
 	height: 5em; width: 100%;

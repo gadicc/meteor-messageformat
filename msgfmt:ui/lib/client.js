@@ -264,6 +264,15 @@ Template.mfTransLang.helpers({
   caseInsensitiveOrdering: function() {
     return Session.get('caseInsensitiveOrdering');
   },
+  sortOrderHeaderClass: function(headerSortField) {
+    var classes = '';
+    var sortField = Session.get('translationSortField');
+    var sortOrder = Session.get('translationSortOrder');
+    if (headerSortField === sortField) {
+      classes += ' active-sort ' + sortOrder;
+    }
+    return classes
+  },
   stateClass: function() {
     if (this.fuzzy)
       return 'fuzzy';
