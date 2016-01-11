@@ -66,14 +66,24 @@
 </template>
 
 <template name="mfTransLang">
+{{ debug }}
   <div class="container" id="mfTransLang">
 
     <div id="mfTransPreview">
       <table>
         <thead>
           <tr>
-            <th>Original String ({{origLang}})</th>
-            <th>Translation ({{destLang}})</th>
+            {{#if showKey}}
+              <th class="{{sortOrderHeaderClass 'key'}}">
+                <a href="#" class='translationSort' data-sortField="key">Key</a>
+              </th>
+            {{/if}}
+            <th class="{{sortOrderHeaderClass 'orig'}}">
+              <a href="#" class="translationSort" data-sortField="orig">Original String ({{origLang}})</a>
+            </th>
+            <th class="{{sortOrderHeaderClass 'trans'}}">
+              <a href="#" class="translationSort" data-sortField="trans">Translation ({{destLang}})</a>
+            </th>
           </tr>
         </thead>
       </table>
@@ -82,6 +92,9 @@
           <tbody>
           {{#each strings}}
             <tr data-key="{{key}}" class="{{stateClass}} {{isCurrent}}">
+              {{#if showKey}}
+                <td>{{key}}</td>
+              {{/if}}
               <td>{{orig}}</td>
               <td>{{trans}}</td>
             </tr>
@@ -90,7 +103,20 @@
         </table>
       </div>
     </div>
-    <p>Use ctrl-up and ctrl-down to quickly change keys</p>
+    <p class='options'>
+      <label>
+        <input type="checkbox" id="translationShowKey" {{isCheckboxChecked showKey}}>
+        Show key
+      </label>
+      <label>
+        <input type='checkbox' id='translationCaseInsensitiveOrdering' {{isCheckboxChecked caseInsensitiveOrdering}}>
+        Case insensitive ordering
+      </label>
+      <br />
+      Keyboard shortcuts: Ctrl-up/down arrow (Win); Control-Command-up/down arrow (Mac)
+      <br />
+      Click on headers to reorder the columns.
+    </p>
     <span><b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{keyInfo.line
       }}{{#if keyInfo.template}} (template
         {{#if keyInfo.routeUrl}}

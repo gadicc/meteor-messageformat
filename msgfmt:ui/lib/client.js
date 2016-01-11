@@ -209,24 +209,11 @@ Template.mfTransLang.helpers({
     });
 
     strings = _.values(out);
-    strings.sort(function(a, b) {
-      if (!a.trans && b.trans)
-        return -1;
-      else if (a.trans && !b.trans)
-        return 1;
-
-      if (!a.fuzzy && b.fuzzy)
-        return -1;
-      else if (b.fuzzy && !a.fuzzy)
-        return 1;
-
-      return a.text - b.text;
-    });
+    strings = sortStrings(strings);
 
     return strings;
   }
 });
-
 
 Template.mfTrans.events({
   'click #mfTransNewSubmit': function() {
@@ -244,7 +231,26 @@ Template.mfTrans.events({
 var unsavedDest;
 Template.mfTransLang.events({
   'click #mfTransLang tr': function(event) {
-    changeKey(this.key);
+    var tr = $(event.target).parents('tr');
+    var key = tr.data('key');
+    if (key) changeKey(key);
+  },
+  'click #translationShowKey': function(event) {
+    Session.set('translationShowKey', event.currentTarget.checked);
+  },
+  'click #translationCaseInsensitiveOrdering': function(event) {
+    Session.set('translationCaseInsensitiveOrdering', event.currentTarget.checked);
+  },
+  'click .translationSort': function(event) {
+    var currentSort = Session.get('translationSortField');
+    var newSort = event.currentTarget.attributes['data-sortField'].value;
+    Session.set('translationSortField', newSort);
+
+    if (currentSort === newSort) {
+      var currentOrder = Session.get('translationSortOrder');
+      var newOrder = (currentOrder === 'asc') ? 'desc' : 'asc';
+      Session.set('translationSortOrder', newOrder);
+    }
   },
   'keyup #mfTransDest': function(event) {
     unsavedDest = event.target.value;
@@ -252,6 +258,21 @@ Template.mfTransLang.events({
 });
 
 Template.mfTransLang.helpers({
+  showKey: function() {
+    return Session.get('translationShowKey');
+  },
+  caseInsensitiveOrdering: function() {
+    return Session.get('caseInsensitiveOrdering');
+  },
+  sortOrderHeaderClass: function(headerSortField) {
+    var classes = '';
+    var sortField = Session.get('translationSortField');
+    var sortOrder = Session.get('translationSortOrder');
+    if (headerSortField === sortField) {
+      classes += ' active-sort ' + sortOrder;
+    }
+    return classes
+  },
   stateClass: function() {
     if (this.fuzzy)
       return 'fuzzy';
@@ -291,8 +312,36 @@ Template.mfTransLang.helpers({
   },
   encodeURIComponent : function(text) {
     return encodeURIComponent(text);
+  },
+  isCheckboxChecked: function(value) {
+    return (value === true ? 'checked' : '');
   }
 });
+
+var sortStrings = function(strings) {
+  var sortField = Session.get('translationSortField');
+  var sortOrder = Session.get('translationSortOrder');
+  if (!sortField) {
+    Session.set('translationSortField', 'orig');
+    sortField = 'orig';
+  }
+  if (!sortOrder) {
+    Session.set('translationSortOrder', 'asc');
+    sortOrder = 'asc';
+  }
+  return strings.sort(function(a, b) {
+    var first = a[sortField];
+    var second = b[sortField];
+    var caseInsensitiveOrdering = Session.get('translationCaseInsensitiveOrdering');
+    if (first && caseInsensitiveOrdering) first = first.toLowerCase();
+    if (second && caseInsensitiveOrdering) second = second.toLowerCase();
+    if (sortOrder === 'asc') {
+      return first > second ? 1 : (first < second ? -1 : 0);
+    } else {
+      return first > second ? -1 : (first < second ? 1 : 0);
+    }
+  });
+};
 
 var initialRender = _.once(function() {
   var key = Session.get('mfTransKey'),
