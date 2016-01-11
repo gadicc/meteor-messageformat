@@ -253,7 +253,15 @@ Template.mfTransLang.events({
     Session.set('translationShowKey', event.currentTarget.checked);
   },
   'click .translationSort': function(event) {
-    Session.set('translationSortField', event.currentTarget.attributes['data-sortField'].value);
+    var currentSort = Session.get('translationSortField');
+    var newSort = event.currentTarget.attributes['data-sortField'].value;
+    Session.set('translationSortField', newSort);
+
+    if (currentSort === newSort) {
+      var currentOrder = Session.get('translationSortOrder');
+      var newOrder = (currentOrder === 'asc') ? 'desc' : 'asc';
+      Session.set('translationSortOrder', newOrder);
+    }
   },
   'keyup #mfTransDest': function(event) {
     unsavedDest = event.target.value;
@@ -266,11 +274,21 @@ Template.mfTransLang.helpers({
     if (!strings) return;
 
     var sortField = Session.get('translationSortField');
+    var sortOrder = Session.get('translationSortOrder');
     if (!sortField) {
       Session.set('translationSortField', 'orig');
+      sortField = 'orig';
+    }
+    if (!sortOrder) {
+      Session.set('translationSortOrder', 'asc');
+      sortOrder = 'asc';
     }
     return strings().sort(function(a, b) {
-      return a[sortField] > b[sortField] ? 1 : (a[sortField] < b[sortField] ? -1 : 0);
+      if (sortOrder === 'asc') {
+        return a[sortField] > b[sortField] ? 1 : (a[sortField] < b[sortField] ? -1 : 0);
+      } else {
+        return a[sortField] > b[sortField] ? -1 : (a[sortField] < b[sortField] ? 1 : 0);
+      }
     });
   },
   showKey: function() {
