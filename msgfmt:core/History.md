@@ -1,5 +1,10 @@
 ## vNEXT
 
+## 2.0.0-preview.16
+
+* Don't rely on `_id` in translation data.  Set compound index in mongo
+  on (key, lang).  Remove possible duplicates in database when upgrading.
+
 ## 2.0.0-preview.15
 
 * Run `syncAll` in it's own Fiber to avoid blocking on load

@@ -1,7 +1,7 @@
 var Fiber = Npm.require('fibers');
 
 // server only, but used on the client in msgfmt:ui
-mfPkg.mfRevisions = new Mongo.Collection('mfRevisions');
+msgfmt.mfRevisions = new Mongo.Collection('mfRevisions');
 
 /*
  * New entry point for startup (native) and any language modification.  Check that all
@@ -41,7 +41,8 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	 */
 
 	var str, existing, revisionId, obj, updating, dbInsert, result, query,
-		optional = ['_id', 'file', 'line', 'template', 'func', 'removed', 'fuzzy'];
+    // removed in core.16; _id
+		optional = [/*'_id',*/ 'file', 'line', 'template', 'func', 'removed', 'fuzzy'];
 	for (key in strings) {
 		str = strings[key];
 		existing = this.strings[lang][key];
@@ -81,6 +82,8 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 			if (str[optional[i]])
 				obj[optional[i]] = str[optional[i]];
 
+    /*
+     - since core.16 we no longer worry about _id's
 		// insert unfound, or re-insert on wrong _id, otherwise update
 		if (existing) {
 			if (str._id && existing._id === str._id) {
@@ -93,6 +96,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 		} else {
 			dbInsert = true;
 		}
+    */
 
 		/* meteor upsert does allow _id even for insert upsert
 		if (this.strings[lang][key] && str._id
@@ -108,11 +112,16 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 			this.strings[lang][key] = obj;
 		*/
 
+    /*
 		if (dbInsert) {
-			obj._id = this.mfStrings.insert(obj)
+			// obj._id = this.mfStrings.insert(obj)  - v16 deprecates use of _id
+      obj._id = this.mfStrings.insert(obj)
 		} else {
-			this.mfStrings.update(obj._id, obj);
+			// this.mfStrings.update(obj._id, obj);  - v16 deprecates use of _id
+      this.mfStrings.update({ key: obj.key, lang: obj.lang }, obj);
 		}
+    */
+    this.mfStrings.upsert({ key: obj.key, lang: obj.lang }, obj);
 
 		if (updating) {
 			// does this update affect translations?
@@ -377,13 +386,51 @@ WebApp.connectHandlers.use(function(req, res, next) {
 
 msgfmt.strings = {};
 
+/*
+ * As of preview.16, we no longer rely on `_id` and properly set a unique compound
+ * index on `key` and `lang`.  In case the database has previous dups, let's clean
+ * them up.
+ */
+
+var checkForDupes = (msgfmt.meta.all && !msgfmt.meta.all._dupeFree);
+if (checkForDupes) {
+  msgfmt.mfMeta.update('all', { $set: { _dupeFree: 1 }} );
+  msgfmt.meta.all._dupeFree = true;
+  log.warn('Checking for dupes in mfStrings... (once off on upgrade from < core.15)');
+}
+
 // Yes, we absolutely do want this to block, to be fully loaded before mfAll.js etc
+// But in future we could see what else needs this and queue in a Fiber
+// e.g. make sure when requesting lang data that we're fully loaded, etc.
+
 log.trace('Retrieving strings from database...');
 var startTime = Date.now();
 var allStrings = msgfmt.mfStrings.find().fetch();
 log.trace('Finished retrieval in ' + (Date.now() - startTime) + ' ms');
-_.each(allStrings, function(str) {
-  checkLocaleMetaExists(str.lang);
-  msgfmt.strings[str.lang][str.key] = str;
-});
+if (checkForDupes) {
+  _.each(allStrings, function(str) {
+    checkLocaleMetaExists(str.lang);
+    var existing = msgfmt.strings[str.lang][str.key];
+    if (existing) {
+      log.warn('Duplicate "' + str.key + '" (' + str.lang + '), keeping latest.');
+      if (str.mtime > existing.mtime) {
+        msgfmt.strings[str.lang][str.key] = str;  // overwrite with newer
+        msgfmt.mfStrings.remove({ key: existing.key, lang: existing.lang });
+      } else {
+        // current str is older, remove it, don't overwrite in msgfmt.strings
+        msgfmt.mfStrings.remove({ key: str.key, lang: str.lang });
+      }
+    } else
+      msgfmt.strings[str.lang][str.key] = str;
+  });
+} else {
+  _.each(allStrings, function(str) {
+    checkLocaleMetaExists(str.lang);
+    msgfmt.strings[str.lang][str.key] = str;
+  });  
+}
 delete allStrings;
+
+// ensure compound indexe on server only (collection exists in both)
+// move to top of file when we're pretty sure everyone is _dupeFree
+msgfmt.mfStrings._ensureIndex( { key:1, lang:1 }, { unique: true } );
