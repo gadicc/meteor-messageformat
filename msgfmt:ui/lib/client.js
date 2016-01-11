@@ -288,6 +288,9 @@ Template.mfTransLang.helpers({
       if (routeName) str.routeUrl = routePathFromName(routeName);
     }
     return str || {};
+  },
+  encodeURIComponent : function(text) {
+    return encodeURIComponent(text);
   }
 });
 
