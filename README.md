@@ -10,4 +10,4 @@ Please choose the appropriate branch:
 
 For full info, docs and examples, see the
 [Meteor MessageFormat home page](http://messageformat.meteor.com/)
-(or install/clone the smart package and run `mrt` in its `website` directory).
+(or install/clone the smart package and run `meteor` in its `website` directory).
