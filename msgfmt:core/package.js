@@ -71,15 +71,22 @@ Package.onUse(function (api) {
   ], both);
 
   // server
-  api.addFiles('lib/mfPkg/messageformat-server.js', server);
+  api.addFiles([
+    'lib/mfPkg/messageformat-server.js',
+    'lib/mfPkg/messageformat-server-integrations.js'
+  ], server);
 
   // client
   api.addFiles([
     'lib/mfPkg/messageformat.html',
-    'lib/mfPkg/messageformat-client.js'
+    'lib/mfPkg/messageformat-client.js',
+    'lib/mfPkg/messageformat-client-integrations.js',
   ], client);
 
   // TODO, on cordova, need to bundle all languages
+
+  // Integrations
+  api.use('cmather:handlebars-server@2.0.0', 'server', { weak: true });
 
   api.export(['mfPkg', 'mf', 'msgfmt'], both);
 });
@@ -93,4 +100,9 @@ Package.onTest(function(api) {
 
   api.addFiles('tests/tests-client.js', client);
   api.addFiles('tests/tests-server.js', server);
+
+  api.addFiles('tests/integrations/handlebars-server.handlebars', server);
+  api.addFiles('tests/tests-server-integrations.js', server);
+  api.use('cmather:handlebars-server@2.0.0', 'server');
+
 });

@@ -32,6 +32,7 @@ version).
 * Super easy integration via automatic locale set on moment, parsley, etc
 * Super fast loading, caching, etc.  Works with BrowserPolicy, appcache, etc.
 * Offline support (including changing of languages while offline)
+* Integrates with autoform, momentjs, parsleyvalidator, cmather:handlebars-server
 
 ## Quick Start
 
@@ -225,3 +226,34 @@ for similar reasons, and
 Alex for shared code on both projects (particularly message parsing).  So ultimately,
 no change is needed on user strings and FormatJS was a better bit for this type of
 project and what we want to offer our users.
+
+## Integrations
+
+### autoform
+
+Use Blaze subexpressions or see Wiki.
+
+### cmather:handlebars-server
+
+**example.handlebars**
+
+```handlebars
+  {{mf 'hello' 'Hello there, {NAME}' NAME=NAME LOCALE=LOCALE}}
+```
+
+**example.js**
+
+```js
+  var out = Handlebars.templates['example']({
+    NAME: 'Chris',
+    LOCALE: 'en_US'
+  });
+```
+
+### momentjs
+
+Transparent integration.  Calls `moment.locale()` on locale change.
+
+### Parsley Validator
+
+Transparent integration.  Calls `ParsleyValidator.setLocale()` on locale change.

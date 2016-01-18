@@ -462,17 +462,6 @@ if (locale) {
   mfPkg.setLocale(msgfmt.native);
 }
 
-var integrations = {
-            'moment': 'locale',
-  'ParsleyValidator': 'setLocale'
-};
-
-msgfmt.on('localeChange', function(locale) {
-  for (var name in integrations)
-    if (window[name] && window[name][integrations[name]])
-      window[name][integrations[name]](locale);
-});
-
 // backcompat with v0, auto call setLocale() on Session.set('locale')
 Tracker.autorun(function() {
   var sessionLocale = Session.get('locale');

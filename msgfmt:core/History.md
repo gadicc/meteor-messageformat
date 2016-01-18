@@ -1,5 +1,7 @@
 ## vNEXT
 
+* Feature: `cmather:handlebars-server` integration (see README).
+
 ## 2.0.0-preview.17
 
 * Workaround for Cordova problems, see README.
