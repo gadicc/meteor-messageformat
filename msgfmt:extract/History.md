@@ -1,5 +1,7 @@
 ## vNEXT
 
+* Fixed double `file` parameter in logKey (thanks @comerc, #187)
+
 ## 2.0.0-preview.12
 
 * Add Blaze subexpression support in .html regex.

@@ -251,7 +251,7 @@ function attrDict(string) {
 }
 
 var lastFile = null;
-function logKey(file, key, text, file, line, strings) {
+function logKey(key, text, file, line, strings) {
   if (strings[key] && strings[key].text != text)
     log.warn('{ ' + key + ': "' + text + '" } in '
       + file + ':' + line + ' replaces DUP_KEY\n         { '
@@ -285,7 +285,7 @@ handlers.html = function(file, data, mtime, strings) {
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line, strings);
+    logKey(key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -303,7 +303,7 @@ handlers.html = function(file, data, mtime, strings) {
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
       .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line, strings);
+    logKey(key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -326,7 +326,7 @@ handlers.jade = function(file, data, mtime, strings) {
     var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])(.*?)\1\s*\)[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line, strings);
+    logKey(key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -344,7 +344,7 @@ handlers.jade = function(file, data, mtime, strings) {
     var tpl = /[\s\S]*template\s*\(\s*name\s*=\s*(['"])([^\1]+?)\1\s*\)[\s\S]*?$/
         .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line, strings);
+    logKey(key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -372,7 +372,7 @@ handlers.js = function(file, data, mtime, strings) {
     var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
       .exec(data.substring(0, result.index));
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line, strings);
+    logKey(key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -398,7 +398,7 @@ handlers.jsx = function(file, data, mtime, strings) {
     var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
       .exec(data.substring(0, result.index));
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line, strings);
+    logKey(key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
@@ -428,7 +428,7 @@ handlers.coffee = function(file, data, mtime, strings) {
     }
 
     var line = data.substring(0, result.index).split('\n').length;
-    logKey(file, key, text, file, line, strings);
+    logKey(key, text, file, line, strings);
     strings[key] = {
       key: key,
       text: text,
