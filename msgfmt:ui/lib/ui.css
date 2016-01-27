@@ -61,11 +61,13 @@ div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 	border-bottom: 1px solid black;
 	border-right: 1px solid black;
 	position: relative; /* makes jquery scroll stuff easier */
+	z-index: 1;
 }
 #mfTransPreview .theadAbove {
 	position: absolute;
 	top: 0;
 	left: 0;
+	z-index: 2;
 }
 #mfTransPreview table { width: 100%; table-layout:fixed; border-collapse:separate; background: white; }
 #mfTransPreview table thead tr { background: #ede9e3; }
