@@ -1,5 +1,13 @@
 ## vNEXT
 
+## 2.0.0-preview.9
+
+Misc features related to #29, #73, #95, #101, #145, #192:
+
+* Feature: sort first by status (untrans, fuzzy, trans)
+* Feature: show file, allow sort by file
+* Feature: filter by key, file, orig, trans
+
 ## 2.0.0-preview.8
 
 * Feature: sort objects by key when saving mfAll.js (#195)

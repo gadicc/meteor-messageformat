@@ -73,7 +73,11 @@
       <table>
         <thead>
           <tr>
-            {{#if showKey}}
+            {{#if showFile}}
+              <th class="{{sortOrderHeaderClass 'file'}}" data-sortField="file">
+                <a href="#">File</a>
+              </th>
+            {{/if}}            {{#if showKey}}
               <th class="{{sortOrderHeaderClass 'key'}}" data-sortField="key">
                 <a href="#">Key</a>
               </th>
@@ -92,6 +96,9 @@
           <tbody>
           {{#each strings}}
             <tr data-key="{{key}}" class="{{stateClass}} {{isCurrent}}">
+              {{#if showFile}}
+                <td>{{file}}</td>
+              {{/if}}
               {{#if showKey}}
                 <td>{{key}}</td>
               {{/if}}
@@ -104,13 +111,25 @@
       </div>
     </div>
     <p class='options'>
+      <label title="Order by untrans, fuzzy, trans">
+        <input type="checkbox" id="translationStatusSort" {{isCheckboxChecked statusSort}}>
+        Sort first by Status
+      </label>
       <label>
         <input type="checkbox" id="translationShowKey" {{isCheckboxChecked showKey}}>
         Show key
       </label>
       <label>
+        <input type="checkbox" id="translationShowFile" {{isCheckboxChecked showFile}}>
+        Show file
+      </label>
+      <label>
         <input type='checkbox' id='translationCaseInsensitiveOrdering' {{isCheckboxChecked caseInsensitiveOrdering}}>
         Case insensitive ordering
+      </label>
+      <label title="Only show matching key, file, orig, trans">
+        Filter:
+        <input id='mfTransLangFilter' type='text' value={{mfTransLangFilter}} />
       </label>
       <br />
       Keyboard shortcuts: Ctrl-up/down arrow (Win); Control-Command-up/down arrow (Mac)

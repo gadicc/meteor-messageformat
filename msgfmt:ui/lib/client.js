@@ -199,21 +199,54 @@ Template.mfTransLang.helpers({
     var orig = mfPkg.native;
     var lang = RouterLayer.getParam('lang');
 
-    // summarise matching keys (orig + trans) to a single record
-    var out = {}, strings = mfPkg.mfStrings.find({
+    var query = {
       $and: [{$or: [{lang: orig}, {lang: lang}]},
         {removed: undefined}]
-    }).fetch();
+    };
 
+    var filter = Session.get('mfTransLangFilter');
+    if (filter) {
+      filter = new RegExp(filter, 'i');
+      /*
+      since we need to recheck later anyways, no point doing twice
+      query.$and.push({
+        $or: [
+          { key: filter },
+          // { text: filter }, // cant do this here, need both langs
+          { file: filter }
+        ]
+      });
+      */
+    }
+
+    var out = {}, strings = mfPkg.mfStrings.find(query).fetch();
+
+    // summarise matching keys (orig + trans) to a single record
     _.each(strings, function(str) {
       if (!out[str.key])
         out[str.key] = { key: str.key };
-      if (str.lang == orig)
+
+      if (str.lang == orig) {
         out[str.key].orig = str.text;
-      else
+        out[str.key].file = str.file;
+      } else {
         out[str.key].trans = str.text;
+      }
+
       if (str.fuzzy)
         out[str.key].fuzzy = true;
+    });
+
+    // reject non-matches (can only do after orig/trans merge)
+    if (filter)
+    _.each(out, function(str, i) {
+      if (!(
+          str.key.match(filter) || 
+          str.file.match(filter) ||
+          str.orig.match(filter) ||
+          (str.trans && str.trans.match(filter))
+            ))
+        delete out[i];
     });
 
     strings = _.values(out);
@@ -243,8 +276,14 @@ Template.mfTransLang.events({
     var key = tr.data('key');
     if (key) changeKey(key);
   },
+  'click #translationStatusSort': function(event) {
+    Session.set('translationStatusSort', event.currentTarget.checked);
+  },
   'click #translationShowKey': function(event) {
     Session.set('translationShowKey', event.currentTarget.checked);
+  },
+  'click #translationShowFile': function(event) {
+    Session.set('translationShowFile', event.currentTarget.checked);
   },
   'click #translationCaseInsensitiveOrdering': function(event) {
     Session.set('translationCaseInsensitiveOrdering', event.currentTarget.checked);
@@ -262,15 +301,24 @@ Template.mfTransLang.events({
   },
   'keyup #mfTransDest': function(event) {
     unsavedDest = event.target.value;
+  },
+  'keyup #mfTransLangFilter': function(event) {
+    Session.set('mfTransLangFilter', event.target.value);
   }
 });
 
 Template.mfTransLang.helpers({
+  statusSort: function() {
+    return Session.get('translationStatusSort');
+  },
   showKey: function() {
     return Session.get('translationShowKey');
   },
+  showFile: function() {
+    return Session.get('translationShowFile');
+  },
   caseInsensitiveOrdering: function() {
-    return Session.get('caseInsensitiveOrdering');
+    return Session.get('translationCaseInsensitiveOrdering');
   },
   sortOrderHeaderClass: function(headerSortField) {
     var classes = 'translationSort';
@@ -323,24 +371,31 @@ Template.mfTransLang.helpers({
   },
   isCheckboxChecked: function(value) {
     return (value === true ? 'checked' : '');
+  },
+  mfTransLangFilter: function() {
+    return Session.get('mfTransLangFilter');
   }
 });
+
+Session.setDefault('translationSortField', 'orig');
+Session.setDefault('translationSortOrder', 'asc');
+Session.setDefault('translationStatusSort', true);
+Session.setDefault('translationCaseInsensitiveOrdering', false);
 
 var sortStrings = function(strings) {
   var sortField = Session.get('translationSortField');
   var sortOrder = Session.get('translationSortOrder');
-  if (!sortField) {
-    Session.set('translationSortField', 'orig');
-    sortField = 'orig';
-  }
-  if (!sortOrder) {
-    Session.set('translationSortOrder', 'asc');
-    sortOrder = 'asc';
-  }
+  var caseInsensitiveOrdering = Session.get('translationCaseInsensitiveOrdering');
+
   return strings.sort(function(a, b) {
+    if (Session.get('translationStatusSort')) {
+      if (a.trans && !b.trans || b.fuzzy) return 1;
+      if (!a.trans && b.trans || !b.fuzzy) return -1;
+      return 0;
+    }
+
     var first = a[sortField];
     var second = b[sortField];
-    var caseInsensitiveOrdering = Session.get('translationCaseInsensitiveOrdering');
     if (first && caseInsensitiveOrdering) first = first.toLowerCase();
     if (second && caseInsensitiveOrdering) second = second.toLowerCase();
     if (sortOrder === 'asc') {
