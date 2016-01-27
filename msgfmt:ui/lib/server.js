@@ -78,14 +78,28 @@ Meteor.publish('mfStats', function() {
 });
 
 WebApp.connectHandlers.use('/translate/mfAll.js', function(req, res, next) {
-  var out, meta = { exportedAt: new Date().getTime(), updatedAt: 0 };
+  var lang, out, meta = { exportedAt: new Date().getTime(), updatedAt: 0 };
+
   for (lang in mfPkg.strings)
       for (key in mfPkg.strings[lang])
           if (mfPkg.strings[lang][key].mtime > meta.updatedAt)
               meta.updatedAt = mfPkg.strings[lang][key].mtime;
 
+  /*
+   * sort objects by key when saving mfAll.js (#195)
+   *   this helps keeping commits of mfAll.js small,
+   *   and gives better overview of changes.
+   */
+  var sortedStrings = {};
+  _.each(Object.keys(mfPkg.strings).sort(), function(lang) {
+    sortedStrings[lang] = {};
+    _.each(Object.keys(mfPkg.strings[lang]).sort(), function(key) {
+      sortedStrings[lang][key] = mfPkg.strings[lang][key];
+    });
+  });
+
   out = 'mfPkg.syncAll('
-      + JSON.stringify(mfPkg.strings, null, 2)
+      + JSON.stringify(sortedStrings, null, 2)
       + ', ' + JSON.stringify(meta, null, 2) + ');';
   //res.writeHead(200, {'Content-Type': 'application/javascript'});
   res.writeHead(200, {'Content-Disposition': 'attachment; filename=mfAll.js'});

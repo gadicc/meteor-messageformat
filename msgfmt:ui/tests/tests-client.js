@@ -1,3 +1,3 @@
-Tinytest.add('messageformat-ui', function(test) {
+Tinytest.add('msgfmt:ui', function(test) {
   test.ok(true);
 });

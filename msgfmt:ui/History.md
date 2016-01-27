@@ -1,5 +1,11 @@
 ## vNEXT
 
+## 2.0.0-preview.8
+
+* Feature: sort objects by key when saving mfAll.js (#195)
+  Instead of natural order.  This helps keeping commits of
+  mfAll.js small, and gives better overview of changes.
+
 ## 2.0.0-preview.7
 
 * Feature: show/hide and sort by `key` (thanks @tomitrescak, #133,
