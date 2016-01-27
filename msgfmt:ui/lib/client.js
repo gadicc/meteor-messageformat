@@ -1,3 +1,11 @@
+/*
+ * NOTE ON USE OF SESSION.SET() ETC
+ *   The messageformat project is around since Meteor 0.5, when this
+ *   was recommended practice.  There are better ways to do this now,
+ *   however, with the way things are going, we're going to need to
+ *   rewrite this all with React soon, so it's not a priority.
+ */
+
 // TODO, if we add a new lang, need to update mfPkg.timestamps
 
 // Setup in msgfmt:core on server, only used on the client in msgfmt:ui
@@ -265,13 +273,13 @@ Template.mfTransLang.helpers({
     return Session.get('caseInsensitiveOrdering');
   },
   sortOrderHeaderClass: function(headerSortField) {
-    var classes = '';
+    var classes = 'translationSort';
     var sortField = Session.get('translationSortField');
     var sortOrder = Session.get('translationSortOrder');
     if (headerSortField === sortField) {
       classes += ' active-sort ' + sortOrder;
     }
-    return classes
+    return classes;
   },
   stateClass: function() {
     if (this.fuzzy)

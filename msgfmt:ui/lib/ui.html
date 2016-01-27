@@ -74,15 +74,15 @@
         <thead>
           <tr>
             {{#if showKey}}
-              <th class="{{sortOrderHeaderClass 'key'}}">
-                <a href="#" class='translationSort' data-sortField="key">Key</a>
+              <th class="{{sortOrderHeaderClass 'key'}}" data-sortField="key">
+                <a href="#">Key</a>
               </th>
             {{/if}}
-            <th class="{{sortOrderHeaderClass 'orig'}}">
-              <a href="#" class="translationSort" data-sortField="orig">Original String ({{origLang}})</a>
+            <th class="{{sortOrderHeaderClass 'orig'}}" data-sortField="orig">
+              <a href="#">Original String ({{origLang}})</a>
             </th>
-            <th class="{{sortOrderHeaderClass 'trans'}}">
-              <a href="#" class="translationSort" data-sortField="trans">Translation ({{destLang}})</a>
+            <th class="{{sortOrderHeaderClass 'trans'}}" data-sortField="trans">
+              <a href="#">Translation ({{destLang}})</a>
             </th>
           </tr>
         </thead>
