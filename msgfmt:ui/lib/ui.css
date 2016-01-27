@@ -41,10 +41,31 @@ div.mfTransGraph.untrans { background: #800; border-right: 1px solid black; }
 	padding: 5px; margin: 5px;
 }
 
+#mfTransPreview {
+	position: relative;
+	height: 200px;
+	resize: vertical;
+	padding-bottom: 12px;
+	overflow-y: hidden;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #ccc;
+	background-color: #ddd;
+}
 #mfTransPreview .tbodyScroll {
-	overflow: hidden; height: 200px; overflow-y: scroll;
-	border-left: 1px solid black; border-bottom: 1px solid black;
+	padding-top: 30px;
+	overflow: hidden;
+	height: 100%;
+	overflow-y: scroll;
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
 	position: relative; /* makes jquery scroll stuff easier */
+}
+#mfTransPreview .theadAbove {
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 #mfTransPreview table { width: 100%; table-layout:fixed; border-collapse:separate; background: white; }
 #mfTransPreview table thead tr { background: #ede9e3; }
