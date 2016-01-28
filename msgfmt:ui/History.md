@@ -1,5 +1,11 @@
 ## vNEXT
 
+## 2.0.0-preview.10
+
+* Bugfix: "Sort first by Status" now works correctly (#204)
+* Bugfix: "Sort by translation" now works correctly (#204)
+* Feature: Resizable string summary table, thanks @MartinFournier (#203)
+
 ## 2.0.0-preview.9
 
 Misc features related to #29, #73, #95, #101, #145, #192:
