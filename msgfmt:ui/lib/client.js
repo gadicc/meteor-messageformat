@@ -382,6 +382,10 @@ Session.setDefault('translationSortOrder', 'asc');
 Session.setDefault('translationStatusSort', true);
 Session.setDefault('translationCaseInsensitiveOrdering', false);
 
+var statusValue = function(str) {
+  return str.trans ? (str.fuzzy ? 1 : 2) : 0;
+}
+
 var sortStrings = function(strings) {
   var sortField = Session.get('translationSortField');
   var sortOrder = Session.get('translationSortOrder');
@@ -389,9 +393,8 @@ var sortStrings = function(strings) {
 
   return strings.sort(function(a, b) {
     if (Session.get('translationStatusSort')) {
-      if (a.trans && !b.trans || b.fuzzy) return 1;
-      if (!a.trans && b.trans || !b.fuzzy) return -1;
-      return 0;
+      var res = statusValue(a) - statusValue(b);
+      if (res) return res; // if 0 continue...
     }
 
     var first = a[sortField];
