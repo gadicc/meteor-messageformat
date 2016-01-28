@@ -397,10 +397,10 @@ var sortStrings = function(strings) {
       if (res) return res; // if 0 continue...
     }
 
-    var first = a[sortField];
-    var second = b[sortField];
-    if (first && caseInsensitiveOrdering) first = first.toLowerCase();
-    if (second && caseInsensitiveOrdering) second = second.toLowerCase();
+    var first = a[sortField] || '';  // avoid undefined in str comparison
+    var second = b[sortField] || ''; // avoid undefined in str comparison
+    if (caseInsensitiveOrdering) first = first.toLowerCase();
+    if (caseInsensitiveOrdering) second = second.toLowerCase();
     if (sortOrder === 'asc') {
       return first > second ? 1 : (first < second ? -1 : 0);
     } else {
