@@ -13,10 +13,10 @@ For full info, docs and examples, see the
 WHAT YOU'RE DOING.  SEE THE VERY END OF THIS DOCUMENT FOR SOME MORE HELP**.
 
 Current versions of each package (requires manual, explicit updates until
-the stable release):
+the stable release; consider backing up your database before upgrading):
 
 ```
-meteor add msgfmt:core@2.0.0-preview.16         # 2016-01-11
+meteor add msgfmt:core@2.0.0-preview.18         # 2016-02-04
 meteor add msgfmt:extract@2.0.0-preview.12
 meteor add msgfmt:ui@2.0.0-preview.9            # 2016-01-27
 ```

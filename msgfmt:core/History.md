@@ -1,6 +1,10 @@
 ## vNEXT
 
-* Feature: `cmather:handlebars-server` integration (see README).
+## 2.0.0-preview.18
+
+* Feature: `cmather:handlebars-server` integration (see README, #32).
+* Bugfix: Due to a weird publish error, the Cordova code below
+  was not included in core.17 (#205)
 
 ## 2.0.0-preview.17
 
