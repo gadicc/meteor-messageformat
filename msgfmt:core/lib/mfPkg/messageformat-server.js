@@ -121,8 +121,8 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
       this.mfStrings.update({ key: obj.key, lang: obj.lang }, obj);
 		}
     */
-    if (!key || !lang) console.log(obj);
-    this.mfStrings.upsert({ key: obj.key, lang: obj.lang }, obj);
+		if (!key || !lang) console.log(obj);
+		this.mfStrings.upsert({ key: obj.key, lang: obj.lang }, obj);
 
 		if (updating) {
 			// does this update affect translations?
