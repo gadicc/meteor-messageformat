@@ -135,7 +135,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 				if (str.removed)
 					query['$set'].removed = true;
 
-				this.mfStrings.update( { key: key, lang: {$ne: lang} }, query);
+				this.mfStrings.update( { key: key, lang: {$ne: lang} }, query, { multi: true });
 			}
 
 			// finally, update the local cache
