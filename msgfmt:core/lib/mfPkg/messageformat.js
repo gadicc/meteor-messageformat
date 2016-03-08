@@ -75,12 +75,6 @@ mfPkg = msgfmt = {
      * update the local cache accordingly
      */
     observeFrom: function(mtime, which) {
-        var query = {mtime: {$gt: mtime}};
-        if (which == 'native')
-            query.lang = mfPkg.native;
-        else if (which == 'trans')
-            query.lang = { $not: mfPkg.native };
-
         this.mfStrings.find().observe({
             added: function(doc) {
 //                console.log('added ' + doc.key + ' ' + doc.text);
