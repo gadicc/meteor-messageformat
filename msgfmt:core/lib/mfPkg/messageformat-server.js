@@ -176,7 +176,7 @@ mfPkg.syncAll = function(strings, meta) {
     var lastSync = msgfmt.mfMeta.findOne('syncTrans');
     lastSync = lastSync ? lastSync.mtime : 0;
 
-    for (lang in strings)
+    for (var lang in strings)
       if (lang != msgfmt.native)
         msgfmt.langUpdate(lang, strings[lang], meta, lastSync);
 
