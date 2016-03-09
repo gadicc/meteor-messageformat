@@ -21,7 +21,8 @@ function msgfmtHandler(compileStep) {
     compileStep.addJavaScript({
       path: 'server/extracts.msgfmt.js',
       sourcePath: process.cwd() + '/' + EXTRACTS_FILE,
-      data: 'console.log("NODE_ENV="+process.env.NODE_ENV); if (1 || process.env.NODE_ENV === "production") msgfmt.addNative.apply(msgfmt, ' + contents + ');'
+      //data: 'console.log("NODE_ENV="+process.env.NODE_ENV); if (1 || process.env.NODE_ENV === "production") msgfmt.addNative.apply(msgfmt, ' + contents + ');'
+      data: 'if (process.env.NODE_ENV === "production") msgfmt.addNative.apply(msgfmt, ' + contents + ');'
     });      
   }
 }

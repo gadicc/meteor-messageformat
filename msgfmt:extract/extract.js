@@ -92,7 +92,8 @@ var checkForUpdates = function(m, force) {
     for (name in changedFiles) {
       var file = changedFiles[name];
       var content = fs.readFileSync(file.fromCwd, 'utf8');
-      handlers[path.extname(name).substr(1)](name, content, file.mtime, newStrings);
+      var mtime = new Date(file.mtime).getTime();
+      handlers[path.extname(name).substr(1)](name, content, mtime, newStrings);
     }
 
     // Only compare oldStrings from the files we're looking at
@@ -138,7 +139,7 @@ var checkForUpdates = function(m, force) {
       log.trace('Marking "' + key + '" as removed.');
       newStrings[key] = oldStrings[key];
       newStrings[key].removed = true;
-      newStrings[key].mtime = new Date();
+      newStrings[key].mtime = Date.now();
       removeCount++;
     }
 
@@ -158,19 +159,26 @@ var checkForUpdates = function(m, force) {
     if (Object.keys(newStrings).length) {
       // console.log(newStrings);
       var max = _.max(newStrings, function(s) { return s.mtime; }).mtime;
+
       mfPkg.addNative(newStrings, {
         extractedAt: Date.now(),
-        updatedAt: max.getTime() // _.isObject(max) ? max.getTime() : max
+        updatedAt: max
       });
     }
 
     if (Object.keys(newStrings).length || force) {
+      // was: msgfmt.strings[msgfmt.native] ?
+      var unorderedStrings = _.extend({}, unchangedStrings, newStrings);
+      var orderedStrings = {};
+      _.each(Object.keys(unorderedStrings).sort(), function(key) {
+        orderedStrings[key] = unorderedStrings[key];
+      });
+
       saveData = JSON.stringify([
-        //msgfmt.strings[msgfmt.native],
-        _.extend({}, unchangedStrings, newStrings),
+        orderedStrings,
         {
           extractedAt: Date.now(),
-          udpatedAt: max && max.getTime() || msgfmt.meta[msgfmt.native].updatedAt
+          updatedAt: max || msgfmt.meta[msgfmt.native].updatedAt || Date.now()
         }
       ]);
     }
@@ -223,9 +231,8 @@ process.on('message', boundCheck);  // Meteor >= 1.0.4
 
 // No reason to block startup, we can do update gradually asyncronously
 Meteor.startup(function() {
-  if (!msgfmt.extractLogLevel)
-    msgfmt.extractLogLevel = 'trace';
-  log = new Logger('msgfmt:extracts', msgfmt.extractLogLevel);
+  log = new Logger('msgfmt:extracts');
+  Logger.setLevel('msgfmt:extracts', msgfmt.initOptions.extractLogLevel || 'info');
 
   var dir = path.dirname(extractsFile);
   fs.exists(dir, function(exists) {

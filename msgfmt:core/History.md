@@ -1,5 +1,28 @@
 ## vNEXT
 
+## v2.0.0-preview.19
+
+* Bugfix: Mark all translations as fuzzy (and not just first match),
+  when a native key is updated (thanks, @sbalmer) (#209)
+
+* Possible bugfix: Correctly scope `lang` in syncAll (thanks, @sbalmer) (#209)
+
+* Possible bugfix: No longer run syncAll in a Fiber, suspected possible cause
+  of mismatched strings (text being assigned to wrong keys), (#195).
+
+* Internal bugfix: observeFrom(time, native/trans) works the old way again,
+  and is used appropriately for performance gains.
+
+* Enhancement: Skip `extracts.msgfmt~` and `mfAll.js` if the database is
+  already up to date.
+
+* Refactor syncAll(), addNative(), langUpdate() methods and handling of mfMeta
+  data.
+
+* Enhancement: native text from mfAll.js is no longer ignored if it's more
+  up to date than database / extracts (affects those that don't use extracts
+  and like to build mfAll.js by hand).
+
 ## 2.0.0-preview.18
 
 * Feature: `cmather:handlebars-server` integration (see README, #32).

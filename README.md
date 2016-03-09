@@ -16,8 +16,8 @@ Current versions of each package (requires manual, explicit updates until
 the stable release; consider backing up your database before upgrading):
 
 ```
-meteor add msgfmt:core@2.0.0-preview.18         # 2016-02-04
-meteor add msgfmt:extract@2.0.0-preview.12
+meteor add msgfmt:core@2.0.0-preview.19         # 2016-03-09
+meteor add msgfmt:extract@2.0.0-preview.13      # 2016-03-09
 meteor add msgfmt:ui@2.0.0-preview.9            # 2016-01-27
 ```
 
@@ -112,7 +112,19 @@ There's an issue with the inject-initial package under Cordova which causes info
 
 ### Debug logging
 
-`Logger.setLevel('msgfmt', 'trace');`
+Before init:
+
+```js
+msgfmt.init('en', {
+  logLevel: 'debug'   // or 'trace'
+})
+```
+
+At runtime:
+
+```js
+Package['jag:pince'].Logger.setLevel('msgfmt', 'debug'); // or 'trace'
+````
 
 ### Events
 

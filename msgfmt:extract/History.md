@@ -1,8 +1,15 @@
 ## vNEXT
 
-* Update README with better log-level and forceExtract info.
+## 2.0.0-preview.13
+
+* Enhancement: Update README with better log-level and forceExtract info.
+* Enhancement: Store `extracts.msgfmt~` in order for those that commit it.
 
 * Bugfix: respect `msgfmt.extractLogLevel` on load.
+* Bugfix: convert file system time to JavaScript time for mtime/ctime.
+* Bugfix: correctly provide updatedAt meta time.
+
+* Consistency: removed record's mtime should use Date.now() not new Date()
 
 * Don't mark strings as removed if they're already marked as removed
   (and don't update the mtime).

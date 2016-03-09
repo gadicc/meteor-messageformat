@@ -15,25 +15,44 @@ function checkLocaleMetaExists(locale) {
 }
 
 // Load each string and update the database if necessary
-mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
+msgfmt.langUpdate = function(lang, strings, newMeta) {
   checkLocaleMetaExists(lang);
-	mfPkg.meta[lang].extractedAt = meta.extractedAt;
-	mfPkg.meta[lang].updatedAt = meta.updatedAt;
-  if (mfPkg.meta.all) {
-    if (meta.updatedAt > mfPkg.meta.all.updatedAt) {
-      mfPkg.meta.all.updatedAt = meta.updatedAt;
-      mfPkg.mfMeta.update('all', { $set: {
-        updatedAt: meta.updatedAt
+
+  /*
+   * Update meta data
+   */
+
+  var existingMeta = msgfmt.meta[lang];
+  var metas = [ 'updatedAt', 'extractedAt' ];
+  var updates = { };
+
+  _.each(metas, function(key) {
+    if (!existingMeta[key] || existingMeta[key] < newMeta[key]) {
+      updates[key] = newMeta[key];
+      existingMeta[key] = newMeta[key];
+    }
+  });
+
+  if (!updates.updatedAt) {
+    log.debug('Aborting unnecessary langUpdate for "' + lang + '" (' +
+      (existingMeta.updatedAt - newMeta.updatedAt) + ' ms behind)');
+    return;
+  }
+
+  msgfmt.mfMeta.upsert(lang, { $set: updates });
+
+  // Aggregated "all" meta
+  if (msgfmt.meta.all) {
+    if (newMeta.updatedAt > msgfmt.meta.all.updatedAt) {
+      msgfmt.meta.all.updatedAt = newMeta.updatedAt;
+      msgfmt.mfMeta.update('all', { $set: {
+        updatedAt: newMeta.updatedAt
       }});
     }
   } else {
-    mfPkg.meta.all = { updatedAt: meta.updatedAt };
-    mfPkg.mfMeta.insert({ _id: 'all', updatedAt: meta.updatedAt });
+    msgfmt.meta.all = { updatedAt: newMeta.updatedAt };
+    msgfmt.mfMeta.insert({ _id: 'all', updatedAt: newMeta.updatedAt });
   }
-  mfPkg.mfMeta.upsert(lang, { $set: {
-    extractedAt: meta.extractedAt,  // could, purposefully, be undefined
-    updatedAt: meta.updatedAt
-  }});
 
 	/*
 	 * See if any of our extracted strings are newer than their copy in
@@ -46,11 +65,6 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 	for (key in strings) {
 		str = strings[key];
 		existing = this.strings[lang][key];
-
-		// skip keys which haven't been modified since last sync
-    // XXX, breaks v2... do we still want/need this?
-		//if (str.mtime <= lastSync)
-		//	continue;
 
 		// skip key if local copy is newer than this one (i.e. from other file)
 		if (existing && existing.mtime > str.mtime)
@@ -121,7 +135,6 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
       this.mfStrings.update({ key: obj.key, lang: obj.lang }, obj);
 		}
     */
-		if (!key || !lang) console.log(obj);
 		this.mfStrings.upsert({ key: obj.key, lang: obj.lang }, obj);
 
 		if (updating) {
@@ -143,71 +156,85 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 		}
 
 	} /* for (key in strings) */
+
 }
 
-// called from mfExract.js
-mfPkg.addNative = function(strings, meta) {
-	if (!this.initted) {
-
-		// not initted yet, we don't know what the native lang is
-    log.debug('addNative() called before init(), queueing...');
-		this.nativeQueue = { strings: strings, meta: meta };
-
-	} else {
-
-    log.debug('addNative() called');
-		var lastSync = this.mfMeta.findOne('syncExtracts');
-		lastSync = lastSync ? lastSync.mtime : 0;
-
-		this.langUpdate(mfPkg.native, strings, meta, lastSync);
-
-		msgfmt['syncExtracts'] = meta.updatedAt;
-		msgfmt.mfMeta.upsert('syncExtracts', {$set: {mtime: msgfmt['syncExtracts'] } });
-
-    this.observeFrom(meta.updatedAt, 'native');
-	}
-}
-
-// called from mfTrans.js
-mfPkg.syncAll = function(strings, meta) {
-  new Fiber(function() {
+function wrapAdd(origFunc, which, name) {
+  return function(strings, meta) {
     var startTime = Date.now();
 
-    var lastSync = msgfmt.mfMeta.findOne('syncTrans');
-    lastSync = lastSync ? lastSync.mtime : 0;
+    // not initted yet, we don't know what the native lang is
+    if (!this.initted) {
+      log.debug(name + ' called before init(), queueing...');
+      this[which+'Queue'] = { strings: strings, meta: meta };
+      return;
+    }
 
-    for (var lang in strings)
-      if (lang != msgfmt.native)
-        msgfmt.langUpdate(lang, strings[lang], meta, lastSync);
+    // In some cases pre core.19, used on upgrade to fix.
+    if (!meta.updatedAt) {
+      log.debug(name + ' meta.updatedAt was ' + meta.updatedAt, meta);
+      meta.updatedAt = Date.now();
+    }
 
-    // TODO.  Sync native strings too, ensure _id's are the same,
-    // allow for random load order  
+    var key = '_lastSync' + which.charAt(0).toUpperCase() + which.substr(1);
+    var lastSync = msgfmt.meta[key];
+    if (!lastSync)
+      lastSync = msgfmt.meta[key] = { mtime: 0 };
 
-    msgfmt['syncTrans'] = meta.updatedAt;
-    msgfmt.mfMeta.upsert('syncTrans', {$set: {mtime: msgfmt['syncTrans'] } });
+    // We're already up to date, abort.
+    if (meta.updatedAt <= lastSync.mtime) {
+      log.debug(name + " already up to date...");
+      return;
+    }
 
-    msgfmt.observeFrom(meta.updatedAt, 'trans');
+    log.info(name + ' updating...');
 
-    log.debug('Finished syncAll (in a fiber) in ' + (Date.now() - startTime) + ' ms');
-  }).run();
+    // Update observe before modifying database
+    this.observeFrom(meta.updatedAt, which);
+
+    // Prewrapped function
+    origFunc.call(this, strings, meta);
+
+    lastSync.mtime = meta.updatedAt;
+    msgfmt.mfMeta.upsert(key, {$set: {mtime: meta.updatedAt } });
+
+    log.debug('Finished ' + name + ' in ' + (Date.now() - startTime) + ' ms');
+  }
 }
 
-var meta = mfPkg.mfMeta.find().fetch();
-if (meta.syncTrans) delete meta.syncTrans;
-if (meta.syncExtracts) delete meta.synExtracts;
-_.each(meta, function(m) {
-  mfPkg.meta[m._id] = m;
-  delete mfPkg.meta[m._id]._id;
-  if (m._id && m._id !== 'all' && m._id !== 'syncTrans' && m.id !== 'syncExtracts')
-    checkLocaleMetaExists(m._id);
-});
+mfPkg.addNative = wrapAdd(function(strings, meta) {
+	this.langUpdate(mfPkg.native, strings, meta);
+}, 'native', 'addNative() (from extracts.msgfmt~)');
+
+// called from mfAll.js
+mfPkg.syncAll = wrapAdd(function(strings, meta) {
+  for (var lang in strings)
+    if (lang !== msgfmt.native)
+      msgfmt.langUpdate(lang, strings[lang], meta);
+
+  // since core.19; use nativeStrings from mfAll.js too
+  var nativeStrings = strings[msgfmt.native];
+  if (nativeStrings) {
+
+    var max = _.max(nativeStrings, function(s) { return s.mtime; }).mtime;
+    var nativeMeta = { updatedAt: max };
+    if (meta.extractedAt)
+      nativeMeta.extractedAt = meta.extractedAt;
+
+    this.addNative(nativeStrings, nativeMeta);
+
+  }
+}, 'trans', 'syncAll() (from mfAll.js)');
 
 var injectableOptions = ['waitOnLoaded', 'sendPolicy'];
 
 mfPkg.serverInit = function(native, options) {
-  if (this.nativeQueue) {
-    this.addNative(this.nativeQueue.strings, this.nativeQueue.meta);
-    delete this.nativeQueue;
+  var queues = { nativeQueue: 'addNative', transQueue: 'syncAll' };
+  for (var queue in queues) {
+    if (this[queue]) {
+      this[queues[queue]](this[queue].strings, this[queue].meta);
+      delete this[queue];
+    }
   }
 
   if (options)
@@ -218,9 +245,8 @@ mfPkg.serverInit = function(native, options) {
 
   checkLocaleMetaExists(native);
 
-  // If addTrans() was never called, observe full translation database
-  if (!mfPkg.syncTrans)
-    mfPkg.observeFrom(0, 'trans');	
+  // maxMtime is set on initial database load (at end of this file)
+  msgfmt.observeFrom(maxMtime);
 }
 
 Meteor.methods({
@@ -387,27 +413,41 @@ WebApp.connectHandlers.use(function(req, res, next) {
 
 msgfmt.strings = {};
 
+// Load meta data
+mfPkg.mfMeta.find().forEach(function(m) {
+  // Update from before core.19
+  if (m._id === 'syncExtracts' || m._id === 'syncTrans') {
+    msgfmt.mfMeta.remove(m._id);
+    return;
+  }
+
+  msgfmt.meta[m._id] = m;
+  if (m._id !== 'all' && m._id.charAt(0) !== '_')
+    checkLocaleMetaExists(m._id);
+  delete m._id;
+});
+
 /*
  * As of preview.16, we no longer rely on `_id` and properly set a unique compound
  * index on `key` and `lang`.  In case the database has previous dups, let's clean
  * them up.
  */
-
-var checkForDupes = (msgfmt.meta.all && !msgfmt.meta.all._dupeFree);
+var checkForDupes = msgfmt.meta.all && !msgfmt.meta.all._dupeFree;
 if (checkForDupes) {
   msgfmt.mfMeta.update('all', { $set: { _dupeFree: 1 }} );
   msgfmt.meta.all._dupeFree = true;
   log.warn('Checking for dupes in mfStrings... (once off on upgrade from < core.15)');
 }
 
-// Yes, we absolutely do want this to block, to be fully loaded before mfAll.js etc
-// But in future we could see what else needs this and queue in a Fiber
-// e.g. make sure when requesting lang data that we're fully loaded, etc.
-
+/*
+ * During script load, immediately load all strings from database
+ */
 log.trace('Retrieving strings from database...');
 var startTime = Date.now();
 var allStrings = msgfmt.mfStrings.find().fetch();
+var maxMtime = 0;
 log.trace('Finished retrieval in ' + (Date.now() - startTime) + ' ms');
+
 if (checkForDupes) {
   _.each(allStrings, function(str) {
     checkLocaleMetaExists(str.lang);
@@ -423,11 +463,13 @@ if (checkForDupes) {
       }
     } else
       msgfmt.strings[str.lang][str.key] = str;
+    if (str.mtime > maxMtime) maxMtime = str.mtime;
   });
 } else {
   _.each(allStrings, function(str) {
     checkLocaleMetaExists(str.lang);
     msgfmt.strings[str.lang][str.key] = str;
+    if (str.mtime > maxMtime) maxMtime = str.mtime;
   });  
 }
 delete allStrings;

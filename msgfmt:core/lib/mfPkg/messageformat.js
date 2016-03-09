@@ -21,7 +21,7 @@ if (Meteor.isServer && Package['gadicohen:messageformat']) {
 
  // For stuff that runs before init, e.g. want correct log level
 log = {};
-var queuedLogs = { debug: [], trace: [], warn: [] };
+var queuedLogs = { debug: [], trace: [], warn: [], info: [] };
 var defferedLog = function(text) { this.push(arguments); };
 (function() {
   for (var key in queuedLogs)
@@ -50,19 +50,30 @@ mfPkg = msgfmt = {
     mfStrings: new Mongo.Collection('mfStrings'),
     mfMeta: new Mongo.Collection('mfMeta'),
 
+    _currentObserves: { },
+
     init: function(native, options) {
         this.native = native;
         this.initted = true;
+        if (!options)
+            options = {};
 
           log = new Logger('msgfmt');
+          if (options.logLevel) {
+            Logger.setLevel('msgfmt', options.logLevel);
+          }
+
           for (key in queuedLogs)
             while (queuedLogs[key].length)
-              log.debug.apply(log, _.union(['[Q]'], queuedLogs[key].shift()));
+              log[key].apply(log, _.union(['[Q]'], queuedLogs[key].shift()));
 
         if (Meteor.isServer)
             this.serverInit(native, options);
         else
             this.clientInit(native, options);
+
+        // For other packages (TODO, plug into init stream)
+        this.initOptions = options;
     },
 
     rtlLangs: [ 'ar', 'dv', 'fa', 'ha', 'he', 'iw', 'ji', 'ps', 'ur', 'yi' ],
@@ -71,11 +82,38 @@ mfPkg = msgfmt = {
     },
 
     /*
-     * Observe additions/changes from after our last extract time, and
-     * update the local cache accordingly
+     * We want our local cache to always be up to date.  By default,
+     * we watch for all changes.  But if we're going to make a batch
+     * update to the database, no point in having these cmoe back
+     * from the database too, so we can update the query by mtime.
+     *
+     * Since updates could come from multiple sources, we'll ignore
+     * requests to observe from an earlier mtime than what we're
+     * already using.
      */
     observeFrom: function(mtime, which) {
-        this.mfStrings.find().observe({
+
+        if (!which) {
+            this.observeFrom(mtime, 'native');
+            this.observeFrom(mtime, 'trans');
+            return;
+        }
+
+        var observes = msgfmt._currentObserves;
+        if (observes[which]) {
+            if (mtime < observes[which].mtime)
+                return;
+            else
+                observes[which].handle.stop();
+        }
+
+        var query = {mtime: {$gt: mtime}};
+        if (which === 'native')
+            query.lang = msgfmt.native;
+        else if (which === 'trans')
+            query.lang = { $ne: msgfmt.native };
+
+        var handle = this.mfStrings.find(query).observe({
             added: function(doc) {
 //                console.log('added ' + doc.key + ' ' + doc.text);
                 if (!mfPkg.strings[doc.lang])
@@ -92,6 +130,8 @@ mfPkg = msgfmt = {
                     delete mfPkg.compiled[doc.lang][doc.key];
             }
         });
+
+        observes[which] = { mtime: mtime, handle: handle };
     }
 };
 
