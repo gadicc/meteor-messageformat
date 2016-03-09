@@ -15,6 +15,7 @@ Npm.depends({
 Package.onUse(function(api) {
   //api.versionsFrom('1.0.4.1');
 
+  api.use('underscore@1.0.0');
   api.use('msgfmt:core@2.0.0-preview.2');
   api.use('jag:pince@0.0.8');
 

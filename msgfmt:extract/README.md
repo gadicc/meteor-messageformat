@@ -1,13 +1,24 @@
-## msgfmt:extract
+# msgfmt:extract
+
+## Debugging
+
+Before msgfmt init:
 
 ```js
-// for now, like this
-msgfmt.extractLogLevel = 'trace';   // debug, warn, info
+msgfmt.init('en', {
+  extractLogLevel: 'trace'  // or: debug, warn, info
+});
 ```
 
-**Force rescan**:
+After Meteor startup (e.g. in `meteor shell`):
+
+```js
+Package['jag:pince'].Logger.setLevel('msgfmt:extracts', 'trace');
+```
+
+## Force rescan
 
 ```bash
-meteor mongo
-db.mfExtractFiles.remove({});
+meteor shell
+msgfmt.forceExtract();
 ```

@@ -85,6 +85,7 @@ var checkForUpdates = function(m, force) {
 
     var newStrings = {};
     var oldStrings = {};
+    var unchangedStrings = {};
     var nativeStrings = mfPkg.strings[mfPkg.native];
     var saveData;
 
@@ -115,6 +116,7 @@ var checkForUpdates = function(m, force) {
             newStrings[key].ctime = newStrings[key].mtime;
           } else {
             // No change
+            unchangedStrings[key] = newStrings[key];
             delete newStrings[key];
           }
         } else {
@@ -129,6 +131,10 @@ var checkForUpdates = function(m, force) {
 
     // if a key existed before but not anymore, mark as removed
     for (key in oldStrings) {
+      if (oldStrings[key].removed) {
+        unchangedStrings[key] = oldStrings[key];
+        continue;
+      }
       log.trace('Marking "' + key + '" as removed.');
       newStrings[key] = oldStrings[key];
       newStrings[key].removed = true;
@@ -160,7 +166,8 @@ var checkForUpdates = function(m, force) {
 
     if (Object.keys(newStrings).length || force) {
       saveData = JSON.stringify([
-        msgfmt.strings[msgfmt.native],
+        //msgfmt.strings[msgfmt.native],
+        _.extend({}, unchangedStrings, newStrings),
         {
           extractedAt: Date.now(),
           udpatedAt: max && max.getTime() || msgfmt.meta[msgfmt.native].updatedAt
@@ -216,7 +223,7 @@ process.on('message', boundCheck);  // Meteor >= 1.0.4
 
 // No reason to block startup, we can do update gradually asyncronously
 Meteor.startup(function() {
-  if (!msgfmt.extractsLogLevel)
+  if (!msgfmt.extractLogLevel)
     msgfmt.extractLogLevel = 'trace';
   log = new Logger('msgfmt:extracts', msgfmt.extractLogLevel);
 
