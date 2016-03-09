@@ -121,8 +121,8 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
       this.mfStrings.update({ key: obj.key, lang: obj.lang }, obj);
 		}
     */
-    if (!key || !lang) console.log(obj);
-    this.mfStrings.upsert({ key: obj.key, lang: obj.lang }, obj);
+		if (!key || !lang) console.log(obj);
+		this.mfStrings.upsert({ key: obj.key, lang: obj.lang }, obj);
 
 		if (updating) {
 			// does this update affect translations?
@@ -135,7 +135,7 @@ mfPkg.langUpdate = function(lang, strings, meta, lastSync) {
 				if (str.removed)
 					query['$set'].removed = true;
 
-				this.mfStrings.update( { key: key, lang: {$ne: lang} }, query);
+				this.mfStrings.update( { key: key, lang: {$ne: lang} }, query, { multi: true });
 			}
 
 			// finally, update the local cache
@@ -176,7 +176,7 @@ mfPkg.syncAll = function(strings, meta) {
     var lastSync = msgfmt.mfMeta.findOne('syncTrans');
     lastSync = lastSync ? lastSync.mtime : 0;
 
-    for (lang in strings)
+    for (var lang in strings)
       if (lang != msgfmt.native)
         msgfmt.langUpdate(lang, strings[lang], meta, lastSync);
 
