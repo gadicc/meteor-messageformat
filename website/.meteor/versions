@@ -16,8 +16,11 @@ boilerplate-generator@1.0.3
 callback-hook@1.0.3
 check@1.0.5
 coffeescript@1.0.6
+cosmos:browserify@0.5.1
 ddp@1.1.0
 deps@1.0.7
+djedi:sanitize-html@1.11.2
+djedi:sanitize-html-client@1.11.2
 ejson@1.0.6
 email@1.0.6
 facebook@1.2.0
@@ -57,9 +60,9 @@ mobile-status-bar@1.0.3
 momentjs:moment@2.10.6
 mongo@1.1.0
 mrt:sp-marked@0.0.2
-msgfmt:core@2.0.0-preview.17
-msgfmt:extract@2.0.0-preview.12
-msgfmt:ui@2.0.0-preview.6
+msgfmt:core@2.0.0-preview.19
+msgfmt:extract@2.0.0-preview.13
+msgfmt:ui@2.0.0-preview.10
 nicolaslopezj:router-layer@0.0.11
 npm-bcrypt@0.7.8_2
 oauth@1.1.4

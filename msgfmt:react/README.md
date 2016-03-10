@@ -10,6 +10,8 @@ Features:
 
 * If LOCALE is not specified, we reactively use msgfmt.locale().
 * In the future, these tags will serve as the basis for inline translation.
+* Supports _HTML={true} to allow HTML in the translation, using
+  `msgfmt.sanitizeHTML()`.
 
 Notes:
 

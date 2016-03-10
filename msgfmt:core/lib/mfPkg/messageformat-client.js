@@ -23,42 +23,81 @@ function getOrEquals(partial, equals) {
   } else
     return partial.get();
 }
-_.each(['locale', 'lang', 'dir', 'loading'], function(what) {
-  var key = '_' + what;
-  var helper = 'msgfmt' + what.charAt(0).toUpperCase() + what.substr(1);
+
+function eachHelper(func) {
+  _.each(['locale', 'lang', 'dir', 'loading'], function(what) {
+    var key = '_' + what;
+    func(key, what);
+  });
+}
+
+eachHelper(function(key, what) {
   msgfmt[key] = new ReactiveVar();
   msgfmt[what] = _.partial(getOrEquals, msgfmt[key]);
-  Template.registerHelper(helper, msgfmt[what]);
 });
 
-/*
- * Main Handlebars regular helper / block helper, calls mf() with correct
- * parameters.  On the client, mf() honors the Session locale if none is
- * manually specified here (see messageformat.js), making this a reactive
- * data source.
- */
-mfPkg.mfHelper = function(key, message, params) {
-	// For best performance, waiton mfPkg.ready() before drawing template
-	var dep = mfPkg.updated();
-	if (typeof key == "undefined") {
-		key = this.KEY;
-	} else {
-		message = params ? message : null;
-		params = params ? params.hash : {};
-	}
+// Blaze support is now optional
+if (Package.templating) {
+  var Template = Package.templating.Template;
+  var Blaze = Package.blaze.Blaze; // implied by `templating`
+  var HTML = Package.htmljs.HTML; // implied by `blaze`
+  var Spacebars = Package.spacebars.Spacebars;
 
-	return mf(key, params, message, params ? params.LOCALE : null)
-};
-Template.registerHelper('mf', mfPkg.mfHelper);
+  // Template helpers for our reactive functions (see above)
+  eachHelper(function(key, what) {
+    var helperName = 'msgfmt' + what.charAt(0).toUpperCase() + what.substr(1);
+    Template.registerHelper(helperName, msgfmt[what]);
+  });
 
-Template.mf.helpers({
-	helper: function(component, options) {
-		var dep = mfPkg.updated();
-		var key = this.KEY;
-		var message = Blaze._toText ? Blaze._toText(component, HTML.TEXTMODE.STRING) : Blaze.toText(component, HTML.TEXTMODE.STRING);
-		return mf(key, this, message, this.LOCALE);
-	}
-});
+  /*
+   * Main Blaze regular helper / block helper, calls mf() with correct
+   * parameters.  On the client, mf() honors the Session locale if none is
+   * manually specified here (see messageformat.js), making this a reactive
+   * data source.
+   */
+  Blaze.Template.registerHelper("mf", function(key, message, params) {
+    // For best performance, waiton mfPkg.ready() before drawing template
+    var dep = mfPkg.updated();
+
+    if (arguments[arguments.length-1] instanceof Spacebars.kw) {
+
+      var result;
+      var _HTML = params && (params._HTML || params._html);
+
+      message = params ? message : null;
+      params = params ? params.hash : {};
+
+      result = mf(key, params, message, params ? params.LOCALE : null);
+      return _HTML ?
+        Spacebars.SafeString(msgfmt.sanitizeHTML(result, _HTML)) : result;
+
+    } else {
+
+      // Block helpers expects a template to be returned
+      return mfTpl;
+
+    }
+
+  });
+
+  var mfTpl = new Template('mf', function() {
+    var view = this;
+
+    var templateInstance = view.templateInstance();
+    var params = templateInstance.data;
+
+    var result, message = '';
+    var _HTML = params._HTML || params._html;
+
+    if (view.templateContentBlock) {
+      message = Blaze._toText(view.templateContentBlock, HTML.TEXTMODE.STRING);
+    }
+
+    result = mf(params.KEY, params, message, params ? params.LOCALE : null);
+    return _HTML ? HTML.Raw(msgfmt.sanitizeHTML(result, _HTML)) : result;
+  });
+
+} /* if (Package.templating) */
 
 mfPkg.strings = mfPkg.useLocalStorage ? amplify.store('mfStrings') || {} : {};
 mfPkg.mfStringsSub = Meteor.subscribe('mfStrings', 'notReady');

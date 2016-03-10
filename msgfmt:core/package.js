@@ -30,7 +30,6 @@ Package.onUse(function (api) {
   // client deps
   api.use([
     // core MDG packages
-    'templating',
     'session',
     'tracker',
     'reactive-var',
@@ -40,6 +39,9 @@ Package.onUse(function (api) {
     // MDG maintained non-core
     'amplify@1.0.0'
   ], client);
+
+  // Blaze support
+  api.use(['templating', 'spacebars'], client, { weak: true });
 
   // For msgfmt.storeUserLocale == true.
   api.use('accounts-base', client, { weak: true });
@@ -78,7 +80,6 @@ Package.onUse(function (api) {
 
   // client
   api.addFiles([
-    'lib/mfPkg/messageformat.html',
     'lib/mfPkg/messageformat-client.js',
     'lib/mfPkg/messageformat-client-integrations.js',
   ], client);
@@ -87,6 +88,11 @@ Package.onUse(function (api) {
 
   // Integrations
   api.use('cmather:handlebars-server@2.0.0', 'server', { weak: true });
+
+  // For msgfmt.sanitizeHTML()
+  api.use('djedi:sanitize-html@1.11.2', server);
+  api.use('djedi:sanitize-html-client@1.11.2-0', client);
+  api.addFiles('lib/mfPkg/sanitization.js', both);
 
   api.export(['mfPkg', 'mf', 'msgfmt'], both);
 });

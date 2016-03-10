@@ -39,20 +39,22 @@ class _MF extends Component {
       }
     }
 
-    if (props._HTML) {
+    var _HTML = props._HTML || props._html;
+    if (_HTML) {
 
-      var html = { __html: mf(props.KEY, props, props.TEXT, locale) };
-      // TODO, optional sanitization
+      var html = { __html:
+        msgfmt.sanitizeHTML( mf(props.KEY, props, props.TEXT, locale), _HTML )
+      };
 
       return (
-        <span dangerouslySetInnerHTML={html}></span>;
-      );      
+        <span dangerouslySetInnerHTML={html}></span>
+      );
 
     } else {
 
       return (
         <span>
-          {mf(props.KEY, props, props.TEXT, locale)}
+          { mf(props.KEY, props, props.TEXT, locale) }
         </span>
       );
 
