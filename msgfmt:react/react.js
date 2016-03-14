@@ -15,9 +15,6 @@ class _MF extends Component {
       this.state = { LOCALE: 'en' };
       mountedComponentsWithState.add(this);
     }
-
-    if (this.props.TEXT)
-      this.props.TEXT = this.props.TEXT.trim();
   }
 
   componentWillUnmount() {
@@ -27,15 +24,22 @@ class _MF extends Component {
 
   render() {
     var props = this.props;
-    var locale = this.props.LOCALE || this.state.LOCALE;
+    var locale = props.LOCALE || this.state.LOCALE;
+    var key = props.KEY;
+    var text = props.children;
+
+    if (typeof text !== 'string' && typeof text !== 'undefined')
+      throw new Error("Only <MF>string</MF> is supported, maybe you need to escape " +
+        "with braces?  i.e. <MF>{`string with } stuff in it`}</MF>");
+
 
     // For HMR; clear MF's cache if TEXT for KEY has changed
-    if ( (!locale || locale === msgfmt.native) && this.props.TEXT &&
-        msgfmt.strings[msgfmt.native] !== this.props.TEXT) {
-      msgfmt.strings[msgfmt.native][this.props.KEY] = this.props.TEXT;
+    if ( (!locale || locale === msgfmt.native) && text &&
+        msgfmt.strings[msgfmt.native] !== text) {
+      msgfmt.strings[msgfmt.native][key] = text;
       if (msgfmt.objects[msgfmt.native]) {
-        delete msgfmt.objects[msgfmt.native][this.props.KEY];
-        delete msgfmt.compiled[msgfmt.native][this.props.KEY];
+        delete msgfmt.objects[msgfmt.native][key];
+        delete msgfmt.compiled[msgfmt.native][key];
       }
     }
 
@@ -43,7 +47,7 @@ class _MF extends Component {
     if (_HTML) {
 
       var html = { __html:
-        msgfmt.sanitizeHTML( mf(props.KEY, props, props.TEXT, locale), _HTML )
+        msgfmt.sanitizeHTML( mf(key, props, text, locale), _HTML )
       };
 
       return (
@@ -54,7 +58,7 @@ class _MF extends Component {
 
       return (
         <span>
-          { mf(props.KEY, props, props.TEXT, locale) }
+          { mf(key, props, text, locale) }
         </span>
       );
 
@@ -65,3 +69,5 @@ class _MF extends Component {
 
 // for Meteor export
 MF = _MF;
+
+export default MF;

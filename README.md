@@ -19,6 +19,7 @@ the stable release; consider backing up your database before upgrading):
 meteor add msgfmt:core@2.0.0-preview.19         # 2016-03-09
 meteor add msgfmt:extract@2.0.0-preview.13      # 2016-03-09
 meteor add msgfmt:ui@2.0.0-preview.9            # 2016-01-27
+meteor add msgfmt:react                         # 2016-03-14 (v2.0.0)
 ```
 
 If you don't want the UI translator on production (i.e. no crowd translation),
