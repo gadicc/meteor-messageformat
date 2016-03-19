@@ -1,5 +1,15 @@
 # msgfmt:extract
 
+* Automatically extracts MF keys & text from your .{html,js,jsx,jade} files
+on save.
+
+## Force rescan
+
+```bash
+meteor shell
+msgfmt.forceExtract();
+```
+
 ## Debugging
 
 Before msgfmt init:
@@ -10,15 +20,9 @@ msgfmt.init('en', {
 });
 ```
 
-After Meteor startup (e.g. in `meteor shell`):
+After Meteor startup (e.g. in `meteor shell` - logs appear in your main
+Meteor process and not in the shell).
 
 ```js
 Package['jag:pince'].Logger.setLevel('msgfmt:extracts', 'trace');
-```
-
-## Force rescan
-
-```bash
-meteor shell
-msgfmt.forceExtract();
 ```

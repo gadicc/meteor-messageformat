@@ -5,9 +5,22 @@ MessageFormat i18n support, the Meteor way.
 Easy reactive use of complicated strings (gender, plural, etc) with insanely
 easy translation into other languages (through a web UI).
 
+## Features
+
+* Super powerful language use via the industry gold standard, MessageFormat
+* Super easy translation via automatic string extraction and translation UI
+* Super easy integration via automatic locale set on moment, parsley, etc
+* Super fast loading, caching, etc.  Works with BrowserPolicy, appcache, etc.
+* Offline support (including changing of languages while offline)
+* Integrates with autoform, momentjs, parsleyvalidator, cmather:handlebars-server
+
 For full info, docs and examples, see the
-[Meteor MessageFormat home page](http://messageformat.meteor.com/)
+[Meteor MessageFormat home page](http://messageformat-v2.meteor.com/)
 (or install/clone the smart package and run `meteor` in its `website` directory).
+For this pre-release, some info on the site is out of date, and all info in the
+READMEs will supercede info on the site (for now).
+
+## v2 pre-release
 
 **THIS IS AN IN-DEVELOPMENT RELEASE.  YOU SHOULD NOT BE USING IT UNLESS YOU KNOW
 WHAT YOU'RE DOING.  SEE THE VERY END OF THIS DOCUMENT FOR SOME MORE HELP**.
@@ -20,6 +33,7 @@ meteor add msgfmt:core@2.0.0-preview.19         # 2016-03-09
 meteor add msgfmt:extract@2.0.0-preview.13      # 2016-03-09
 meteor add msgfmt:ui@2.0.0-preview.9            # 2016-01-27
 
+# use on of these depending
 meteor add msgfmt:react                         # 2016-03-14 (v2.0.0) - Meteor 1.3+
 meteor add msgfmt:react@2.0.0-meteor12          # 2016-03-14 (v2.0.0) - Meteor 1.2
 ```
@@ -28,14 +42,14 @@ If you don't want the UI translator on production (i.e. no crowd translation),
 instead of adding msgfmt:ui, add `msgfmt:ui-dev-only` (no need to specify
 version).
 
-## Features
-
-* Super powerful language use via the industry gold standard, MessageFormat
-* Super easy translation via automatic string extraction and translation UI
-* Super easy integration via automatic locale set on moment, parsley, etc
-* Super fast loading, caching, etc.  Works with BrowserPolicy, appcache, etc.
-* Offline support (including changing of languages while offline)
-* Integrates with autoform, momentjs, parsleyvalidator, cmather:handlebars-server
+Subpackage READMEs:
+[msgfmt:core](https://github.com/gadicc/meteor-messageformat/tree/v2/msgfmt:core#readme)
+|
+[msgfmt:extract](https://github.com/gadicc/meteor-messageformat/tree/v2/msgfmt:extract#readme)
+|
+[msgfmt:ui](https://github.com/gadicc/meteor-messageformat/tree/v2/msgfmt:ui#readme)
+|
+[msgfmt:react](https://github.com/gadicc/meteor-messageformat/tree/v2/msgfmt:react#readme)
 
 ## Quick Start
 
@@ -64,12 +78,12 @@ Setup your strings like this:
 ```
 
 For more complicated examples, see the
-[examples page](http://messageformat.meteor.com/examples).
+[examples page](http://messageformat-v2.meteor.com/examples).
 For more information about different options, see the
 [docs](http://messageformat.meteor.com/docs).
 
 To translate your strings, go to `/translate` in your app, available by default
-to any registered user.  See the [docs](http://messageformat.meteor.com/docs)
+to any registered user.  See the [docs](http://messageformat-v2.meteor.com/docs)
 about custom security policies.
 
 ## More info

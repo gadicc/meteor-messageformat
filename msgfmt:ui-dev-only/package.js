@@ -3,6 +3,7 @@ Package.describe({
   version:   "2.0.3",
   summary:   "msgfmt-ui that is never deployed",
   git:       "https://github.com/gadicc/meteor-messageformat.git",
+  documentation: 'README.md',
   debugOnly: true
 });
 

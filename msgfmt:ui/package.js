@@ -3,6 +3,7 @@ Package.describe({
   version: "2.0.0-preview.10",
   summary: "messageformat: translation UI",
   git:      "https://github.com/gadicc/meteor-messageformat.git",
+  documentation: 'README.md'
 });
 
 Package.onUse(function (api) {

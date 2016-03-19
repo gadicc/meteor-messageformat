@@ -3,6 +3,7 @@ Package.describe({
   version: "2.0.0-preview.19",
   summary: "MessageFormat support, the Meteor way",
   git:     "https://github.com/gadicc/meteor-messageformat.git",
+  documentation: '../README.md'
 });
 
 Package.registerBuildPlugin({
