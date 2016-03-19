@@ -1,5 +1,9 @@
 ## vNEXT
 
+## 2.0.0-preview.11 (2016-03-19)
+
+* Bugfix for Meteor 1.2+: Explicity use() underscore on server too.
+
 ## 2.0.0-preview.10
 
 * Bugfix: "Sort first by Status" now works correctly (#204)

@@ -31,7 +31,7 @@ the stable release; consider backing up your database before upgrading):
 ```
 meteor add msgfmt:core@2.0.0-preview.19         # 2016-03-09
 meteor add msgfmt:extract@2.0.0-preview.13      # 2016-03-09
-meteor add msgfmt:ui@2.0.0-preview.9            # 2016-01-27
+meteor add msgfmt:ui@2.0.0-preview.11           # 2016-03-18
 
 # use on of these depending
 meteor add msgfmt:react                         # 2016-03-14 (v2.0.0) - Meteor 1.3+
