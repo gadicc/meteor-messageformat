@@ -1,7 +1,7 @@
 # msgfmt:extract
 
-* Automatically extracts MF keys & text from your .{html,js,jsx,jade} files
-on save.
+* Automatically extracts MF keys & text from your .{html,js,jsx,jade,coffee}
+files on save.
 
 ## Force rescan
 

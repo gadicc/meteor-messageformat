@@ -1,4 +1,16 @@
-## vNEXT
+# Change Log
+
+All notable changes to this project will be documented in this file.
+This project adheres to [Semantic Versioning](http://semver.org/).
+
+## Unreleased
+
+## 2.0.0-preview.14
+
+### Added
+
+- Support the new <MF KEY="myKey">myText</MF> format from `msgfmt:react`
+- Use the enclosing React component name for the "template" field.
 
 ## 2.0.0-preview.13
 

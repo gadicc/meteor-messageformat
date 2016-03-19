@@ -398,20 +398,44 @@ handlers.js = function(file, data, mtime, strings) {
   }
 };
 
+/*
+  class Blah extends ... { render () { ... } }
+  const/var/let Blah = React.createClass( { render: function() ... } )
+  const/var/let Blah = () => ( )
+  const/var/let Blah = () => {( )}
+
+  function(), function (), () with vars 
+*/
+function lastReactComponentName(string) {
+  var REs = [
+    /class\s+(\w+)\s+extends[\s\S]*?$/,
+    /(?:const|var|let)\s+(\w+)\s*=\s*React.createClass\([\s\S]*?$/,
+    /(?:const|var|let)\s+(\w+)\s*=\s*(?:function){0,1}\s*\([\s\S]*?$/,
+  ];
+
+  var i, last = { 0: '', 1: 'unknown', index: 0 };
+  for (var i=0; i < REs.length; i++) {
+    var match = REs[i].exec(string);
+    if (match && match.index >= last.index)
+      last = match;
+  }
+
+  return last && last[1];
+}
+
 handlers.jsx = function(file, data, mtime, strings) {
   // XXX TODO, escaped quotes
   var result, re;
 
-    // <MyComponent>{mf('test_jsx_key','test_jsx_text')}</MyComponent>
-    // mf('test_jsx_key','test_jsx_text')
+  // <MyComponent>{mf('test_jsx_key','test_jsx_text')}</MyComponent>
+  // mf('test_jsx_key','test_jsx_text')
 
   re = /mf\s*\(\s*(['"])(.*?)\1\s*,\s*.*?\s*,?\s*(['"])(.*?)\3,?.*?\)/g;
   while (result = re.exec(data)) {
     var key = result[2], text = result[4], attributes = attrDict(result[5]);
     if (!text && _.isString(result[3])) text = result[3];
-    var func = /[\s\S]*\n*(.*?function.*?\([\s\S]*?\))[\s\S]*?$/
-      .exec(data.substring(0, result.index));
     var line = data.substring(0, result.index).split('\n').length;
+    var template = lastReactComponentName(data.substring(0, result.index));
     logKey(key, text, file, line, strings);
     strings[key] = {
       key: key,
@@ -419,9 +443,34 @@ handlers.jsx = function(file, data, mtime, strings) {
       file: file,
       line: line,
       mtime: mtime,
-      func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
+      template: template
     };
   }
+
+  // <MF KEY="key" attr2=val2 etc>text</MF>
+  // <MF KEY="key" attr2=val2 etc>{`text`}</MF>
+  re = /<MF (.*?)>\s*([^]*?)\s*<\/MF>/g;
+  while (result = re.exec(data)) {
+    var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
+    var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
+      .exec(data.substring(0, result.index)); // TODO, optimize
+    var line = data.substring(0, result.index).split('\n').length;
+    var template = lastReactComponentName(data.substring(0, result.index));
+
+    // Strip out {` text `}
+    text = text.replace(/^\{\`\s*([^]*?)\s*\`\}/, '$1');
+
+    logKey(key, text, file, line, strings);
+    strings[key] = {
+      key: key,
+      text: text,
+      file: file,
+      line: line,
+      mtime: mtime,
+      template: template
+    };
+  }
+
 };
 
 handlers.coffee = function(file, data, mtime, strings) {
@@ -452,4 +501,11 @@ handlers.coffee = function(file, data, mtime, strings) {
       mtime: mtime
     };
   }
+};
+
+if (!msgfmt._testExports)
+  msgfmt._testExports = {};
+msgfmt._testExports.extract = {
+  handlers: handlers,
+  lastReactComponentName: lastReactComponentName
 };
