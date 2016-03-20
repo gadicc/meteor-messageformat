@@ -1,5 +1,10 @@
 ## vNEXT
 
+## v2.0.0-preview.20
+
+* Use https to retrieve strings if the current page was loaded with https
+  (#213)
+
 ## v2.0.0-preview.19
 
 * Bugfix: Mark all translations as fuzzy (and not just first match),

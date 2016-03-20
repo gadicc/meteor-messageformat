@@ -220,7 +220,8 @@ function fetchLocale(locale) {
     locale = 'all';
 
   unique = locale + '/' + (mfPkg.lastSync[locale] || 0);
-  url = Meteor.absoluteUrl('msgfmt/locale/' + unique);
+  url = Meteor.absoluteUrl('msgfmt/locale/' + unique,
+    { secure: window.location.protocol === "https:" });
   log.debug('fetchLocale request for "' + locale + '", url: ' + url);
   times.fetches[unique] = Date.now();
 
