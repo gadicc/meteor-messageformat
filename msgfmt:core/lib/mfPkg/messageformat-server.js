@@ -27,6 +27,10 @@ msgfmt.langUpdate = function(lang, strings, newMeta) {
   var updates = { };
 
   _.each(metas, function(key) {
+    // Upgrade from v1 or pre core@2.0.0-preview.19
+    if (typeof newMeta.updatedAt === 'string')
+      newMeta.updatedAt = new Date(newMeta.updatedAt).getTime();
+
     if (!existingMeta[key] || existingMeta[key] < newMeta[key]) {
       updates[key] = newMeta[key];
       existingMeta[key] = newMeta[key];

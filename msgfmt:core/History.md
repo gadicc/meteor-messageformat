@@ -1,5 +1,7 @@
 ## vNEXT
 
+* Improved import of mfAll.js from < core.19 (incl v0)
+
 ## v2.0.0-preview.20
 
 * Use https to retrieve strings if the current page was loaded with https
