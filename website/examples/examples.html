@@ -3,6 +3,9 @@
 
     <h1>{{mf 'examples_header' 'Meteor MessageFormat examples'}}</h1>
 
+    <h3>Some of these examples work only in v2, particularly, the react
+    component and numbers/dates &amp; HTML escaping</h3>
+
     <p>The examples below rely purely on Session variables, because they allow for
       easy demonstration on the client-side.  However, the results from a
       <code>collection.find()</code> work just as well, and remain reactive.</p>
@@ -63,10 +66,17 @@
     <div class="exampleWrapper">
       <table class="example">
         <tr>
-          <td>{{mf 'template' 'Template'}}:</td>
+          <td>Blaze:</td>
           <td>
             {{#sh_highlight lang='html'}}
               {{|mf 'i_am_str' 'I am a string.'}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>React:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              &lt;MF KEY='i_am_str'&gt;I am a string&lt;/MF&gt;
             {{/sh_highlight}}
           </td>
         </tr><tr>
@@ -89,10 +99,17 @@
     <div class="exampleWrapper">
       <table class="example">
         <tr>
-          <td>{{mf 'template' 'Template'}}:</td>
+          <td>Blaze:</td>
           <td>
             {{#sh_highlight lang='html'}}
               {{|mf 'hello_name' 'Hello, {NAME}.' NAME='Gadi'}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>React:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              &lt;MF KEY='hello_name' NAME="Gadi"&gt;{`Hello, {NAME}.`}&lt;/MF&gt;
             {{/sh_highlight}}
           </td>
         </tr><tr>
@@ -115,12 +132,19 @@
     <div class="exampleWrapper">
       <table class="example">
         <tr>
-          <td>{{mf 'template' 'Template'}}:</td>
+          <td>Blaze:</td>
           <td>
             {{#sh_highlight lang='html'}}
               {{|#mf KEY='hello_name' NAME=getName}}
                 Hello, {NAME}.
               {{|/mf}}
+            {{/sh_highlight}}
+          </td>
+        </tr><tr>
+          <td>React:</td>
+          <td>
+            {{#sh_highlight lang='html'}}
+              &lt;MF KEY='hello_name' NAME={getName}&gt;{`Hello, {NAME}.`}&lt;/MF&gt;
             {{/sh_highlight}}
           </td>
         </tr><tr>

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+DEPLOY_HOSTNAME=galaxy.meteor.com \
+meteor deploy messageformat.meteorapp.com --settings settings.json
