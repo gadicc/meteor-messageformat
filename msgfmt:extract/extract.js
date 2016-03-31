@@ -93,6 +93,7 @@ var checkForUpdates = function(m, force) {
       var file = changedFiles[name];
       var content = fs.readFileSync(file.fromCwd, 'utf8');
       var mtime = new Date(file.mtime).getTime();
+      log.debug('Extracting from ' + name);
       handlers[path.extname(name).substr(1)](name, content, mtime, newStrings);
     }
 
