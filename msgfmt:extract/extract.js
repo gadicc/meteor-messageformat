@@ -42,7 +42,7 @@ var checkForUpdates = function(m, force) {
   var walker  = walk.walk(relUp, {
     followLinks: false,
     filters: [
-      /\/\.[^\.]+\//  // skip .directories (hidden)
+      /\/\.[^\.]+\/|node_modules/  // skip .directories (hidden) & node_modules
     ]
   });
 
