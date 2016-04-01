@@ -104,6 +104,7 @@ Package.onTest(function(api) {
   api.use('underscore');
   api.use('http', 'server');
   api.use('browser-policy', server);
+  api.use('tracker', client);
 
   api.addFiles('tests/tests-client.js', client);
   api.addFiles('tests/tests-server.js', server);

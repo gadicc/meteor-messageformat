@@ -1,6 +1,6 @@
 window.mfPkg = mfPkg;
 mfPkg.setBodyDir = false;
-Logger.setLevel('msgfmt', 'trace');
+Package['jag:pince'].Logger.setLevel('msgfmt', 'trace');
 mfPkg.init('en');
 
 Tinytest.addAsync('msgfmt:core - setLocale - sets connectionLocale on server', function(test, complete) {
