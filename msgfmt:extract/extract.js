@@ -51,7 +51,7 @@ var checkForUpdates = function(m, force) {
 
   walker.on('file', function(root, stat, next) {
     // Add this file to the list of files (skip .dirs)
-    if (stat.name.match(/html$|js$|coffee$|jsx$|jade$/)) {
+    if (stat.name.match(/\.(html|js|coffee|jsx|jade)$/)) {
       var prettyDir = root.substr(relUp.length-1);
       var file = path.join(prettyDir, stat.name);
 
