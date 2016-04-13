@@ -1,12 +1,3 @@
-[submodule "msgfmt:core/lib/messageformat.js"]
-	path = msgfmt:core/lib/messageformat.js
-	url = https://github.com/SlexAxton/messageformat.js
-	master = v2
-[submodule "lib/messageformat.js"]
-	path = lib/messageformat.js
-	url = https://github.com/SlexAxton/messageformat.js
-	master = v0
-
 [submodule "msgfmt:core/lib/intl-messageformat"]
 	path = msgfmt:core/lib/intl-messageformat
 	url = https://github.com/yahoo/intl-messageformat
