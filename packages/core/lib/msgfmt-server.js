@@ -241,11 +241,14 @@ mfPkg.serverInit = function(native, options) {
     }
   }
 
-  if (options)
+  if (options) {
+    msgfmt.options = options;
+
     _.each(injectableOptions, function(key) {
       if (options[key] !== undefined)
         msgfmt[key] = options[key];
     });
+  }
 
   checkLocaleMetaExists(native);
 
@@ -367,6 +370,15 @@ var msgfmtClientData = function(req) {
 WebApp.connectHandlers.use(function(req, res, next) {
   if (Inject.appUrl(req.url))
     Inject.obj('msgfmt', msgfmtClientData(req), res);
+    if (!msgfmt.options.disableIntlPolyfill) {
+      // We use a function in case new langauges are added after first load
+      Inject.rawHead('intlPoly', function() {
+        return '<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features='
+        + _.map(_.keys(msgfmt.strings),
+            function(locale) { return 'Intl.~locale.' + locale }).join(',')
+        + '"></script>';
+      });
+    }
   next();
 });
 

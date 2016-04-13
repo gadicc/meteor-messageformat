@@ -1,9 +1,14 @@
-# meteor-messageformat [![Build Status](https://api.travis-ci.org/gadicc/meteor-messageformat.svg?branch=v2)](https://travis-ci.org/gadicc/meteor-messageformat)
+# msgfmt:core
 
 MessageFormat i18n support, the Meteor way.
 
 Easy reactive use of complicated strings (gender, plural, etc) with insanely
 easy translation into other languages (through a web UI).
+
+Please read the [general README](../../README.md) first before reading
+this `msgfmt:core` README.
+
+## Intro
 
 For full info, docs and examples, see the
 [Meteor MessageFormat home page](http://messageformat.meteor.com/)
@@ -70,3 +75,24 @@ For full info, docs and examples, see the
 ## Offline Support
 
 TODO, manifest, buildcompiler, cordova
+See current workaround in main README.
+
+## Intl polyfill
+
+In v2 we handle date/number/currency formatting, but it relies on native
+browser support.  We rely on the
+[Intl polyfill](https://github.com/andyearnshaw/Intl.js)
+served via [cdn.polyfill.io](https://cdn.polyfill.io/) to provide this
+support in earlier browsers, requesting all the locales you currently
+offer.  (No, we don't lazy load locales for the polyfill)
+
+This results in an extra external request to the CDN on each initial
+page load.  polyfill.io is served from the fastly world-wide CDN, and
+looks at the browser's user-agent to only send the polyfill if needed.
+However, if the extra request bothers you, you can turn it off with:
+
+```js
+msgfmt.init('en', {
+  disableIntlPolyfill: true
+});
+```
