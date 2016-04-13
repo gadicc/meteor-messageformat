@@ -20,6 +20,12 @@ For full info, docs and examples, see the
 For this pre-release, some info on the site is out of date, and all info in the
 READMEs will supercede info on the site (for now).
 
+## Support for Meteor <= 1.2.1 (End of Life)
+
+At some point later this year (2016), support for Meteor versions below 1.3 will be dropped.  You will continue to be able to use your last installed version of msgfmt - indefinitely - but later updates will rely - in a non-backwards-compatible manner - on featuers provided by Meteor 1.3.  This co-incides with MDG's roadmap to deprecate Atmosphere and move all core Meteor packages to npm.
+
+New versions will still be on Atmosphere for some time to come, since we are heavily coupled to the Meteor build system for a lot of our "magic".  But we'd like to start using ES6+ features and gradually prepare the code for a possible generic npm release in the long term.
+
 ## v2 pre-release
 
 **THIS IS AN IN-DEVELOPMENT RELEASE.  YOU SHOULD NOT BE USING IT UNLESS YOU KNOW
