@@ -60,40 +60,33 @@ Package.onUse(function (api) {
     'webapp'
   ], server);
 
-  // common adds
-//  api.addFiles('lib/messageformat.js/messageformat.js', ['client', 'server']);
-
   // TODO, locales by demand, respect namespacing by wrapping files ourselves
   api.addFiles([
     'lib/intl-messageformat/dist/intl-messageformat-with-locales.js'
   ], both)
 
-  api.addFiles([
-    'lib/mfPkg/messageformat.js'//,
-//    'lib/mfPkg/locale-all.js'
-  ], both);
+  /* --- core package code --- */
 
-  // server
-  api.addFiles([
-    'lib/mfPkg/messageformat-server.js',
-    'lib/mfPkg/messageformat-server-integrations.js'
-  ], server);
-
-  // client
-  api.addFiles([
-    'lib/mfPkg/messageformat-client.js',
-    'lib/mfPkg/messageformat-client-integrations.js',
-  ], client);
+  api.addFiles('lib/msgfmt/msgfmt.js', both);
+  api.addFiles('lib/msgfmt/msgfmt-server.js', server);
+  api.addFiles('lib/msgfmt/msgfmt-client.js', client);
 
   // TODO, on cordova, need to bundle all languages
 
-  // Integrations
-  api.use('cmather:handlebars-server@2.0.0', 'server', { weak: true });
+  /* --- integrations --- */
 
-  // For msgfmt.sanitizeHTML()
+  api.addFiles('lib/msgfmt/msgfmt-client-integrations.js', client);
+
+  api.use('cmather:handlebars-server@2.0.0', 'server', { weak: true });
+  api.addFiles('lib/msgfmt/msgfmt-server-integrations.js', server);
+
+  /* --- for msgfmt.sanitizeHTML() --- */
+
   api.use('djedi:sanitize-html@1.11.2', server);
   api.use('djedi:sanitize-html-client@1.11.2-0', client);
-  api.addFiles('lib/mfPkg/sanitization.js', both);
+  api.addFiles('lib/msgfmt/sanitization.js', both);
+
+  /* --- exports --- */
 
   api.export(['mfPkg', 'mf', 'msgfmt'], both);
 });
