@@ -397,6 +397,9 @@ handlers.js = function(file, data, mtime, strings) {
       func: func ? func[1].replace(/^\s+|\s+$/g, '') : 'unknown'
     };
   }
+
+  // its pretty common to put jsx in js files these days too
+  handlers.jsx(file, data, mtime, strings);
 };
 
 /*
@@ -450,7 +453,7 @@ handlers.jsx = function(file, data, mtime, strings) {
 
   // <MF KEY="key" attr2=val2 etc>text</MF>
   // <MF KEY="key" attr2=val2 etc>{`text`}</MF>
-  re = /<MF (.*?)>\s*([^]*?)\s*<\/MF>/g;
+  re = /<MF\s+(.*?)>\s*([^]*?)\s*<\/MF>/g;
   while (result = re.exec(data)) {
     var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
     var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/

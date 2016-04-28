@@ -5,6 +5,22 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 2.0.1 (2016-04-28)
+
+### Fixed
+
+* Allow any kind of whitespace between `<MF andArgs>` to allow splitting the
+  tag over multiple lines.
+
+* Allow JSX in `.js` files too.
+
+## 2.0.0 (2016-04-01)
+
+### Fixed
+
+* Ignore `node_modules` directories (thanks @MartinFournier, #214, #215)
+* Require a '.' before matching extensions
+
 ## 2.0.0-preview.14
 
 ### Added
