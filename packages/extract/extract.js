@@ -453,11 +453,9 @@ handlers.jsx = function(file, data, mtime, strings) {
 
   // <MF KEY="key" attr2=val2 etc>text</MF>
   // <MF KEY="key" attr2=val2 etc>{`text`}</MF>
-  re = /<MF\s+(.*?)>\s*([^]*?)\s*<\/MF>/g;
+  re = /<MF\s+([^]*?)>\s*([^]*?)\s*<\/MF>/g;
   while (result = re.exec(data)) {
     var text = result[2], attributes = attrDict(result[1]), key = attributes.KEY;
-    var tpl = /<template .*name=(['"])(.*?)\1.*?>[\s\S]*?$/
-      .exec(data.substring(0, result.index)); // TODO, optimize
     var line = data.substring(0, result.index).split('\n').length;
     var template = lastReactComponentName(data.substring(0, result.index));
 

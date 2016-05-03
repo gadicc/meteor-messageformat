@@ -5,12 +5,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 2.0.2 (2016-05-03)
+
+* Further fix for <MF arg newline arg> (#220).
+
 ## 2.0.1 (2016-04-28)
 
 ### Fixed
 
 * Allow any kind of whitespace between `<MF andArgs>` to allow splitting the
-  tag over multiple lines.
+  tag over multiple lines (#220).
 
 * Allow JSX in `.js` files too.
 

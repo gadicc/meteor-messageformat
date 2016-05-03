@@ -1,6 +1,6 @@
 Package.describe({
   name: 'msgfmt:extract',
-  version: '2.0.1',
+  version: '2.0.2',
   summary: 'Extracts native / translatable strings from your app',
   git: 'https://github.com/gadicc/meteor-messageformat.git',
   documentation: 'README.md',
