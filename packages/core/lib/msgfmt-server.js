@@ -285,7 +285,7 @@ Meteor.publish('mfStrings', function(lang, after, fullInfo) {
 
   // fake sub
   if (lang == 'notReady')
-    return null;
+    return this.ready();
 
   // ['en', 'he'] or 'en' or 'native' or 'all'
   if (_.isArray(lang))
@@ -308,7 +308,7 @@ Meteor.publish('msgfmt:locale', function() {
   if (this.userId)
     return Meteor.users.find(this.userId, { fields: { locale: 1 } });
   else
-    return null;
+    return this.ready();
 });
 
 Meteor.methods({
