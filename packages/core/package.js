@@ -1,6 +1,6 @@
 Package.describe({
   name:    "msgfmt:core",
-  version: "2.0.0-preview.21",
+  version: "2.0.0-preview.22",
   summary: "MessageFormat i18n support, the Meteor way",
   git:     "https://github.com/gadicc/meteor-messageformat.git",
   documentation: 'README.md'

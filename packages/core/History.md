@@ -1,5 +1,20 @@
 ## vNEXT
 
+## v2.0.0-preview.22 (2016-05-31)
+
+### Fixed
+
+* Don't block publication ready status, fixes spiderable issues.
+  (thanks @sbalmer) (#231)
+
+## v2.0.0-preview.21 (2016-04-13)
+
+## Added
+
+* Polyfill for Intl on older browsers (#163)
+
+## Fixed
+
 * Improved import of mfAll.js from < core.19 (incl v0)
 
 ## v2.0.0-preview.20
