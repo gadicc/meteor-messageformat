@@ -377,9 +377,10 @@ Template.mfTransLang.helpers({
   }
 });
 
-Session.setDefault('translationSortField', 'orig');
+Session.setDefault('translationSortField', 'key');
 Session.setDefault('translationSortOrder', 'asc');
-Session.setDefault('translationStatusSort', true);
+Session.setDefault('translationStatusSort', false);
+Session.setDefault('translationShowKey', true);
 Session.setDefault('translationCaseInsensitiveOrdering', false);
 
 var statusValue = function(str) {
