@@ -1,5 +1,10 @@
 ## vNEXT
 
+## 2.0.0 (2016-06-22)
+
+* Bugfix: default to sort by KEY, vs STATUS, thanks @1u (#229, #237).
+  Possibly helps with #236.
+
 ## 2.0.0-preview.11 (2016-03-19)
 
 * Bugfix for Meteor 1.2+: Explicity use() underscore on server too.
