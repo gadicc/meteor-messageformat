@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import msgfmt, { mf } from 'msgfmt';
 
 var mountedComponentsWithState = new Set();
 msgfmt.on('localeChange', function(locale) {
@@ -6,7 +7,7 @@ msgfmt.on('localeChange', function(locale) {
     component.setState({ LOCALE: locale });
 });
 
-class _MF extends Component {
+class MF extends Component {
 
   constructor(props) {
     super(props);
@@ -34,6 +35,7 @@ class _MF extends Component {
 
 
     // For HMR; clear MF's cache if TEXT for KEY has changed
+    /*
     if ( (!locale || locale === msgfmt.native) && text &&
         msgfmt.strings[msgfmt.native] !== text) {
       msgfmt.strings[msgfmt.native][key] = text;
@@ -42,6 +44,7 @@ class _MF extends Component {
         delete msgfmt.compiled[msgfmt.native][key];
       }
     }
+    */
 
     var _HTML = props._HTML || props._html;
     if (_HTML) {
@@ -67,7 +70,10 @@ class _MF extends Component {
 
 }
 
-// for Meteor export
-MF = _MF;
+MF.propTypes = {
+  KEY: PropTypes.string.isRequired,
+  LOCALE: PropTypes.string,
+  TEXT: PropTypes.string
+};
 
 export default MF;
