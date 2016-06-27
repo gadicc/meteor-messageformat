@@ -15,7 +15,7 @@ easy translation into other languages (through a web UI).
 * Integrates with autoform, momentjs, parsleyvalidator, cmather:handlebars-server
 
 For full info, docs and examples, see the
-[Meteor MessageFormat home page](http://messageformat-v2.meteor.com/)
+[Meteor MessageFormat home page](http://messageformat.meteorapp.com/)
 (or install/clone the smart package and run `meteor` in its `website` directory).
 For this pre-release, some info on the site is out of date, and all info in the
 READMEs will supercede info on the site (for now).
@@ -76,7 +76,7 @@ msgfmt.init('en');
 where `en` should be your "native" language, i.e. the language all your
 strings are in before any translation occurs.  You can supply an optional
 second argument with a key-value dictionary of configuration values, see
-the [docs](http://messageformat.meteor.com/docs) for more.
+the [docs](http://messageformat.meteorapp.com/docs) for more.
 
 Setup your strings like this:
 
@@ -86,12 +86,12 @@ Setup your strings like this:
 ```
 
 For more complicated examples, see the
-[examples page](http://messageformat-v2.meteor.com/examples).
+[examples page](http://messageformat.meteorapp.com//examples).
 For more information about different options, see the
-[docs](http://messageformat.meteor.com/docs).
+[docs](http://messageformat.meteorapp.com/docs).
 
 To translate your strings, go to `/translate` in your app, available by default
-to any registered user.  See the [docs](http://messageformat-v2.meteor.com/docs)
+to any registered user.  See the [docs](http://messageformat.meteorapp.com/docs)
 about custom security policies.
 
 ## More info
