@@ -35,7 +35,7 @@ Current versions of each package (requires manual, explicit updates until
 the stable release; consider backing up your database before upgrading):
 
 ```
-meteor add msgfmt:core@2.0.0-preview.21         # 2016-04-13
+meteor add msgfmt:core@2.0.0-preview.23         # 2016-09-05
 
 # released packages
 meteor add msgfmt:extract                       # 2016-04-01 (v2.0.0)

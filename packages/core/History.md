@@ -1,5 +1,13 @@
 ## vNEXT
 
+## v2.0.0-preview.23 (2016-09-05)
+
+### Changed
+
+* "Broken" translations (that can't be compiled) are no longer displayed as
+  `[Object object]`; instead the native string will be shown and an error
+  logged on the console.  Thanks, @sbalmer! (#244)
+
 ## v2.0.0-preview.22 (2016-05-31)
 
 ### Fixed
