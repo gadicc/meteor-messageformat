@@ -158,7 +158,7 @@ msgfmt.addCurrencyShortcut = function(currency) {
 msgfmt.addFormat('number', { ZAR: { style: 'currency', currency: 'ZAR' } });
 msgfmt.addCurrencyShortcut('ILS');
 
-mf = function(key, params, message, locale) {
+mf = function mfcall(key, params, message, locale) {
     if (!locale) {
       if (Meteor.isClient) {
         locale = Session.get('locale');
@@ -213,15 +213,21 @@ mf = function(key, params, message, locale) {
         cmessage = mfPkg.compiled[locale][key] = new IntlMessageFormat(message, locale, formats);
     }
 
+    var formatted = key;
     try {
-        //cmessage = cmessage(params);
-        cmessage = cmessage.format(params);
+        formatted = cmessage.format(params);
     }
     catch(err) {
-        cmessage = err;
+        log.warn("Error formatting "+key+" in locale "+locale+": "+err.message);
+        if (locale !== mfPkg.native) {
+            // Retry in native language
+            formatted = mfcall(key, params, message, mfPkg.native);
+        } else {
+            // Give up
+        }
     }
     
-    return cmessage;
+    return formatted;
 }
 
 // Could make this completely private but useful for plugins to use
