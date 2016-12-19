@@ -13,7 +13,7 @@ class MF extends Component {
     super(props);
 
     if (!this.props.LOCALE) {
-      this.state = { LOCALE: 'en' };
+      this.state = { LOCALE: msgfmt.locale() || msgfmt.native };
       mountedComponentsWithState.add(this);
     }
   }

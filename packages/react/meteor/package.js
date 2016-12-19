@@ -1,6 +1,6 @@
 Package.describe({
   name: 'msgfmt:react',
-  version: '2.0.0',
+  version: '2.0.1-test.0',
   summary: 'An MF component for use with msgfmt and react',
   git: 'https://github.com/gadicc/meteor-messageformat',
   documentation: 'README.md'
