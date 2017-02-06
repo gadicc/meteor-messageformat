@@ -294,3 +294,7 @@ Transparent integration.  Calls `moment.locale()` on locale change.
 ### Parsley Validator
 
 Transparent integration.  Calls `ParsleyValidator.setLocale()` on locale change.
+
+## Sites built with Meteor-MessageFormat
+
+* [White Rabbit Express](https://www.whiterabbitexpress.com)
