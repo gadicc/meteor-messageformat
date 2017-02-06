@@ -20,6 +20,9 @@ For full info, docs and examples, see the
 For this pre-release, some info on the site is out of date, and all info in the
 READMEs will supercede info on the site (for now).
 
+**See the end of this README for a showcase of sites built with
+meteor-messageformat!**
+
 ## Support for Meteor <= 1.2.1 (End of Life)
 
 At some point later this year (2016), support for Meteor versions below 1.3 will be dropped.  You will continue to be able to use your last installed version of msgfmt - indefinitely - but later updates will rely - in a non-backwards-compatible manner - on featuers provided by Meteor 1.3.  This co-incides with MDG's roadmap to deprecate Atmosphere and move all core Meteor packages to npm.
@@ -297,4 +300,10 @@ Transparent integration.  Calls `ParsleyValidator.setLocale()` on locale change.
 
 ## Sites built with Meteor-MessageFormat
 
-* [White Rabbit Express](https://www.whiterabbitexpress.com)
+* [Openki.net](https://sandbox.openki.net/) - Crowd-sourced Education (there's a [sandbox](https://sandbox.openki.net/) too!) - @1u and @sbalmer
+* [White Rabbit Express](https://www.whiterabbitexpress.com) - Buy from Japan - @Maxhodges
+
+A huge thank you to the above sites and authors for your continued faith and
+support in meteor-messageformat over the years, all the way from our early days!
+Your bug hunting, PRs and vocal support have been critical to this project and
+my motivation in maintaining it.  Thank you so much!
