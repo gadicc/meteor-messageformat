@@ -9,11 +9,11 @@ msgfmt:ui
 msgfmt:extract
 
 standard-app-packages
-accounts-ui
-accounts-password
-accounts-github
-accounts-google
-accounts-facebook
+accounts-ui@1.1.9
+accounts-password@1.3.5
+accounts-github@1.2.1
+accounts-google@1.1.2
+accounts-facebook@1.1.1
 
 iron:router
 #kadira:flow-router
@@ -29,4 +29,9 @@ jag:pince
 
 # if this package is used, app code sets disallowEval
 #browser-policy
-standard-minifiers
+standard-minifier-css
+standard-minifier-js
+shell-server
+facebook-config-ui
+github-config-ui
+google-config-ui
