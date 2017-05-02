@@ -99,6 +99,14 @@ about custom security policies.
 
 ## More info
 
+### Testing
+
+Msgfmt requires Meteor's "full application" test mode to work properly with
+tests, i.e. `meteor test --full-app`.  Particularly, if you're calling
+`msgfmt.init('en')` in, say, `lib/config.js` - it's important to understand
+that Meteor completely ignores this file in 'regular' test mode.  For more
+information, please see [issue #242](https://github.com/gadicc/meteor-messageformat/issues/242#issuecomment-298094711).
+
 ### Optional Settings
 
 Defaults are shown below.
