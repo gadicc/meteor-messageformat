@@ -1,5 +1,15 @@
 ## vNEXT
 
+## v2.0.0-preview.24 (2017-05-04)
+
+### Added
+
+* Allow `mf('key', 'text', params)` in addition to the regular
+  `mf('key', params, 'text')`  Previously, `mf('key', 'text')` was accepted
+  too, but there was no way to provide `params` in this ordering.  Now if
+  the second argument is a String, the second and third arguments are swapped.
+  (#253).
+
 ## v2.0.0-preview.23 (2016-09-05)
 
 ### Changed

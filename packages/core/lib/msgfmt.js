@@ -159,6 +159,8 @@ msgfmt.addFormat('number', { ZAR: { style: 'currency', currency: 'ZAR' } });
 msgfmt.addCurrencyShortcut('ILS');
 
 mf = function mfcall(key, params, message, locale) {
+    var tmp;
+
     if (!locale) {
       if (Meteor.isClient) {
         locale = Session.get('locale');
@@ -176,12 +178,13 @@ mf = function mfcall(key, params, message, locale) {
         }
 
       }
-    }    
+    }
     if (!locale || (!mfPkg.strings[locale] && !mfPkg.compiled[locale]))
         locale = mfPkg.native;
     if (_.isString(params)) {
+        tmp = message;
         message = params;
-        params = null;
+        params = tmp;
     }
 
     var mf = mfPkg.objects[locale];
@@ -226,7 +229,7 @@ mf = function mfcall(key, params, message, locale) {
             // Give up
         }
     }
-    
+
     return formatted;
 }
 
