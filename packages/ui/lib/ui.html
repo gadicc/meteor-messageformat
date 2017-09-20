@@ -105,6 +105,10 @@
               <td>{{orig}}</td>
               <td>{{trans}}</td>
             </tr>
+          {{else}}
+            <tr>
+                <td>{{#if loading}}Loading...{{else}}Nothing.{{/if}}</td>
+            </tr>
           {{/each}}
           </tbody>
         </table>
