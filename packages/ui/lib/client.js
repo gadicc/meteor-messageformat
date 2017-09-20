@@ -135,7 +135,10 @@ Template.mfTransLang.onCreated(function() {
   var lang = RouterLayer.getParam('lang');
   var native = mfPkg.native;
 
-  this.subscribe('mfStrings', [native, lang], 0, true);
+  Session.set('mfLoading', true);
+  this.subscribe('mfStrings', [native, lang], 0, true, function() {
+    Session.set('mfLoading', false);
+  });
 
   // Build a collection of language pairs for quick lookup
   var instance = this;
@@ -221,6 +224,7 @@ Template.mfTrans.helpers({
 Template.mfTransLang.helpers({
   origLang: mfPkg.native,
   destLang: function() { return RouterLayer.getParam('lang'); },
+  loading: function() { return Session.get('mfLoading'); },
   allowed: function() {
     return !mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this);
   },
