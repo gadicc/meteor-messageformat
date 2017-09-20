@@ -1,5 +1,14 @@
 ## vNEXT
 
+## 2.1.0 (2017-09-20)
+
+* Improvements to the translation UI, big thanks @sbalmer! (#262)
+
+  * Fixes error when using filter and translation had no orig text.
+  * Improves rendering time by caching the translation pairs in a collection
+  * Uses localeCompare to sort entries
+  * Shows a loading indicator
+
 ## 2.0.0 (2016-06-22)
 
 * Bugfix: default to sort by KEY, vs STATUS, thanks @1u (#229, #237).
