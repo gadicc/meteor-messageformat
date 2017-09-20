@@ -381,24 +381,23 @@ var statusValue = function(str) {
 
 var sortStrings = function(strings) {
   var sortField = Session.get('translationSortField');
-  var sortOrder = Session.get('translationSortOrder');
+  var sortOrder = Session.get('translationSortOrder') === 'asc' ? 1 : -1;
   var caseInsensitiveOrdering = Session.get('translationCaseInsensitiveOrdering');
+  var translationStatusSort = Session.get('translationStatusSort');
 
   return strings.sort(function(a, b) {
-    if (Session.get('translationStatusSort')) {
+    if (translationStatusSort) {
       var res = statusValue(a) - statusValue(b);
       if (res) return res; // if 0 continue...
     }
 
     var first = a[sortField] || '';  // avoid undefined in str comparison
     var second = b[sortField] || ''; // avoid undefined in str comparison
-    if (caseInsensitiveOrdering) first = first.toLowerCase();
-    if (caseInsensitiveOrdering) second = second.toLowerCase();
-    if (sortOrder === 'asc') {
-      return first > second ? 1 : (first < second ? -1 : 0);
-    } else {
-      return first > second ? -1 : (first < second ? 1 : 0);
+    if (caseInsensitiveOrdering) {
+        first = first.toLowerCase();
+        second = second.toLowerCase();
     }
+    return first.localeCompare(second) * sortOrder;
   });
 };
 
