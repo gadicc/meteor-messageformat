@@ -133,7 +133,36 @@ var origOnPopState, origPushState;
 Template.mfTransLang.onCreated(function() {
   // Note, this is in ADDITION to the regular mfStrings sub
   var lang = RouterLayer.getParam('lang');
-  this.subscribe('mfStrings', [mfPkg.native, lang], 0, true);
+  var native = mfPkg.native;
+
+  this.subscribe('mfStrings', [native, lang], 0, true);
+
+  // Build a collection of language pairs for quick lookup
+  var instance = this;
+  instance.pairs = new Mongo.Collection(null);
+  var updatePair = function(entry) {
+      var string = {};
+      if (entry.lang === native) {
+          string.orig = entry.text;
+          string.file = entry.file;
+      }
+      if (entry.lang === lang) {
+          string.trans = entry.text;
+          string.fuzzy = entry.fuzzy;
+      }
+      instance.pairs.update(entry.key, { $set: string });
+  };
+
+  mfPkg.mfStrings.find({ lang: { $in: [lang, native] }, removed: null }).observe({
+      'added': function(entry) {
+          if (!instance.pairs.findOne(entry.key)) {
+              instance.pairs.insert({ _id: entry.key, key: entry.key });
+          }
+          updatePair(entry);
+      },
+      'changed': updatePair
+  });
+
   this.subscribe('mfRevisions', lang, 10);
 
   // Temporary, only used to override preserve on dest
@@ -199,60 +228,19 @@ Template.mfTransLang.helpers({
     var orig = mfPkg.native;
     var lang = RouterLayer.getParam('lang');
 
-    var query = {
-      $and: [{$or: [{lang: orig}, {lang: lang}]},
-        {removed: undefined}]
-    };
-
+    var query = { orig: { $exists: true } };
     var filter = Session.get('mfTransLangFilter');
     if (filter) {
-      filter = new RegExp(filter, 'i');
-      /*
-      since we need to recheck later anyways, no point doing twice
-      query.$and.push({
-        $or: [
-          { key: filter },
-          // { text: filter }, // cant do this here, need both langs
-          { file: filter }
-        ]
-      });
-      */
+        var match = new RegExp(filter, "i");
+        query.$or =
+            [ { key: match }
+            , { orig: match }
+            , { file: match }
+            , { trans: match }
+            ];
     }
-
-    var out = {}, strings = mfPkg.mfStrings.find(query).fetch();
-
-    // summarise matching keys (orig + trans) to a single record
-    _.each(strings, function(str) {
-      if (!out[str.key])
-        out[str.key] = { key: str.key };
-
-      if (str.lang == orig) {
-        out[str.key].orig = str.text;
-        out[str.key].file = str.file;
-      } else {
-        out[str.key].trans = str.text;
-      }
-
-      if (str.fuzzy)
-        out[str.key].fuzzy = true;
-    });
-
-    // reject non-matches (can only do after orig/trans merge)
-    if (filter)
-    _.each(out, function(str, i) {
-      if (!(
-          str.key.match(filter) || 
-          str.file.match(filter) ||
-          str.orig.match(filter) ||
-          (str.trans && str.trans.match(filter))
-            ))
-        delete out[i];
-    });
-
-    strings = _.values(out);
-    strings = sortStrings(strings);
-
-    return strings;
+    var strings = Template.instance().pairs.find(query).fetch();
+    return sortStrings(strings);
   }
 });
 
