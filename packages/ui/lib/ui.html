@@ -140,7 +140,7 @@
       <br />
       Click on headers to reorder the columns.
     </p>
-    <span><b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{keyInfo.line
+    <span>{{#if keyInfo.key}}<b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{/if}}{{keyInfo.line
       }}{{#if keyInfo.template}} (template
         {{#if keyInfo.routeUrl}}
           <a href="{{keyInfo.routeUrl}}">{{keyInfo.template}}</a
