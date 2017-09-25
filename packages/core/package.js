@@ -6,11 +6,6 @@ Package.describe({
   documentation: 'README.md'
 });
 
-Package.registerBuildPlugin({
-  name: 'msgfmt',
-  sources: [ 'buildPlugin.js' ]
-});
-
 var client = 'client';
 var server = 'server';
 var both = [ client, server ];
