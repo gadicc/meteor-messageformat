@@ -4,7 +4,8 @@
 Logger.setLevel('msgfmt', 'trace');
 
 mfPkg.init('en', {
-  // sendPolicy: 'all'
+  // sendPolicy: 'all',
+  extractLogLevel: 'trace'
 });
 
 if (Meteor.isClient) {

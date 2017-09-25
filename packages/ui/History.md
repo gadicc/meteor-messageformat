@@ -1,5 +1,12 @@
 ## vNEXT
 
+## 2.2.0 (2017-09-25)
+
+* Details in the translation interface, thanks @sbalmer! (#264)
+
+  * Show input fields only when allowed to edit
+  * Don't show orphaned filler text
+
 ## 2.1.0 (2017-09-20)
 
 * Improvements to the translation UI, big thanks @sbalmer! (#262)
