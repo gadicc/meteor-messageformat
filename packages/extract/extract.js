@@ -122,7 +122,7 @@ var extract = (root) => {
     let currentCache = cache;
 
     try {
-        // Detect when files with entries were were deleted
+        // Detect when files with entries were deleted
         Object.keys(cache.extracts).forEach((filePath) => {
             if (!extractsPerFile[filePath]) {
                 filesChanged = true;
@@ -135,6 +135,7 @@ var extract = (root) => {
         if (filesChanged) {
             let update = new Date().getTime();
             if (!stringsChanged && cache) {
+                // Keep the old date to prevent unnecessary DB-update runs.
                 update = cache.update;
             }
             // Update cache
