@@ -6,27 +6,57 @@ var fs   = Npm.require('fs');
 var path = Npm.require('path');
 var walk = Npm.require('walk');
 
-/*
- * So what's going on here?  msgfmt:extracts creates a file with a
- * tilde ("~") suffix, to prevent Meteor from reloading when it's updated.
- * That file itself is only created on reload, so that would cause a double
- * reload and be a total pain.  But, Meteor doesn't bundle ~ files either.
- * to look for this file, and bundle it.  This happens on load, so will
- * catch it only on the next reload, but that's fine, since the file is
- * only used in production.
-*/
+/* The extraction process uses two files:
+ *
+ *   server/extracts.msgfmt: This file triggers the extraction process by
+ *       virtue of having the .msgfmt extension for which we register a source
+ *       handler below. This file is created automatically.
+ *
+ *   server/extracts.msgfmt~: The extraction result is cached in this file,
+ *       so that extraction needs to be run on changed files only. The file has
+ *       a tilde at the end to make it invisible for Meteor. Otherwise Meteor
+ *       would trigger another reload when it is changed during the build
+ *       process.
+ */
 
-function msgfmtHandler(compileStep) {
-    const root = process.cwd();
-    const extracted = extract(root);
-    compileStep.addJavaScript({
-        path: 'server/extracts.msgfmt.js',
-        sourcePath: root + '/' + EXTRACTS_FILE,
-        data: 'msgfmt.addNative.apply(msgfmt, ' + extracted + ');'
-    });
-}
+// Ensure the trigger file exists
+const dir = path.dirname(EXTRACTS_FILE);
+fs.exists(dir, function(exists) {
+    if (exists) {
+        const triggerFile = EXTRACTS_FILE.replace(/~$/,'');
+        fs.exists(triggerFile, function(exists) {
+            if (!exists) {
+                fs.writeFile(triggerFile, '# Used by ' + EXTRACTS_FILE + ', do not delete.\n');
+            }
+        });
+    } else {
+      console.log('msgfmt creating ' + dir + ' in app root.');
+      fs.mkdir(dir, function(err) {
+            if (err) throw err;
+      });
+    }
+});
 
-Plugin.registerSourceHandler('msgfmt', msgfmtHandler);
+
+// register build handler that add a JS file that contains all the extracted
+// strings.
+msgfmtExtractor = () => ({
+    processFilesForTarget: function(files) {
+        files.forEach((file) => {
+            const root = process.cwd();
+            const extracted = extract(root);
+            const wrapped = 'msgfmt.addNative.apply(msgfmt, ' + extracted + ');'
+            file.addJavaScript({
+                data: wrapped,
+                path: `${file.getPathInPackage()}.js`
+            });
+        });
+    }
+});
+
+Plugin.registerCompiler({
+    extensions: [ 'msgfmt' ],
+}, msgfmtExtractor);
 
 var extract = (root) => {
     const cacheFile = path.join.apply(null, [root].concat(EXTRACTS_FILE.split('/')));

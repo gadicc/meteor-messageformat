@@ -6,10 +6,6 @@ Package.describe({
   documentation: 'README.md',
 });
 
-Npm.depends({
-  "walk": "2.3.9",
-});
-
 Package.registerBuildPlugin({
   name: 'msgfmt',
   sources: [ 'extract.js' ],
@@ -17,6 +13,7 @@ Package.registerBuildPlugin({
 });
 
 Package.onUse(function(api) {
+  api.use('isobuild:compiler-plugin@1.0.0');
   api.use('msgfmt:core@2.0.0-preview.19');
 });
 
