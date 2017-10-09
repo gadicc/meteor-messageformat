@@ -140,18 +140,22 @@
       <br />
       Click on headers to reorder the columns.
     </p>
-    <span><b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{keyInfo.line
+    <span>{{#if keyInfo.key}}<b>{{keyInfo.key}}</b> in {{keyInfo.file}}:{{/if}}{{keyInfo.line
       }}{{#if keyInfo.template}} (template
         {{#if keyInfo.routeUrl}}
           <a href="{{keyInfo.routeUrl}}">{{keyInfo.template}}</a
         >{{else}}"{{keyInfo.template}}"{{/if}}){{/if
       }}{{#if keyInfo.func}}; {{keyInfo.func}}{{/if}}
     </span><br />
+{{#if allowed}}
     <textarea id="mfTransOrig" readonly>{{mfTransOrig}}</textarea>
     <textarea id="mfTransDest">{{mfTransTrans}}</textarea>
     <a href='https://translate.google.com/#{{origLang}}/{{destLang}}/{{encodeURIComponent mfTransOrig}}' target='_blank'>
       Google Translate?
     </a>
+{{else}}
+    Login to edit!
+{{/if}}
   <br /><br />
   <p>
     <a href="/translate">Back to Translation Summary</a>

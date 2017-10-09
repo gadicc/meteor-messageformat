@@ -216,9 +216,6 @@ Template.mfTrans.helpers({
   strings: function() { return mfPkg.mfStrings.find(); },
   stats: function() { return mfPkg.mfMeta.findOne({_id: '__stats'}); },
   native: mfPkg.native,
-  allowed: function() {
-    return !mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this);
-  }
 });
 
 Template.mfTransLang.helpers({
@@ -226,7 +223,7 @@ Template.mfTransLang.helpers({
   destLang: function() { return RouterLayer.getParam('lang'); },
   loading: function() { return Session.get('mfLoading'); },
   allowed: function() {
-    return !mfPkg.webUI.allowed.call(this) || mfPkg.webUI.denied.call(this);
+    return mfPkg.webUI.allowed.call(this) && !mfPkg.webUI.denied.call(this);
   },
   strings: function() {
     var orig = mfPkg.native;

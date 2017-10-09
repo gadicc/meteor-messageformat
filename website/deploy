@@ -1,4 +1,4 @@
 #!/bin/sh
 
-DEPLOY_HOSTNAME=galaxy.meteor.com \
+DEPLOY_HOSTNAME=us-east-1.galaxy-deploy.meteor.com \
 meteor deploy messageformat.meteorapp.com --settings settings.json
