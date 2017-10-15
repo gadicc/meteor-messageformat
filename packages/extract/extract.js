@@ -92,6 +92,9 @@ var extract = (root) => {
     const listeners = {
         'file': function(dir, stat, next) {
             try {
+                // Skip dot-files.
+                if (stat.name.charAt(0) == '.') { next(); return; }
+
                 const ext = path.extname(stat.name).substr(1);
                 if (!ext) { next(); return; }
 
@@ -142,7 +145,7 @@ var extract = (root) => {
         { followLinks: false
         , listeners: listeners
         , filters:
-            [ /\/\./ // Skip dotfiles
+            [ /\/\./ // Skip dot-dirs
             , 'node_modules'
             ]
         }
