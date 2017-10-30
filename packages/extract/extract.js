@@ -196,7 +196,7 @@ var extract = (root) => {
                         console.log(a);
                         console.log(b);
                     }
-                    return;
+                    continue;
                 }
                 extracts[b.key] = b;
             }
