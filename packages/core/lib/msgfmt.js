@@ -36,6 +36,7 @@ mfPkg = msgfmt = {
     strings: {},
     meta: {},
     initted: false,
+    queuedUpdates: [],
 
     sendPolicy: 'all',
     sendNative: false,
