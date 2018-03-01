@@ -54,13 +54,13 @@ instead of adding msgfmt:ui, add `msgfmt:ui-dev-only` (no need to specify
 version).
 
 Subpackage READMEs:
-[msgfmt:core](https://github.com/gadicc/meteor-messageformat/tree/v2/msgfmt:core#readme)
+[msgfmt:core](https://github.com/gadicc/meteor-messageformat/tree/v2/packages/core#readme)
 |
-[msgfmt:extract](https://github.com/gadicc/meteor-messageformat/tree/v2/msgfmt:extract#readme)
+[msgfmt:extract](https://github.com/gadicc/meteor-messageformat/tree/v2/packages/extract#readme)
 |
-[msgfmt:ui](https://github.com/gadicc/meteor-messageformat/tree/v2/msgfmt:ui#readme)
+[msgfmt:ui](https://github.com/gadicc/meteor-messageformat/tree/v2/packages/ui#readme)
 |
-[msgfmt:react](https://github.com/gadicc/meteor-messageformat/tree/v2/msgfmt:react#readme)
+[msgfmt:react](https://github.com/gadicc/meteor-messageformat/tree/v2/packages/react#readme)
 
 ## Quick Start
 
