@@ -40,6 +40,18 @@ function routePathFromName(name) {
     return ironRouter.path(name);
 }
 
+// RouterLayer supports the following implementations, but does not provide any abstraction on the base path.
+// This will ensure hrefs are formatted with respect to the base path for a given implementation
+function basePath() {
+  if (_.has(Package, 'kadira:flow-router')) {
+    // TODO: ...
+  } else if (_.has(Package, 'iron:router')) {
+    // TODO: ...
+  } else if (_.has(Package, 'ostrio:flow-router-extra')) {
+    return RouterLayer.flowRouter._page.base();
+  }
+}
+
 /*
  * After user presses ctrl up-down, if the newly highlighted row
  * is not above or below the viewable area, scroll appropriately
@@ -216,6 +228,9 @@ Template.mfTrans.helpers({
   strings: function() { return mfPkg.mfStrings.find(); },
   stats: function() { return mfPkg.mfMeta.findOne({_id: '__stats'}); },
   native: mfPkg.native,
+  basePath: function() {
+    return basePath();
+  }
 });
 
 Template.mfTransLang.helpers({
@@ -242,6 +257,9 @@ Template.mfTransLang.helpers({
     }
     var strings = Template.instance().pairs.find(query).fetch();
     return sortStrings(strings);
+  },
+  basePath: function() {
+    return basePath();
   }
 });
 
