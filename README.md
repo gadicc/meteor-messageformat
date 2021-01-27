@@ -1,3 +1,11 @@
+# Notice: Not in active development
+
+This project is not currently being actively developed.  The released v1
+still works (to my knowledge) but reached end of life in 2016.  I am not
+working on any multi-language projects at this time, but may resume work
+on this when I do.  v2 would be a pure-npm (non-Meteor specific) package.
+Thank you everyone everyone for all your many years of support!
+
 # meteor-messageformat (v2) [![Build Status](https://api.travis-ci.org/gadicc/meteor-messageformat.svg?branch=v2)](https://travis-ci.org/gadicc/meteor-messageformat)
 
 MessageFormat i18n support, the Meteor way.
