@@ -241,7 +241,7 @@ Meteor.startup(function() {
       var triggerFile = extractsFile.replace(/~$/,'');
       fs.exists(triggerFile, function(exists) {
         if (!exists)
-          fs.writeFile(triggerFile, '# Used by ' + EXTRACTS_FILE + ', do not delete.\n');
+          fs.writeFile(triggerFile, '# Used by ' + EXTRACTS_FILE + ', do not delete.\n', a, function() { });
       });
     } else {
       log.trace('Creating ' + path.dirname(EXTRACTS_FILE) + ' in app root...');
