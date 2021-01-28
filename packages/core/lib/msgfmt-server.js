@@ -75,7 +75,7 @@ msgfmt.langUpdate = function(lang, strings, newMeta) {
 			continue;
 
 		// if text has changed, create a new revision, else preserve revisionId
-		if (existing && existing.text == str.text && existing.removed == str.removed) {
+		if (existing && existing.text == str.text) {
 			updating = false;
 			revisionId = this.strings[lang][key].revisionId;
 		} else {
@@ -142,37 +142,26 @@ msgfmt.langUpdate = function(lang, strings, newMeta) {
 		this.mfStrings.upsert({ key: obj.key, lang: obj.lang }, obj);
 
 		if (updating) {
-			// does this update affect translations?
-			if (existing && (lang == mfPkg.native || str.removed)) {
-				query = { $set: {} };
-				if (lang == mfPkg.native) {
-					// TODO, consider string comparison with threshold to mark as fuzzy
-					query['$set'].fuzzy = true;
-				}
-				if (str.removed)
-					query['$set'].removed = true;
-
-				this.mfStrings.update( { key: key, lang: {$ne: lang} }, query, { multi: true });
+			// Set fuzzy flag on translations when the native string changes
+			if (existing && lang == mfPkg.native) {
+				// TODO, consider string comparison with threshold to mark as fuzzy
+				this.mfStrings.update(
+					{ key: key, lang: {$ne: lang} },
+					{ $set: { fuzzy: true } },
+					{ multi: true }
+				);
 			}
 
 			// finally, update the local cache
-			this.strings[lang][key] = obj;			
+			this.strings[lang][key] = obj;
 		}
 
 	} /* for (key in strings) */
 
 }
 
-function wrapAdd(origFunc, which, name) {
-  return function(strings, meta) {
+mfPkg.updateMeta = function(stringUpdate, meta, which, name) {
     var startTime = Date.now();
-
-    // not initted yet, we don't know what the native lang is
-    if (!this.initted) {
-      log.debug(name + ' called before init(), queueing...');
-      this[which+'Queue'] = { strings: strings, meta: meta };
-      return;
-    }
 
     // In some cases pre core.19, used on upgrade to fix.
     if (!meta.updatedAt) {
@@ -196,49 +185,87 @@ function wrapAdd(origFunc, which, name) {
     // Update observe before modifying database
     this.observeFrom(meta.updatedAt, which);
 
-    // Prewrapped function
-    origFunc.call(this, strings, meta);
+    stringUpdate.bind(this)();
 
     lastSync.mtime = meta.updatedAt;
     msgfmt.mfMeta.upsert(key, {$set: {mtime: meta.updatedAt } });
 
     log.debug('Finished ' + name + ' in ' + (Date.now() - startTime) + ' ms');
-  }
 }
 
-mfPkg.addNative = wrapAdd(function(strings, meta) {
-	this.langUpdate(mfPkg.native, strings, meta);
-}, 'native', 'addNative() (from extracts.msgfmt~)');
+mfPkg.afterInit = function(delayedUpdate) {
+    var boundUpdate = delayedUpdate.bind(this);
+    if (this.initted) {
+        boundUpdate();
+    } else {
+        this.queuedUpdates.push(boundUpdate);
+    }
+}
+
+// called from extracts.msgfmt.js generated at build-time
+mfPkg.addNative = function(strings, meta) {
+    var stringUpdater = function() {
+        this.langUpdate(this.native, strings, meta);
+        var existing = Object.keys(strings);
+        this.mfStrings.update({ key: { $nin: existing } }, { $set: { removed: true } }, { multi: true });
+        this.mfStrings.update({ key: { $in: existing } }, { $unset: { removed: "" } }, { multi: true });
+    };
+    mfPkg.afterInit(function() {
+        this.updateMeta(
+            stringUpdater,
+            meta,
+            'native',
+            'addNative() (from extracts.msgfmt~)'
+        );
+    });
+};
 
 // called from mfAll.js
-mfPkg.syncAll = wrapAdd(function(strings, meta) {
-  for (var lang in strings)
-    if (lang !== msgfmt.native)
-      msgfmt.langUpdate(lang, strings[lang], meta);
+mfPkg.syncAll = function(strings, meta) {
+    mfPkg.afterInit(function() {
+        this.updateMeta(
+            function() {
+                for (var lang in strings) {
+                    if (lang !== msgfmt.native) {
+                        msgfmt.langUpdate(lang, strings[lang], meta);
+                    }
+                }
+            },
+            meta,
+            'trans',
+            'syncAll() (from mfAll.js)'
+        );
 
-  // since core.19; use nativeStrings from mfAll.js too
-  var nativeStrings = strings[msgfmt.native];
-  if (nativeStrings) {
+        // since core.19; use nativeStrings from mfAll.js too
+        // This is useful to people that update native translations directly
+        // in mfAll.js.
+        var nativeLang = this.native;
+        var nativeStrings = strings[nativeLang];
+        if (nativeStrings) {
+            var max = _.max(nativeStrings, function(s) { return s.mtime; }).mtime;
+            var nativeMeta = { updatedAt: max };
+            if (meta.extractedAt) {
+                nativeMeta.extractedAt = meta.extractedAt;
+            }
 
-    var max = _.max(nativeStrings, function(s) { return s.mtime; }).mtime;
-    var nativeMeta = { updatedAt: max };
-    if (meta.extractedAt)
-      nativeMeta.extractedAt = meta.extractedAt;
-
-    this.addNative(nativeStrings, nativeMeta);
-
-  }
-}, 'trans', 'syncAll() (from mfAll.js)');
+            this.updateMeta(
+                function() {
+                    this.langUpdate(nativeLang, nativeStrings, nativeMeta);
+                },
+                meta,
+                'trans',
+                'syncAll() (native from mfAll.js)'
+            );
+        }
+    });
+};
 
 var injectableOptions = ['waitOnLoaded', 'sendPolicy'];
 
 mfPkg.serverInit = function(native, options) {
-  var queues = { nativeQueue: 'addNative', transQueue: 'syncAll' };
-  for (var queue in queues) {
-    if (this[queue]) {
-      this[queues[queue]](this[queue].strings, this[queue].meta);
-      delete this[queue];
-    }
+  var queuedUpdate;
+  while (queuedUpdate = this.queuedUpdates.shift()) {
+    queuedUpdate();
   }
 
   if (options) {
@@ -486,7 +513,7 @@ if (checkForDupes) {
     checkLocaleMetaExists(str.lang);
     msgfmt.strings[str.lang][str.key] = str;
     if (str.mtime > maxMtime) maxMtime = str.mtime;
-  });  
+  });
 }
 delete allStrings;
 
